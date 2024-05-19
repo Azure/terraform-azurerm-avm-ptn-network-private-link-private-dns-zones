@@ -55,7 +55,7 @@ resource "azurerm_resource_group" "this" {
 # with a data source.
 module "test" {
   source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
+  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   # ...
   location            = azurerm_resource_group.this.location
   name                = "TODO" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
