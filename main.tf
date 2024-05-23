@@ -1,14 +1,20 @@
-# resource "azurerm_resource_group" "this" {
-#   location = var.location
-#   name     = var.resource_group_name # calling code must supply the name
-#   tags     = var.tags
-# }
+resource "azurerm_resource_group" "this" {
+  count = var.resoruce_group_creation_enabled ? 1 : 0
+
+  location = var.location
+  name     = var.resource_group_name
+  tags     = var.tags
+}
 
 # module "avm-res-network-privatednszone" {
+#   for_each = local.private_link_private_dns_zones_replaced_regionCode
+
 #   source  = "Azure/avm-res-network-privatednszone/azurerm"
 #   version = "0.1.1"
-#   # insert the 2 required variables here
-  
+
+#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+#   domain_name         = each.value
+#   # virtual_network_links = 
 # }
 
 # # required AVM resources interfaces

@@ -7,122 +7,240 @@ variable "resoruce_group_creation_enabled" {
 
 variable "resource_group_name" {
   type        = string
-  description = "The resource group where the resources will be deployed."
+  description = "The resource group where the resources will be deployed. Either the name of the new resource group to create or the name of an existing resource group."
 }
 
 variable "private_link_private_dns_zones" {
-  type = set(string)
-  default = [
-    "privatelink.api.azureml.ms",
-    "privatelink.notebooks.azure.net",
-    "privatelink.cognitiveservices.azure.com",
-    "privatelink.openai.azure.com",
-    "privatelink.directline.botframework.com",
-    "privatelink.token.botframework.com",
-    "privatelink.servicebus.windows.net",
-    "privatelink.servicebus.windows.net",
-    "privatelink.datafactory.azure.net",
-    "privatelink.adf.azure.com",
-    "privatelink.azurehdinsight.net",
-    "privatelink.{regionName}.kusto.windows.net",
-    "privatelink.blob.core.windows.net",
-    "privatelink.queue.core.windows.net",
-    "privatelink.table.core.windows.net",
-    "privatelink.analysis.windows.net",
-    "privatelink.pbidedicated.windows.net",
-    "privatelink.tip1.powerquery.microsoft.com",
-    "privatelink.azuredatabricks.net",
-    "{regionName}.privatelink.batch.azure.com",
-    "{regionName}.service.privatelink.batch.azure.com",
-    "privatelink-global.wvd.microsoft.com",
-    "privatelink.wvd.microsoft.com",
-    "privatelink.wvd.microsoft.com",
-    "privatelink.{regionName}.azmk8s.io",
-    "privatelink.azurecr.io",
-    "{regionName}.data.privatelink.azurecr.io",
-    "privatelink.database.windows.net",
-    "privatelink.documents.azure.com",
-    "privatelink.mongo.cosmos.azure.com",
-    "privatelink.cassandra.cosmos.azure.com",
-    "privatelink.gremlin.cosmos.azure.com",
-    "privatelink.table.cosmos.azure.com",
-    "privatelink.analytics.cosmos.azure.com",
-    "privatelink.postgres.cosmos.azure.com",
-    "privatelink.postgres.database.azure.com",
-    "privatelink.postgres.database.azure.com",
-    "privatelink.mysql.database.azure.com",
-    "privatelink.mysql.database.azure.com",
-    "privatelink.mariadb.database.azure.com",
-    "privatelink.redis.cache.windows.net",
-    "privatelink.redisenterprise.cache.azure.net",
-    "privatelink.database.windows.net",
-    "privatelink.documents.azure.com",
-    "privatelink.mongo.cosmos.azure.com",
-    "privatelink.cassandra.cosmos.azure.com",
-    "privatelink.gremlin.cosmos.azure.com",
-    "privatelink.table.cosmos.azure.com",
-    "privatelink.analytics.cosmos.azure.com",
-    "privatelink.postgres.cosmos.azure.com",
-    "privatelink.postgres.database.azure.com",
-    "privatelink.postgres.database.azure.com",
-    "privatelink.mysql.database.azure.com",
-    "privatelink.mysql.database.azure.com",
-    "privatelink.mariadb.database.azure.com",
-    "privatelink.redis.cache.windows.net",
-    "privatelink.redisenterprise.cache.azure.net",
-    "privatelink.his.arc.azure.com",
-    "privatelink.guestconfiguration.azure.com",
-    "privatelink.dp.kubernetesconfiguration.azure.com",
-    "privatelink.servicebus.windows.net",
-    "privatelink.eventgrid.azure.net",
-    "privatelink.eventgrid.azure.net",
-    "privatelink.eventgrid.azure.net",
-    "privatelink.eventgrid.azure.net",
-    "privatelink.azure-api.net",
-    "privatelink.workspace.azurehealthcareapis.com",
-    "privatelink.fhir.azurehealthcareapis.com",
-    "privatelink.dicom.azurehealthcareapis.com",
-    "privatelink.azure-devices.net",
-    "privatelink.servicebus.windows.net1",
-    "privatelink.azure-devices-provisioning.net",
-    "privatelink.api.adu.microsoft.com",
-    "privatelink.azureiotcentral.com",
-    "privatelink.digitaltwins.azure.net",
-    "privatelink.media.azure.net",
-    "privatelink.azure-automation.net",
-    "privatelink.{regionCode}.backup.windowsazure.com",
-    "privatelink.siterecovery.windowsazure.com",
-    "privatelink.monitor.azure.com",
-    "privatelink.oms.opinsights.azure.com",
-    "privatelink.ods.opinsights.azure.com",
-    "privatelink.agentsvc.azure-automation.net",
-    "privatelink.blob.core.windows.net",
-    "privatelink.purview.azure.com",
-    "privatelink.purviewstudio.azure.com",
-    "privatelink.prod.migration.windowsazure.com",
-    "privatelink.prod.migration.windowsazure.com",
-    "privatelink.azure.com",
-    "privatelink.grafana.azure.com",
-    "privatelink.vaultcore.azure.net",
-    "privatelink.managedhsm.azure.net",
-    "privatelink.azconfig.io",
-    "privatelink.attest.azure.net",
-    "privatelink.blob.core.windows.net",
-    "privatelink.table.core.windows.net",
-    "privatelink.queue.core.windows.net",
-    "privatelink.file.core.windows.net",
-    "privatelink.web.core.windows.net",
-    "privatelink.dfs.core.windows.net",
-    "privatelink.afs.azure.net",
-    "privatelink.blob.core.windows.net",
-    "privatelink.search.windows.net",
-    "privatelink.servicebus.windows.net",
-    "privatelink.azurewebsites.net",
-    "scm.privatelink.azurewebsites.net",
-    "privatelink.service.signalr.net",
-    "privatelink.azurestaticapps.net",
-    "privatelink.servicebus.windows.net"
-  ]
+  type = map(object({
+    zone_name = optional(string, null)
+  }))
+  default = {
+    azure_ml = {
+      zone_name = "privatelink.api.azureml.ms"
+    }
+    azure_ml_notebooks = {
+      zone_name = "privatelink.notebooks.azure.net"
+    }
+    azure_ai_cog_svcs = {
+      zone_name = "privatelink.cognitiveservices.azure.com"
+    }
+    azure_ai_oai = {
+      zone_name = "privatelink.openai.azure.com"
+    }
+    azure_bot_svc_bot = {
+      zone_name = "privatelink.directline.botframework.com"
+    }
+    azure_bot_svc_token = {
+      zone_name = "privatelink.token.botframework.com"
+    }
+    azure_service_hub = {
+      zone_name = "privatelink.servicebus.windows.net"
+    }
+    azure_data_factory = {
+      zone_name = "privatelink.datafactory.azure.net"
+    }
+    azure_data_factory_portal = {
+      zone_name = "privatelink.adf.azure.com"
+    }
+    azure_hdinsight = {
+      zone_name = "privatelink.azurehdinsight.net"
+    }
+    azure_data_explorer = {
+      zone_name = "privatelink.{regionName}.kusto.windows.net"
+    }
+    azure_storage_blob = {
+      zone_name = "privatelink.blob.core.windows.net"
+    }
+    azure_storage_queue = {
+      zone_name = "privatelink.queue.core.windows.net"
+    }
+    azure_storage_table = {
+      zone_name = "privatelink.table.core.windows.net"
+    }
+    azure_storage_file = {
+      zone_name = "privatelink.file.core.windows.net"
+    }
+    azure_storage_web = {
+      zone_name = "privatelink.web.core.windows.net"
+    }
+    azure_data_lake_gen2 = {
+      zone_name = "privatelink.dfs.core.windows.net"
+    }
+    azure_file_sync = {
+      zone_name = "privatelink.afs.azure.net"
+    }
+    azure_power_bi_tenant_analysis = {
+      zone_name = "privatelink.analysis.windows.net"
+    }
+    azure_power_bi_dedicated = {
+      zone_name = "privatelink.pbidedicated.windows.net"
+    }
+    azure_power_bi_power_query = {
+      zone_name = "privatelink.tip1.powerquery.microsoft.com"
+    }
+    azure_databricks_ui_api = {
+      zone_name = "privatelink.azuredatabricks.net"
+    }
+    azure_batch_account = {
+      zone_name = "{regionName}.privatelink.batch.azure.com"
+    }
+    azure_batch_node_mgmt = {
+      zone_name = "{regionName}.service.privatelink.batch.azure.com"
+    }
+    azure_avd_global = {
+      zone_name = "privatelink-global.wvd.microsoft.com"
+    }
+    azure_avd_feed_mgmt = {
+      zone_name = "privatelink.wvd.microsoft.com"
+    }
+    azure_aks_mgmt = {
+      zone_name = "privatelink.{regionName}.azmk8s.io"
+    }
+    azure_acr_registry = {
+      zone_name = "privatelink.azurecr.io"
+    }
+    azure_acr_data = {
+      zone_name = "{regionName}.data.privatelink.azurecr.io"
+    }
+    azure_sql_server = {
+      zone_name = "privatelink.database.windows.net"
+    }
+    azure_cosmos_db_sql = {
+      zone_name = "privatelink.documents.azure.com"
+    }
+    azure_cosmos_db_mongo = {
+      zone_name = "privatelink.mongo.cosmos.azure.com"
+    }
+    azure_cosmos_db_cassandra = {
+      zone_name = "privatelink.cassandra.cosmos.azure.com"
+    }
+    azure_cosmos_db_gremlin = {
+      zone_name = "privatelink.gremlin.cosmos.azure.com"
+    }
+    azure_cosmos_db_table = {
+      zone_name = "privatelink.table.cosmos.azure.com"
+    }
+    azure_cosmos_db_analytical = {
+      zone_name = "privatelink.analytics.cosmos.azure.com"
+    }
+    azure_cosmos_db_postgres = {
+      zone_name = "privatelink.postgres.cosmos.azure.com"
+    }
+    azure_cosmos_db_mysql = {
+      zone_name = "privatelink.mysql.database.azure.com"
+    }
+    azure_cosmos_db_mariadb = {
+      zone_name = "privatelink.mariadb.database.azure.com"
+    }
+    azure_redis_cache = {
+      zone_name = "privatelink.redis.cache.windows.net"
+    }
+    azure_redis_enterprise = {
+      zone_name = "privatelink.redisenterprise.cache.azure.net"
+    }
+    azure_arc_hybrid_compute = {
+      zone_name = "privatelink.his.arc.azure.com"
+    }
+    azure_arc_guest_configuration = {
+      zone_name = "privatelink.guestconfiguration.azure.com"
+    }
+    azure_arc_kubernetes = {
+      zone_name = "privatelink.dp.kubernetesconfiguration.azure.com"
+    }
+    azure_event_grid = {
+      zone_name = "privatelink.eventgrid.azure.net"
+    }
+    azure_api_management = {
+      zone_name = "privatelink.azure-api.net"
+    }
+    azure_healthcare_workspaces = {
+      zone_name = "privatelink.workspace.azurehealthcareapis.com"
+    }
+    azure_healthcare_fhir = {
+      zone_name = "privatelink.fhir.azurehealthcareapis.com"
+    }
+    azure_healthcare_dicom = {
+      zone_name = "privatelink.dicom.azurehealthcareapis.com"
+    }
+    azure_iot_hub = {
+      zone_name = "privatelink.azure-devices.net"
+    }
+    azure_iot_hub_provisioning = {
+      zone_name = "privatelink.azure-devices-provisioning.net"
+    }
+    azure_iot_hub_update = {
+      zone_name = "privatelink.api.adu.microsoft.com"
+    }
+    azure_iot_central = {
+      zone_name = "privatelink.azureiotcentral.com"
+    }
+    azure_digital_twins = {
+      zone_name = "privatelink.digitaltwins.azure.net"
+    }
+    azure_media_services_delivery = {
+      zone_name = "privatelink.media.azure.net"
+    }
+    azure_automation = {
+      zone_name = "privatelink.azure-automation.net"
+    }
+    azure_backup = {
+      zone_name = "privatelink.{regionCode}.backup.windowsazure.com"
+    }
+    azure_site_recovery = {
+      zone_name = "privatelink.siterecovery.windowsazure.com"
+    }
+    azure_monitor = {
+      zone_name = "privatelink.monitor.azure.com"
+    }
+    azure_log_analytics = {
+      zone_name = "privatelink.oms.opinsights.azure.com"
+    }
+    azure_log_analytics_data = {
+      zone_name = "privatelink.ods.opinsights.azure.com"
+    }
+    azure_monitor_agent = {
+      zone_name = "privatelink.agentsvc.azure-automation.net"
+    }
+    azure_purview_account = {
+      zone_name = "privatelink.purview.azure.com"
+    }
+    azure_purview_studio = {
+      zone_name = "privatelink.purviewstudio.azure.com"
+    }
+    azure_migration_service = {
+      zone_name = "privatelink.prod.migration.windowsazure.com"
+    }
+    azure_grafana = {
+      zone_name = "privatelink.grafana.azure.com"
+    }
+    azure_key_vault = {
+      zone_name = "privatelink.vaultcore.azure.net"
+    }
+    azure_managed_hsm = {
+      zone_name = "privatelink.managedhsm.azure.net"
+    }
+    azure_app_configuration = {
+      zone_name = "privatelink.azconfig.io"
+    }
+    azure_attestation = {
+      zone_name = "privatelink.attest.azure.net"
+    }
+    azure_search = {
+      zone_name = "privatelink.search.windows.net"
+    }
+    azure_app_service = {
+      zone_name = "privatelink.azurewebsites.net"
+    }
+    azure_app_service_scm = {
+      zone_name = "scm.privatelink.azurewebsites.net"
+    }
+    azure_signalr_service = {
+      zone_name = "privatelink.service.signalr.net"
+    }
+    azure_static_web_apps = {
+      zone_name = "privatelink.azurestaticapps.net"
+    }
+  }
   description = <<DESCRIPTION
 A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
 
@@ -141,15 +259,27 @@ The folowing Private Link Private DNS Zones have been removed from the default v
 - `privatelink.{dnsPrefix}.database.windows.net`
 - `privatelink.{partitionId}.azurestaticapps.net`
 
+We have also removed the following Private Link Private DNS Zones from the default value for this variable as they should only be created and used with in specific scenarios:
+
+- `privatelink.azure.com`
+
 DESCRIPTION
   nullable    = false
+
 }
 
 variable "virtual_network_resource_ids_to_link_to" {
-  type        = set(string)
-  description = "A set of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created."
-  default = []
-  nullable    = false  
+  type = map(object({
+    vnet_resource_id = optional(string, null)
+  }))
+  default     = {}
+  nullable    = false
+  description = <<DESCRIPTION
+A map of objects of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+
+- `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
+
+DESCRIPTION  
 }
 
 # required AVM interfaces
