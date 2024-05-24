@@ -124,7 +124,7 @@ locals {
     "swedensouth" : "sds"
   }
 
-  private_link_private_dns_zones_replaced_regionName = [for zone in var.private_link_private_dns_zones : replace(zone, "{regionName}", local.location_short_name)]
+  private_link_private_dns_zones_replaced_regionName = [for zone in var.private_link_private_dns_zones : replace(zone["zone_name"], "{regionName}", local.location_short_name)]
   private_link_private_dns_zones_replaced_regionCode = [for zone in local.private_link_private_dns_zones_replaced_regionName : replace(zone, "{regionCode}", local.azure_region_geo_codes_short_name_as_key[local.location_short_name])]
 
 }

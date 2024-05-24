@@ -126,11 +126,14 @@ variable "private_link_private_dns_zones" {
     azure_cosmos_db_postgres = {
       zone_name = "privatelink.postgres.cosmos.azure.com"
     }
-    azure_cosmos_db_mysql = {
-      zone_name = "privatelink.mysql.database.azure.com"
-    }
-    azure_cosmos_db_mariadb = {
+    azure_maria_db_server = {
       zone_name = "privatelink.mariadb.database.azure.com"
+    }
+    azure_postgres_sql_server = {
+      zone_name = "privatelink.postgres.database.azure.com"
+    }
+    azure_mysql_db_server = {
+      zone_name = "privatelink.mysql.database.azure.com"
     }
     azure_redis_cache = {
       zone_name = "privatelink.redis.cache.windows.net"

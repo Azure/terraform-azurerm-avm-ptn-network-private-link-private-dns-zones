@@ -45,3 +45,4 @@ avm.tflint_example.merged.hcl
 *.md.tmp
 # MacOS
 .DS_Store
+.vscode/settings.json
