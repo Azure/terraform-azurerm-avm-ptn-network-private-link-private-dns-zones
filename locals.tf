@@ -132,8 +132,6 @@ locals {
     zone_name = replace(v.zone_name, "{regionCode}", local.azure_region_geo_codes_short_name_as_key[local.location_short_name])
   } }
 
-# Use a DIY approach
-
   combined_private_link_private_dns_zones_replaced_with_vnets_to_link = {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : [
@@ -147,33 +145,5 @@ locals {
       ]
     ) : "${item.zone_key}/${item.vnet_key}" => item
   }
-
-
-#########
-
-# Use setproduct()
-
-  set_of_private_link_private_dns_zones_replaced_regionCode = [
-    for k, v in local.private_link_private_dns_zones_replaced_regionCode_map : {
-      key       = k
-      zone_name = v.zone_name
-    }
-  ]
-
-  set_of_virtual_network_resource_ids_to_link_to = [
-    for k, v in var.virtual_network_resource_ids_to_link_to : {
-      key              = k
-      vnet_resource_id = v.vnet_resource_id
-    }
-  ]
-
-  product_of_private_link_private_dns_zones_replaced_combined_with_vnets_to_link = [
-    for pair in setproduct(local.set_of_private_link_private_dns_zones_replaced_regionCode, local.set_of_virtual_network_resource_ids_to_link_to) : {
-      zone_key   = pair[0].key
-      zone_value = pair[0].zone_name
-      vnet_key   = pair[1].key
-      vnet_value = pair[1].vnet_resource_id
-    }
-  ]
 
 }
