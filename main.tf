@@ -14,7 +14,7 @@ module "avm_res_network_privatednszone" {
 
   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   domain_name         = each.value.zone_value.zone_name
-  virtual_network_links = each.value.vnet_value.vnet_resource_id == null ? {} : {
+  virtual_network_links = each.value.has_vnet ? {} : {
     "vnet_link" = {
       vnetlinkname = "vnet-link"
       vnetid       = each.value.vnet_value.vnet_resource_id
