@@ -132,7 +132,19 @@ locals {
     zone_name = replace(v.zone_name, "{regionCode}", local.azure_region_geo_codes_short_name_as_key[local.location_short_name])
   } }
 
-  combined_private_link_private_dns_zones_replaced_with_vnets_to_link = {
+  combined_private_link_private_dns_zones_replaced_with_vnets_to_link = length(var.virtual_network_resource_ids_to_link_to) == 0 ? {
+    for item in flatten([
+      for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : {
+        zone_key   = zone_key
+        zone_value = zone_value
+        vnet_key   = null
+        vnet_value = {
+          vnet_resource_id = null
+        }
+      }
+      ]
+    ) : "${item.zone_key}/no_vnet" => item
+    } : {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : [
         for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : {

@@ -6,16 +6,22 @@ resource "azurerm_resource_group" "this" {
   tags     = var.tags
 }
 
-# module "avm-res-network-privatednszone" {
-#   for_each = local.private_link_private_dns_zones_replaced_regionCode
+module "avm_res_network_privatednszone" {
+  for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
-#   source  = "Azure/avm-res-network-privatednszone/azurerm"
-#   version = "0.1.1"
+  source  = "Azure/avm-res-network-privatednszone/azurerm"
+  version = "0.1.1"
 
-#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
-#   domain_name         = each.value
-#   # virtual_network_links = 
-# }
+  resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+  domain_name         = each.value.zone_value.zone_name
+  virtual_network_links = each.value.vnet_value.vnet_resource_id == null ? {} : {
+    "vnet_link" = {
+      vnetlinkname = "vnet-link"
+      vnetid       = each.value.vnet_value.vnet_resource_id
+      autoregistration = false
+    }
+  }
+}
 
 # # required AVM resources interfaces
 # # resource "azurerm_management_lock" "this" {
