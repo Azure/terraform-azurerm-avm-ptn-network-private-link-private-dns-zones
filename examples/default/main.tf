@@ -37,12 +37,6 @@ module "naming" {
   version = "~> 0.3"
 }
 
-# This is required for resource modules
-resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
-}
-
 # This is the module call
 # Do not specify location here due to the randomization above.
 # Leaving location as `null` will cause the module to use the resource group location
@@ -50,10 +44,8 @@ resource "azurerm_resource_group" "this" {
 module "test" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-
-  resoruce_group_creation_enabled = false
+  location            = module.regions.regions[random_integer.region_index.result].name
+  resource_group_name = module.naming.resource_group.name_unique
 
   enable_telemetry = false
 }
