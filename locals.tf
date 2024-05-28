@@ -141,6 +141,7 @@ locals {
         vnet_value = {
           vnet_resource_id = null
         }
+        has_vnet = false
       }
       ]
     ) : "${item.zone_key}/no_vnet" => item
@@ -152,6 +153,7 @@ locals {
           zone_value = zone_value
           vnet_key   = vnet_key
           vnet_value = vnet_value
+          has_vnet = true
         }
       ]
       ]
