@@ -14,14 +14,31 @@ module "avm_res_network_privatednszone" {
 
   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   domain_name         = each.value.zone_value.zone_name
-  virtual_network_links = each.value.has_vnet ? {} : {
-    "vnet_link" = {
-      vnetlinkname = "vnet-link"
-      vnetid       = each.value.vnet_value.vnet_resource_id
-      autoregistration = false
+
+  virtual_network_links = each.value.has_vnet ? { for vnet in each.value.vnets : vnet.vnet_key => {
+    vnetlinkname     = "vnet_link-${each.value.zone_key}-${vnet.vnet_key}"
+    vnetid           = vnet.vnet_value.vnet_resource_id
+    autoregistration = false
     }
-  }
+  } : {}
+
+  enable_telemetry = var.enable_telemetry
 }
+
+# resource "azurerm_private_dns_zone" "this" {
+#   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
+
+#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+#   name                = each.value.zone_value.zone_name
+# }
+
+# resource "azurerm_private_dns_zone_virtual_network_link" "this" {
+#   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
+
+#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+#   name = each.value.
+
+# }
 
 # # required AVM resources interfaces
 # # resource "azurerm_management_lock" "this" {

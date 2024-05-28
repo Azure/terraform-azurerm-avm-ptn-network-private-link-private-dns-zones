@@ -65,7 +65,6 @@ module "test" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  depends_on          = [azurerm_virtual_network.this_1, azurerm_virtual_network.this_2]
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
 

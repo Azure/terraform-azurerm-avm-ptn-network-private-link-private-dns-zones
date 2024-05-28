@@ -137,27 +137,29 @@ locals {
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : {
         zone_key   = zone_key
         zone_value = zone_value
-        vnet_key   = null
-        vnet_value = {
-          vnet_resource_id = null
-        }
-        has_vnet = false
+        vnets      = null
+        has_vnet   = false
       }
       ]
-    ) : "${item.zone_key}/no_vnet" => item
+    ) : "${item.zone_key}" => item
     } : {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : [
-        for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : {
+        {
           zone_key   = zone_key
           zone_value = zone_value
-          vnet_key   = vnet_key
-          vnet_value = vnet_value
+          vnets = [
+            for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : {
+              vnet_key   = vnet_key
+              vnet_value = vnet_value
+              has_vnet   = true
+            }
+          ]
           has_vnet = true
         }
       ]
       ]
-    ) : "${item.zone_key}/${item.vnet_key}" => item
+    ) : "${item.zone_key}" => item
   }
 
 }

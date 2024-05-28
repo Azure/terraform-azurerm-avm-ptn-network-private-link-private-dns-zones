@@ -54,7 +54,6 @@ module "test" {
   resource_group_name = azurerm_resource_group.this.name
 
   resoruce_group_creation_enabled = false
-  
 
   enable_telemetry = false
 }
