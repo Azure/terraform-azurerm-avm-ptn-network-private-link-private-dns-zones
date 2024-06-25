@@ -38,17 +38,17 @@ resource "azurerm_resource_group" "this" {
 }
 
 resource "azurerm_virtual_network" "this_1" {
-  name                = "vnet1"
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
   address_space       = ["10.0.1.0/24"]
+  location            = azurerm_resource_group.this.location
+  name                = "vnet1"
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 resource "azurerm_virtual_network" "this_2" {
-  name                = "vnet2"
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
   address_space       = ["10.0.2.0/24"]
+  location            = azurerm_resource_group.this.location
+  name                = "vnet2"
+  resource_group_name = azurerm_resource_group.this.name
 }
 
 module "test" {
