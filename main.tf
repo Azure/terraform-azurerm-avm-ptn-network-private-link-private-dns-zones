@@ -25,21 +25,6 @@ module "avm_res_network_privatednszone" {
   enable_telemetry = var.enable_telemetry
 }
 
-# resource "azurerm_private_dns_zone" "this" {
-#   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
-
-#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
-#   name                = each.value.zone_value.zone_name
-# }
-
-# resource "azurerm_private_dns_zone_virtual_network_link" "this" {
-#   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
-
-#   resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
-#   name = each.value.
-
-# }
-
 # # required AVM resources interfaces
 # # resource "azurerm_management_lock" "this" {
 # #   count = var.lock != null ? 1 : 0
