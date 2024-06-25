@@ -17,27 +17,21 @@ provider "azurerm" {
 }
 
 
-## Section to provide a random Azure region for the resource group
-# This allows us to randomize the region for the resource group.
 module "regions" {
   source  = "Azure/regions/azurerm"
   version = "~> 0.3"
 }
 
-# This allows us to randomize the region for the resource group.
 resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
   min = 0
 }
-## End of section to provide a random Azure region for the resource group
 
-# This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
   version = "~> 0.3"
 }
 
-# This is required for resource modules
 resource "azurerm_resource_group" "this" {
   location = module.regions.regions[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
@@ -57,10 +51,6 @@ resource "azurerm_virtual_network" "this_2" {
   address_space       = ["10.0.2.0/24"]
 }
 
-# This is the module call
-# Do not specify location here due to the randomization above.
-# Leaving location as `null` will cause the module to use the resource group location
-# with a data source.
 module "test" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
@@ -79,5 +69,5 @@ module "test" {
     }
   }
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
