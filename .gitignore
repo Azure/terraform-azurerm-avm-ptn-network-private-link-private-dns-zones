@@ -46,3 +46,5 @@ avm.tflint_example.merged.hcl
 # MacOS
 .DS_Store
 .vscode/settings.json
+avm.tflint_module.hcl
+avm.tflint_module.merged.hcl
