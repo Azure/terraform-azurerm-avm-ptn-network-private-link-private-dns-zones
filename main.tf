@@ -45,7 +45,7 @@ resource "azurerm_role_assignment" "this" {
   for_each = var.resource_group_role_assignments
 
   principal_id                           = each.value.principal_id
-  scope                                  = var.resoruce_group_creation_enabled ? azurerm_resource_group.this.id : data.azurerm_resource_group.this.id
+  scope                                  = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
   condition                              = each.value.condition
   condition_version                      = each.value.condition_version
   delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
