@@ -37,7 +37,7 @@ resource "azurerm_management_lock" "this" {
 
   lock_level = var.lock.kind
   name       = coalesce(var.lock.name, "lock-${var.lock.kind}")
-  scope      = var.resoruce_group_creation_enabled ? azurerm_resource_group.this.id : data.azurerm_resource_group.this.id
+  scope      = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
   notes      = var.lock.kind == "CanNotDelete" ? "Cannot delete the resource or its child resources." : "Cannot delete or modify the resource or its child resources."
 }
 
