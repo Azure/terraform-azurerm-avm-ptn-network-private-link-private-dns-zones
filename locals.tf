@@ -126,7 +126,7 @@ locals {
         has_vnet   = false
       }
       ]
-    ) : "${item.zone_key}" => item
+    ) : item.zone_key => item
     } : {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : [
@@ -144,7 +144,7 @@ locals {
         }
       ]
       ]
-    ) : "${item.zone_key}" => item
+    ) : item.zone_key => item
   }
   location_lowered    = lower(var.location)
   location_short_name = strcontains(local.location_lowered, " ") ? local.azure_region_short_names_display_name_as_key[local.location_lowered] : local.location_lowered
