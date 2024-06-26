@@ -43,9 +43,12 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
+- [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [random_id.telem](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) (resource)
+- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
@@ -114,7 +117,7 @@ Default: `true`
 
 ### <a name="input_lock"></a> [lock](#input\_lock)
 
-Description: Controls the Resource Lock configuration for each of the Private Link Private DNS Zones created and Resource Group, if created. The following properties can be specified:
+Description: Controls the Resource Lock configuration for the Resource Group that hosts the Private DNS Zones. The following properties can be specified:
 
 - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
 - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
@@ -129,35 +132,6 @@ object({
 ```
 
 Default: `null`
-
-### <a name="input_private_link_dns_zones_role_assignments"></a> [private\_link\_dns\_zones\_role\_assignments](#input\_private\_link\_dns\_zones\_role\_assignments)
-
-Description: A map of role assignments to create on each of the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-
-- `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
-- `principal_id` - The ID of the principal to assign the role to.
-- `description` - The description of the role assignment.
-- `skip_service_principal_aad_check` - If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
-- `condition` - The condition which will be used to scope the role assignment.
-- `condition_version` - The version of the condition syntax. Valid values are '2.0'.
-
-> Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
-
-Type:
-
-```hcl
-map(object({
-    role_definition_id_or_name             = string
-    principal_id                           = string
-    description                            = optional(string, null)
-    skip_service_principal_aad_check       = optional(bool, false)
-    condition                              = optional(string, null)
-    condition_version                      = optional(string, null)
-    delegated_managed_identity_resource_id = optional(string, null)
-  }))
-```
-
-Default: `{}`
 
 ### <a name="input_private_link_private_dns_zones"></a> [private\_link\_private\_dns\_zones](#input\_private\_link\_private\_dns\_zones)
 
@@ -435,7 +409,7 @@ Default: `true`
 
 ### <a name="input_resource_group_role_assignments"></a> [resource\_group\_role\_assignments](#input\_resource\_group\_role\_assignments)
 
-Description: A map of role assignments to create on the Resource Group, if `resoruce_group_creation_enabled` is set to `true`. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+Description: A map of role assignments to create on the Resource Group. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
 - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
 - `principal_id` - The ID of the principal to assign the role to.
@@ -492,7 +466,11 @@ The following outputs are exported:
 
 ### <a name="output_combined_private_link_private_dns_zones_replaced_with_vnets_to_link"></a> [combined\_private\_link\_private\_dns\_zones\_replaced\_with\_vnets\_to\_link](#output\_combined\_private\_link\_private\_dns\_zones\_replaced\_with\_vnets\_to\_link)
 
-Description: n/a
+Description: The final map of private link private DNS zones to link to virtual networks including the region name replacements as required.
+
+### <a name="output_resource_group_resource_id"></a> [resource\_group\_resource\_id](#output\_resource\_group\_resource\_id)
+
+Description: The resource ID of the resource group that the Private DNS Zones are deployed into.
 
 ## Modules
 

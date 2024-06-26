@@ -8,7 +8,8 @@ resource "azurerm_resource_group" "this" {
 
 data "azurerm_resource_group" "this" {
   count = var.resoruce_group_creation_enabled ? 0 : 1
-  name  = var.resource_group_name
+
+  name = var.resource_group_name
 }
 
 module "avm_res_network_privatednszone" {
