@@ -1,87 +1,12 @@
-variable "name" {
+variable "location" {
   type        = string
-  description = "The name of the this resource."
-
-  validation {
-    condition     = can(regex("TODO", var.name))
-    error_message = "The name must be TODO." # TODO remove the example below once complete:
-    #condition     = can(regex("^[a-z0-9]{5,50}$", var.name))
-    #error_message = "The name must be between 5 and 50 characters long and can only contain lowercase letters and numbers."
-  }
+  description = "Azure region where the each of the Private Link Private DNS Zones created and Resource Group, if created, will be deployed."
+  nullable    = false
 }
 
-# This is required for most resource modules
 variable "resource_group_name" {
   type        = string
-  description = "The resource group where the resources will be deployed."
-}
-
-# required AVM interfaces
-# remove only if not supported by the resource
-# tflint-ignore: terraform_unused_declarations
-variable "customer_managed_key" {
-  type = object({
-    key_vault_resource_id = string
-    key_name              = string
-    key_version           = optional(string, null)
-    user_assigned_identity = optional(object({
-      resource_id = string
-    }), null)
-  })
-  default     = null
-  description = <<DESCRIPTION
-A map describing customer-managed keys to associate with the resource. This includes the following properties:
-- `key_vault_resource_id` - The resource ID of the Key Vault where the key is stored.
-- `key_name` - The name of the key.
-- `key_version` - (Optional) The version of the key. If not specified, the latest version is used.
-- `user_assigned_identity` - (Optional) An object representing a user-assigned identity with the following properties:
-  - `resource_id` - The resource ID of the user-assigned identity.
-DESCRIPTION  
-}
-
-variable "diagnostic_settings" {
-  type = map(object({
-    name                                     = optional(string, null)
-    log_categories                           = optional(set(string), [])
-    log_groups                               = optional(set(string), ["allLogs"])
-    metric_categories                        = optional(set(string), ["AllMetrics"])
-    log_analytics_destination_type           = optional(string, "Dedicated")
-    workspace_resource_id                    = optional(string, null)
-    storage_account_resource_id              = optional(string, null)
-    event_hub_authorization_rule_resource_id = optional(string, null)
-    event_hub_name                           = optional(string, null)
-    marketplace_partner_resource_id          = optional(string, null)
-  }))
-  default     = {}
-  description = <<DESCRIPTION
-A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-
-- `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
-- `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
-- `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
-- `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
-- `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
-- `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
-- `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.
-- `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.
-- `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
-- `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
-DESCRIPTION  
-  nullable    = false
-
-  validation {
-    condition     = alltrue([for _, v in var.diagnostic_settings : contains(["Dedicated", "AzureDiagnostics"], v.log_analytics_destination_type)])
-    error_message = "Log analytics destination type must be one of: 'Dedicated', 'AzureDiagnostics'."
-  }
-  validation {
-    condition = alltrue(
-      [
-        for _, v in var.diagnostic_settings :
-        v.workspace_resource_id != null || v.storage_account_resource_id != null || v.event_hub_authorization_rule_resource_id != null || v.marketplace_partner_resource_id != null
-      ]
-    )
-    error_message = "At least one of `workspace_resource_id`, `storage_account_resource_id`, `marketplace_partner_resource_id`, or `event_hub_authorization_rule_resource_id`, must be set."
-  }
+  description = "The resource group where the resources will be deployed. Either the name of the new resource group to create or the name of an existing resource group."
 }
 
 variable "enable_telemetry" {
@@ -94,12 +19,6 @@ If it is set to false, then no telemetry will be collected.
 DESCRIPTION
 }
 
-variable "location" {
-  type        = string
-  nullable    = false
-  description = "Azure region where the resource should be deployed."
-}
-
 variable "lock" {
   type = object({
     kind = string
@@ -107,7 +26,7 @@ variable "lock" {
   })
   default     = null
   description = <<DESCRIPTION
-Controls the Resource Lock configuration for this resource. The following properties can be specified:
+Controls the Resource Lock configuration for the Resource Group that hosts the Private DNS Zones. The following properties can be specified:
 
 - `kind` - (Required) The type of lock. Possible values are `\"CanNotDelete\"` and `\"ReadOnly\"`.
 - `name` - (Optional) The name of the lock. If not specified, a name will be generated based on the `kind` value. Changing this forces the creation of a new resource.
@@ -119,87 +38,274 @@ DESCRIPTION
   }
 }
 
-# tflint-ignore: terraform_unused_declarations
-variable "managed_identities" {
-  type = object({
-    system_assigned            = optional(bool, false)
-    user_assigned_resource_ids = optional(set(string), [])
-  })
-  default     = {}
-  description = <<DESCRIPTION
-Controls the Managed Identity configuration on this resource. The following properties can be specified:
-
-- `system_assigned` - (Optional) Specifies if the System Assigned Managed Identity should be enabled.
-- `user_assigned_resource_ids` - (Optional) Specifies a list of User Assigned Managed Identity resource IDs to be assigned to this resource.
-DESCRIPTION
-  nullable    = false
-}
-
-variable "private_endpoints" {
+variable "private_link_private_dns_zones" {
   type = map(object({
-    name = optional(string, null)
-    role_assignments = optional(map(object({
-      role_definition_id_or_name             = string
-      principal_id                           = string
-      description                            = optional(string, null)
-      skip_service_principal_aad_check       = optional(bool, false)
-      condition                              = optional(string, null)
-      condition_version                      = optional(string, null)
-      delegated_managed_identity_resource_id = optional(string, null)
-    })), {})
-    lock = optional(object({
-      kind = string
-      name = optional(string, null)
-    }), null)
-    tags                                    = optional(map(string), null)
-    subnet_resource_id                      = string
-    private_dns_zone_group_name             = optional(string, "default")
-    private_dns_zone_resource_ids           = optional(set(string), [])
-    application_security_group_associations = optional(map(string), {})
-    private_service_connection_name         = optional(string, null)
-    network_interface_name                  = optional(string, null)
-    location                                = optional(string, null)
-    resource_group_name                     = optional(string, null)
-    ip_configurations = optional(map(object({
-      name               = string
-      private_ip_address = string
-    })), {})
+    zone_name = optional(string, null)
   }))
-  default     = {}
+  default = {
+    azure_ml = {
+      zone_name = "privatelink.api.azureml.ms"
+    }
+    azure_ml_notebooks = {
+      zone_name = "privatelink.notebooks.azure.net"
+    }
+    azure_ai_cog_svcs = {
+      zone_name = "privatelink.cognitiveservices.azure.com"
+    }
+    azure_ai_oai = {
+      zone_name = "privatelink.openai.azure.com"
+    }
+    azure_bot_svc_bot = {
+      zone_name = "privatelink.directline.botframework.com"
+    }
+    azure_bot_svc_token = {
+      zone_name = "privatelink.token.botframework.com"
+    }
+    azure_service_hub = {
+      zone_name = "privatelink.servicebus.windows.net"
+    }
+    azure_data_factory = {
+      zone_name = "privatelink.datafactory.azure.net"
+    }
+    azure_data_factory_portal = {
+      zone_name = "privatelink.adf.azure.com"
+    }
+    azure_hdinsight = {
+      zone_name = "privatelink.azurehdinsight.net"
+    }
+    azure_data_explorer = {
+      zone_name = "privatelink.{regionName}.kusto.windows.net"
+    }
+    azure_storage_blob = {
+      zone_name = "privatelink.blob.core.windows.net"
+    }
+    azure_storage_queue = {
+      zone_name = "privatelink.queue.core.windows.net"
+    }
+    azure_storage_table = {
+      zone_name = "privatelink.table.core.windows.net"
+    }
+    azure_storage_file = {
+      zone_name = "privatelink.file.core.windows.net"
+    }
+    azure_storage_web = {
+      zone_name = "privatelink.web.core.windows.net"
+    }
+    azure_data_lake_gen2 = {
+      zone_name = "privatelink.dfs.core.windows.net"
+    }
+    azure_file_sync = {
+      zone_name = "privatelink.afs.azure.net"
+    }
+    azure_power_bi_tenant_analysis = {
+      zone_name = "privatelink.analysis.windows.net"
+    }
+    azure_power_bi_dedicated = {
+      zone_name = "privatelink.pbidedicated.windows.net"
+    }
+    azure_power_bi_power_query = {
+      zone_name = "privatelink.tip1.powerquery.microsoft.com"
+    }
+    azure_databricks_ui_api = {
+      zone_name = "privatelink.azuredatabricks.net"
+    }
+    azure_batch_account = {
+      zone_name = "{regionName}.privatelink.batch.azure.com"
+    }
+    azure_batch_node_mgmt = {
+      zone_name = "{regionName}.service.privatelink.batch.azure.com"
+    }
+    azure_avd_global = {
+      zone_name = "privatelink-global.wvd.microsoft.com"
+    }
+    azure_avd_feed_mgmt = {
+      zone_name = "privatelink.wvd.microsoft.com"
+    }
+    azure_aks_mgmt = {
+      zone_name = "privatelink.{regionName}.azmk8s.io"
+    }
+    azure_acr_registry = {
+      zone_name = "privatelink.azurecr.io"
+    }
+    azure_acr_data = {
+      zone_name = "{regionName}.data.privatelink.azurecr.io"
+    }
+    azure_sql_server = {
+      zone_name = "privatelink.database.windows.net"
+    }
+    azure_cosmos_db_sql = {
+      zone_name = "privatelink.documents.azure.com"
+    }
+    azure_cosmos_db_mongo = {
+      zone_name = "privatelink.mongo.cosmos.azure.com"
+    }
+    azure_cosmos_db_cassandra = {
+      zone_name = "privatelink.cassandra.cosmos.azure.com"
+    }
+    azure_cosmos_db_gremlin = {
+      zone_name = "privatelink.gremlin.cosmos.azure.com"
+    }
+    azure_cosmos_db_table = {
+      zone_name = "privatelink.table.cosmos.azure.com"
+    }
+    azure_cosmos_db_analytical = {
+      zone_name = "privatelink.analytics.cosmos.azure.com"
+    }
+    azure_cosmos_db_postgres = {
+      zone_name = "privatelink.postgres.cosmos.azure.com"
+    }
+    azure_maria_db_server = {
+      zone_name = "privatelink.mariadb.database.azure.com"
+    }
+    azure_postgres_sql_server = {
+      zone_name = "privatelink.postgres.database.azure.com"
+    }
+    azure_mysql_db_server = {
+      zone_name = "privatelink.mysql.database.azure.com"
+    }
+    azure_redis_cache = {
+      zone_name = "privatelink.redis.cache.windows.net"
+    }
+    azure_redis_enterprise = {
+      zone_name = "privatelink.redisenterprise.cache.azure.net"
+    }
+    azure_arc_hybrid_compute = {
+      zone_name = "privatelink.his.arc.azure.com"
+    }
+    azure_arc_guest_configuration = {
+      zone_name = "privatelink.guestconfiguration.azure.com"
+    }
+    azure_arc_kubernetes = {
+      zone_name = "privatelink.dp.kubernetesconfiguration.azure.com"
+    }
+    azure_event_grid = {
+      zone_name = "privatelink.eventgrid.azure.net"
+    }
+    azure_api_management = {
+      zone_name = "privatelink.azure-api.net"
+    }
+    azure_healthcare_workspaces = {
+      zone_name = "privatelink.workspace.azurehealthcareapis.com"
+    }
+    azure_healthcare_fhir = {
+      zone_name = "privatelink.fhir.azurehealthcareapis.com"
+    }
+    azure_healthcare_dicom = {
+      zone_name = "privatelink.dicom.azurehealthcareapis.com"
+    }
+    azure_iot_hub = {
+      zone_name = "privatelink.azure-devices.net"
+    }
+    azure_iot_hub_provisioning = {
+      zone_name = "privatelink.azure-devices-provisioning.net"
+    }
+    azure_iot_hub_update = {
+      zone_name = "privatelink.api.adu.microsoft.com"
+    }
+    azure_iot_central = {
+      zone_name = "privatelink.azureiotcentral.com"
+    }
+    azure_digital_twins = {
+      zone_name = "privatelink.digitaltwins.azure.net"
+    }
+    azure_media_services_delivery = {
+      zone_name = "privatelink.media.azure.net"
+    }
+    azure_automation = {
+      zone_name = "privatelink.azure-automation.net"
+    }
+    azure_backup = {
+      zone_name = "privatelink.{regionCode}.backup.windowsazure.com"
+    }
+    azure_site_recovery = {
+      zone_name = "privatelink.siterecovery.windowsazure.com"
+    }
+    azure_monitor = {
+      zone_name = "privatelink.monitor.azure.com"
+    }
+    azure_log_analytics = {
+      zone_name = "privatelink.oms.opinsights.azure.com"
+    }
+    azure_log_analytics_data = {
+      zone_name = "privatelink.ods.opinsights.azure.com"
+    }
+    azure_monitor_agent = {
+      zone_name = "privatelink.agentsvc.azure-automation.net"
+    }
+    azure_purview_account = {
+      zone_name = "privatelink.purview.azure.com"
+    }
+    azure_purview_studio = {
+      zone_name = "privatelink.purviewstudio.azure.com"
+    }
+    azure_migration_service = {
+      zone_name = "privatelink.prod.migration.windowsazure.com"
+    }
+    azure_grafana = {
+      zone_name = "privatelink.grafana.azure.com"
+    }
+    azure_key_vault = {
+      zone_name = "privatelink.vaultcore.azure.net"
+    }
+    azure_managed_hsm = {
+      zone_name = "privatelink.managedhsm.azure.net"
+    }
+    azure_app_configuration = {
+      zone_name = "privatelink.azconfig.io"
+    }
+    azure_attestation = {
+      zone_name = "privatelink.attest.azure.net"
+    }
+    azure_search = {
+      zone_name = "privatelink.search.windows.net"
+    }
+    azure_app_service = {
+      zone_name = "privatelink.azurewebsites.net"
+    }
+    azure_app_service_scm = {
+      zone_name = "scm.privatelink.azurewebsites.net"
+    }
+    azure_signalr_service = {
+      zone_name = "privatelink.service.signalr.net"
+    }
+    azure_static_web_apps = {
+      zone_name = "privatelink.azurestaticapps.net"
+    }
+  }
   description = <<DESCRIPTION
-A map of private endpoints to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
 
-- `name` - (Optional) The name of the private endpoint. One will be generated if not set.
-- `role_assignments` - (Optional) A map of role assignments to create on the private endpoint. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time. See `var.role_assignments` for more information.
-- `lock` - (Optional) The lock level to apply to the private endpoint. Default is `None`. Possible values are `None`, `CanNotDelete`, and `ReadOnly`.
-- `tags` - (Optional) A mapping of tags to assign to the private endpoint.
-- `subnet_resource_id` - The resource ID of the subnet to deploy the private endpoint in.
-- `private_dns_zone_group_name` - (Optional) The name of the private DNS zone group. One will be generated if not set.
-- `private_dns_zone_resource_ids` - (Optional) A set of resource IDs of private DNS zones to associate with the private endpoint. If not set, no zone groups will be created and the private endpoint will not be associated with any private DNS zones. DNS records must be managed external to this module.
-- `application_security_group_resource_ids` - (Optional) A map of resource IDs of application security groups to associate with the private endpoint. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-- `private_service_connection_name` - (Optional) The name of the private service connection. One will be generated if not set.
-- `network_interface_name` - (Optional) The name of the network interface. One will be generated if not set.
-- `location` - (Optional) The Azure location where the resources will be deployed. Defaults to the location of the resource group.
-- `resource_group_name` - (Optional) The resource group where the resources will be deployed. Defaults to the resource group of this resource.
-- `ip_configurations` - (Optional) A map of IP configurations to create on the private endpoint. If not specified the platform will create one. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-  - `name` - The name of the IP configuration.
-  - `private_ip_address` - The private IP address of the IP configuration.
+**NOTE:**
+
+- Private Link Private DNS Zones that have `{{regionCode}}` in the name will be replaced with the Geo Code of the Region you specified in the `location` variable, if available, as documented [here](https://learn.microsoft.com/azure/private-link/private-endpoint-dns#:~:text=Note-,In%20the%20above%20text%2C%20%7BregionCode%7D%20refers%20to%20the%20region%20code%20(for%20example%2C%20eus%20for%20East%20US%20and%20ne%20for%20North%20Europe).%20Refer%20to%20the%20following%20lists%20for%20regions%20codes%3A,-All%20public%20clouds).
+  - e.g. If `UK South` or `uksouth` was specified as the region in the `location` variable, `{{regionCode}}` would be replaced with `uks` in the Private DNS Zone name.
+- Private Link Private DNS Zones that have `{{regionName}}` in the name will be replaced with the short name of the Region you specified in the `location` variable, if available, as documented [here](https://learn.microsoft.com/azure/private-link/private-endpoint-dns).
+  - e.g. If `UK South` or `uksouth` was specified as the region in the `location` variable, `{{regionName}}` would be replaced with `uksouth` in the Private DNS Zone name.
+
+**IMPORTANT:**
+
+The folowing Private Link Private DNS Zones have been removed from the default value for this variable as they require additional placeholders to be replaced that will only be known by the caller of the module at runtime and cannot be determined by the module itself. If you have a requirement to create these Private Link Private DNS Zones, you must provide the full list of Private Link Private DNS Zones to create as a set in the `private_link_private_dns_zones` variable, using the default value as a reference. The list of Private Link Private DNS Zones that have been removed are:
+
+- `{subzone}.privatelink.{regionName}.azmk8s.io`
+- `privatelink.{dnsPrefix}.database.windows.net`
+- `privatelink.{partitionId}.azurestaticapps.net`
+
+We have also removed the following Private Link Private DNS Zones from the default value for this variable as they should only be created and used with in specific scenarios:
+
+- `privatelink.azure.com`
+
 DESCRIPTION
   nullable    = false
 }
 
-# This variable is used to determine if the private_dns_zone_group block should be included,
-# or if it is to be managed externally, e.g. using Azure Policy.
-# https://github.com/Azure/terraform-azurerm-avm-res-keyvault-vault/issues/32
-# Alternatively you can use AzAPI, which does not have this issue.
-variable "private_endpoints_manage_dns_zone_group" {
+variable "resoruce_group_creation_enabled" {
   type        = bool
   default     = true
+  description = "This variable controls whether or not the resource group should be created. If set to false, the resource group must be created elsewhere and the resource group name must be provided to the module. If set to true, the resource group will be created by the module using the name provided in `resource_group_name`."
   nullable    = false
-  description = "Whether to manage private DNS zone groups with this module. If set to false, you must manage private DNS zone groups externally, e.g. using Azure Policy."
 }
 
-variable "role_assignments" {
+variable "resource_group_role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string
     principal_id                           = string
@@ -211,7 +317,7 @@ variable "role_assignments" {
   }))
   default     = {}
   description = <<DESCRIPTION
-A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+A map of role assignments to create on the Resource Group. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
 - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
 - `principal_id` - The ID of the principal to assign the role to.
@@ -225,10 +331,23 @@ DESCRIPTION
   nullable    = false
 }
 
-
 # tflint-ignore: terraform_unused_declarations
 variable "tags" {
   type        = map(string)
   default     = null
   description = "(Optional) Tags of the resource."
+}
+
+variable "virtual_network_resource_ids_to_link_to" {
+  type = map(object({
+    vnet_resource_id = optional(string, null)
+  }))
+  default     = {}
+  description = <<DESCRIPTION
+A map of objects of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+
+- `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
+
+DESCRIPTION  
+  nullable    = false
 }

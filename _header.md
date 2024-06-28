@@ -1,15 +1,17 @@
-# terraform-azurerm-avm-template
+# terraform-azurerm-avm-ptn-network-private-link-private-dns-zones
 
-This is a template repo for Terraform Azure Verified Modules.
+This module deploys all known Azure Private DNS Zones for Azure Services that support Private Link as documented and detailed here in [Azure Private Endpoint private DNS zone values](https://learn.microsoft.com/azure/private-link/private-endpoint-dns). 
 
-Things to do:
+The module also has logic built in to it to handle the replacements of the following strings in the Private DNS Zone Names to the appropriate Azure Region name, short name or geo-code as required:
 
-1. Set up a GitHub repo environment called `test`.
-1. Configure environment protection rule to ensure that approval is required before deploying to this environment.
-1. Create a user-assigned managed identity in your test subscription.
-1. Create a role assignment for the managed identity on your test subscription, use the minimum required role.
-1. Configure federated identity credentials on the user assigned managed identity. Use the GitHub environment.
-1. Search and update TODOs within the code and remove the TODO comments once complete.
+- `...{regionName}...`
+- `...{regionCode}...`
+
+
+> [!NOTE]  
+> This module only supports Azure Public/Commercial today and **NOT** Azure US Government Cloud (a.k.a. Fairfax) or Azure China Cloud (a.k.a. Mooncake). If you would like to see support added for these clouds please raise an issue/feature request on this repo/module.
+
+---
 
 > [!IMPORTANT]
 > As the overall AVM framework is not GA (generally available) yet - the CI framework and test automation is not fully functional and implemented across all supported languages yet - breaking changes are expected, and additional customer feedback is yet to be gathered and incorporated. Hence, modules **MUST NOT** be published at version `1.0.0` or higher at this time.

@@ -1,9 +1,9 @@
 <!-- BEGIN_TF_DOCS -->
-# Default example
+# Link Private DNS Zones to Virtual Networks and Deploy Private DNS Zones to an Existing Resource Group
 
-This deploys the module in its simplest form.
+This deploys the in a more advanced but more common configuration.
 
-It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link in a new Resource Group that it will create with the name provided.
+It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link.
 
 ```hcl
 terraform {
@@ -28,6 +28,7 @@ provider "azurerm" {
   }
 }
 
+
 module "regions" {
   source  = "Azure/regions/azurerm"
   version = "~> 0.3"
@@ -43,15 +44,44 @@ module "naming" {
   version = "~> 0.3"
 }
 
+resource "azurerm_resource_group" "this" {
+  location = module.regions.regions[random_integer.region_index.result].name
+  name     = module.naming.resource_group.name_unique
+}
+
+resource "azurerm_virtual_network" "this_1" {
+  address_space       = ["10.0.1.0/24"]
+  location            = azurerm_resource_group.this.location
+  name                = "vnet1"
+  resource_group_name = azurerm_resource_group.this.name
+}
+
+resource "azurerm_virtual_network" "this_2" {
+  address_space       = ["10.0.2.0/24"]
+  location            = azurerm_resource_group.this.location
+  name                = "vnet2"
+  resource_group_name = azurerm_resource_group.this.name
+}
 
 module "test" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
-  location            = module.regions.regions[random_integer.region_index.result].name
-  resource_group_name = module.naming.resource_group.name_unique
+
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+
+  resoruce_group_creation_enabled = false
+
+  virtual_network_resource_ids_to_link_to = {
+    "vnet1" = {
+      vnet_resource_id = azurerm_virtual_network.this_1.id
+    }
+    "vnet2" = {
+      vnet_resource_id = azurerm_virtual_network.this_2.id
+    }
+  }
 
   enable_telemetry = var.enable_telemetry
-
 }
 ```
 
@@ -70,12 +100,17 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (~> 3.74)
+
 - <a name="provider_random"></a> [random](#provider\_random) (~> 3.5)
 
 ## Resources
 
 The following resources are used by this module:
 
+- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [azurerm_virtual_network.this_1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
+- [azurerm_virtual_network.this_2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
