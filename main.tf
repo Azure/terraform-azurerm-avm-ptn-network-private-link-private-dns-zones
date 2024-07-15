@@ -29,7 +29,7 @@ module "avm_res_network_privatednszone" {
   } : {}
 
   tags = var.tags
-  
+
   enable_telemetry = var.enable_telemetry
 }
 
