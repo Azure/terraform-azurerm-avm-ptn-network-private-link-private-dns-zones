@@ -62,7 +62,7 @@ module "test" {
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name
 
-  resoruce_group_creation_enabled = false
+  resource_group_creation_enabled = false
 
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {

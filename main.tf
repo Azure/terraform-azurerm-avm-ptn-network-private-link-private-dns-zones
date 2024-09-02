@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "this" {
-  count = var.resoruce_group_creation_enabled ? 1 : 0
+  count = var.resource_group_creation_enabled ? 1 : 0
 
   location = var.location
   name     = var.resource_group_name
@@ -7,7 +7,7 @@ resource "azurerm_resource_group" "this" {
 }
 
 data "azurerm_resource_group" "this" {
-  count = var.resoruce_group_creation_enabled ? 0 : 1
+  count = var.resource_group_creation_enabled ? 0 : 1
 
   name = var.resource_group_name
 }
@@ -18,7 +18,7 @@ module "avm_res_network_privatednszone" {
   source  = "Azure/avm-res-network-privatednszone/azurerm"
   version = "0.1.2"
 
-  resource_group_name = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+  resource_group_name = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   domain_name         = each.value.zone_value.zone_name
 
   virtual_network_links = each.value.has_vnet ? { for vnet in each.value.vnets : vnet.vnet_key => {
@@ -39,7 +39,7 @@ resource "azurerm_management_lock" "this" {
 
   lock_level = var.lock.kind
   name       = coalesce(var.lock.name, "lock-${var.lock.kind}")
-  scope      = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
+  scope      = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
   notes      = var.lock.kind == "CanNotDelete" ? "Cannot delete the resource or its child resources." : "Cannot delete or modify the resource or its child resources."
 }
 
@@ -47,7 +47,7 @@ resource "azurerm_role_assignment" "this" {
   for_each = var.resource_group_role_assignments
 
   principal_id                           = each.value.principal_id
-  scope                                  = var.resoruce_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
+  scope                                  = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
   condition                              = each.value.condition
   condition_version                      = each.value.condition_version
   delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
