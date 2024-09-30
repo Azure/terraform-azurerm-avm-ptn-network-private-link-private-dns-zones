@@ -6,12 +6,6 @@ resource "azurerm_resource_group" "this" {
   tags     = var.tags
 }
 
-# data "azurerm_resource_group" "this" {
-#   count = var.resource_group_creation_enabled ? 0 : 1
-
-#   name = var.resource_group_name
-# }
-
 data "azurerm_client_config" "current" {}
 
 module "avm_res_network_privatednszone" {
