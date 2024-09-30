@@ -9,8 +9,34 @@ resource "azurerm_resource_group" "this" {
 data "azurerm_client_config" "current" {}
 
 module "avm_res_network_privatednszone" {
-  # count = var.deploy_region_specific_zones_only ? 0 : 1 
-  for_each = var.deploy_region_specific_zones_only ? local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link : local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link_only_multi_region_zones
+  for_each = {
+    for k, v in local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link : k => v
+    if !var.deploy_region_specific_zones_only
+  }
+
+  source  = "Azure/avm-res-network-privatednszone/azurerm"
+  version = "0.1.2"
+
+  resource_group_name = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+  domain_name         = each.value.zone_value.zone_name
+
+  virtual_network_links = each.value.has_vnet ? { for vnet in each.value.vnets : vnet.vnet_key => {
+    vnetlinkname     = "vnet_link-${each.value.zone_key}-${vnet.vnet_key}"
+    vnetid           = vnet.vnet_value.vnet_resource_id
+    autoregistration = false
+    }
+  } : {}
+
+  tags = var.tags
+
+  enable_telemetry = var.enable_telemetry
+}
+
+module "avm_res_network_privatednszone_region_only" {
+  for_each = {
+    for k, v in local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link_only_multi_region_zones : k => v
+    if var.deploy_region_specific_zones_only
+  }
 
   source  = "Azure/avm-res-network-privatednszone/azurerm"
   version = "0.1.2"
