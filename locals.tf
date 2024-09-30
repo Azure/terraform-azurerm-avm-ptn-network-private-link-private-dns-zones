@@ -157,8 +157,8 @@ locals {
   resource_group_resource_id         = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
   role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
   combined_private_link_private_dns_zones_replaced_with_vnets_to_link_only_multi_region_zones = {
-    for key, value in local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link :
-    key => value
-    if strcontains(value.zone_value.zone_name, local.azure_region_geo_codes_short_name_as_key[local.location_short_name]) || strcontains(value.zone_value.zone_name, local.location_short_name)
+    for k, v in local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link :
+    k => v
+    if strcontains(v.zone_value.zone_name, local.azure_region_geo_codes_short_name_as_key[local.location_short_name]) || strcontains(v.zone_value.zone_name, local.location_short_name)
   }
 }
