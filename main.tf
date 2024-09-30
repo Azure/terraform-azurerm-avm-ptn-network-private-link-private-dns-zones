@@ -9,7 +9,8 @@ resource "azurerm_resource_group" "this" {
 data "azurerm_client_config" "current" {}
 
 module "avm_res_network_privatednszone" {
-  for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
+  # count = var.deploy_region_specific_zones_only ? 0 : 1 
+  for_each = var.deploy_region_specific_zones_only ? local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link : local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link_only_multi_region_zones
 
   source  = "Azure/avm-res-network-privatednszone/azurerm"
   version = "0.1.2"

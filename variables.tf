@@ -351,3 +351,9 @@ A map of objects of Virtual Network Resource IDs to link to the Private Link Pri
 DESCRIPTION  
   nullable    = false
 }
+
+variable "deploy_region_specific_zones_only" {
+  type        = bool
+  default     = false
+  description = "This variable controls whether or not to deploy only the region-specific Private Link Private DNS Zones. If set to true, only the Private Link Private DNS Zones that have region-specific or geo code placeholders will be deployed. This is useful if calling the module multiple times for multi-region scenarios."
+}
