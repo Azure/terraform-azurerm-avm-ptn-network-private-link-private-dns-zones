@@ -91,5 +91,10 @@ module "test" {
     }
   }
 
+  tags = {
+    "env"             = "example"
+    "example-tag-key" = "example tag value"
+  }
+
   enable_telemetry = var.enable_telemetry
 }

@@ -21,6 +21,7 @@ module "avm_res_network_privatednszone" {
     vnetlinkname     = "vnet_link-${each.value.zone_key}-${vnet.vnet_key}"
     vnetid           = vnet.vnet_value.vnet_resource_id
     autoregistration = false
+    tags             = var.tags
     }
   } : {}
 
