@@ -28,6 +28,7 @@ provider "azurerm" {
   }
 }
 
+data "azurerm_client_config" "current" {}
 
 module "regions" {
   source  = "Azure/regions/azurerm"
@@ -81,6 +82,14 @@ module "test" {
     }
   }
 
+  resource_group_role_assignments = {
+    "rbac-asi-1" = {
+      role_definition_id_or_name       = "Reader"
+      principal_id                     = data.azurerm_client_config.current.object_id
+      skip_service_principal_aad_check = true
+    }
+  }
+
   enable_telemetry = var.enable_telemetry
 }
 ```
@@ -104,6 +113,7 @@ The following resources are used by this module:
 - [azurerm_virtual_network.this_1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [azurerm_virtual_network.this_2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs

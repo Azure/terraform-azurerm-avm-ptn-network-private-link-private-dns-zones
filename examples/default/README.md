@@ -28,6 +28,8 @@ provider "azurerm" {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 module "regions" {
   source  = "Azure/regions/azurerm"
   version = "~> 0.3"
@@ -43,12 +45,19 @@ module "naming" {
   version = "~> 0.3"
 }
 
-
 module "test" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
+
+  resource_group_role_assignments = {
+    "rbac-asi-1" = {
+      role_definition_id_or_name       = "Reader"
+      principal_id                     = data.azurerm_client_config.current.object_id
+      skip_service_principal_aad_check = true
+    }
+  }
 
   enable_telemetry = var.enable_telemetry
 
@@ -71,6 +80,7 @@ The following requirements are needed by this module:
 The following resources are used by this module:
 
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
