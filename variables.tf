@@ -110,7 +110,7 @@ variable "private_link_private_dns_zones" {
       zone_name = "privatelink.azuredatabricks.net"
     }
     azure_batch = {
-      zone_name = "'privatelink.batch.azure.com'"
+      zone_name = "privatelink.batch.azure.com"
     }
     azure_avd_global = {
       zone_name = "privatelink-global.wvd.microsoft.com"

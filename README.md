@@ -182,7 +182,7 @@ Default:
     "zone_name": "privatelink.{regionCode}.backup.windowsazure.com"
   },
   "azure_batch": {
-    "zone_name": "'privatelink.batch.azure.com'"
+    "zone_name": "privatelink.batch.azure.com"
   },
   "azure_bot_svc_bot": {
     "zone_name": "privatelink.directline.botframework.com"
