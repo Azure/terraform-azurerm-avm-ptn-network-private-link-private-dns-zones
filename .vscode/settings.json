@@ -1,23 +1,4 @@
 {
   "editor.bracketPairColorization.enabled": true,
-  "workbench.colorCustomizations": {
-    "activityBar.activeBackground": "#f8a3fa",
-    "activityBar.background": "#f8a3fa",
-    "activityBar.foreground": "#15202b",
-    "activityBar.inactiveForeground": "#15202b99",
-    "activityBarBadge.background": "#797607",
-    "activityBarBadge.foreground": "#e7e7e7",
-    "commandCenter.border": "#15202b99",
-    "sash.hoverBorder": "#f8a3fa",
-    "statusBar.background": "#f473f7",
-    "statusBar.foreground": "#15202b",
-    "statusBarItem.hoverBackground": "#f043f4",
-    "statusBarItem.remoteBackground": "#f473f7",
-    "statusBarItem.remoteForeground": "#15202b",
-    "titleBar.activeBackground": "#f473f7",
-    "titleBar.activeForeground": "#15202b",
-    "titleBar.inactiveBackground": "#f473f799",
-    "titleBar.inactiveForeground": "#15202b99"
-  },
   "peacock.color": "#f473f7",
 }

@@ -27,7 +27,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.116.0, < 4.0)
 
 - <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
@@ -439,7 +439,7 @@ The following Modules are called:
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.1.2
+Version: 0.2.1
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
