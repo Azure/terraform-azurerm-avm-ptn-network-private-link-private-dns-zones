@@ -3,7 +3,7 @@
 
 This deploys the module in a more advanced and rarer configuration.
 
-It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link.
+It will deploy custom private DNS zones into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link.
 
 ```hcl
 terraform {
@@ -72,6 +72,15 @@ module "test" {
   resource_group_name = azurerm_resource_group.this.name
 
   resource_group_creation_enabled = false
+
+  private_link_private_dns_zones = {
+    "custom_zone_1" = {
+      zone_name = "custom-example-1.int"
+    }
+    "custom_zone_2" = {
+      zone_name = "custom-example-2.local"
+    }
+  }
 
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
