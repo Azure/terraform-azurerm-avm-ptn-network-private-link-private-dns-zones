@@ -27,7 +27,7 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (~> 3.71)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.116.0, < 4.0)
 
 - <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
@@ -42,8 +42,8 @@ The following resources are used by this module:
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [modtm_telemetry.telemetry](https://registry.terraform.io/providers/Azure/modtm/latest/docs/resources/telemetry) (resource)
 - [random_uuid.telemetry](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) (resource)
+- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 - [azurerm_client_config.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) (data source)
 - [modtm_module_source.telemetry](https://registry.terraform.io/providers/Azure/modtm/latest/docs/data-sources/module_source) (data source)
 
 <!-- markdownlint-disable MD013 -->
@@ -181,11 +181,8 @@ Default:
   "azure_backup": {
     "zone_name": "privatelink.{regionCode}.backup.windowsazure.com"
   },
-  "azure_batch_account": {
-    "zone_name": "{regionName}.privatelink.batch.azure.com"
-  },
-  "azure_batch_node_mgmt": {
-    "zone_name": "{regionName}.service.privatelink.batch.azure.com"
+  "azure_batch": {
+    "zone_name": "privatelink.batch.azure.com"
   },
   "azure_bot_svc_bot": {
     "zone_name": "privatelink.directline.botframework.com"
@@ -442,7 +439,7 @@ The following Modules are called:
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.1.2
+Version: 0.2.1
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection

@@ -65,6 +65,15 @@ module "test" {
 
   resource_group_creation_enabled = false
 
+  private_link_private_dns_zones = {
+    "custom_zone_1" = {
+      zone_name = "custom-example-1.int"
+    }
+    "custom_zone_2" = {
+      zone_name = "custom-example-2.local"
+    }
+  }
+
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
       vnet_resource_id = azurerm_virtual_network.this_1.id
@@ -80,6 +89,11 @@ module "test" {
       principal_id                     = data.azurerm_client_config.current.object_id
       skip_service_principal_aad_check = true
     }
+  }
+
+  tags = {
+    "env"             = "example"
+    "example-tag-key" = "example tag value"
   }
 
   enable_telemetry = var.enable_telemetry

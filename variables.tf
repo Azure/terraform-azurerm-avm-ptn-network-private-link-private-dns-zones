@@ -109,11 +109,8 @@ variable "private_link_private_dns_zones" {
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
     }
-    azure_batch_account = {
-      zone_name = "{regionName}.privatelink.batch.azure.com"
-    }
-    azure_batch_node_mgmt = {
-      zone_name = "{regionName}.service.privatelink.batch.azure.com"
+    azure_batch = {
+      zone_name = "privatelink.batch.azure.com"
     }
     azure_avd_global = {
       zone_name = "privatelink-global.wvd.microsoft.com"

@@ -6,17 +6,13 @@ resource "azurerm_resource_group" "this" {
   tags     = var.tags
 }
 
-data "azurerm_resource_group" "this" {
-  count = var.resource_group_creation_enabled ? 0 : 1
-
-  name = var.resource_group_name
-}
+data "azurerm_client_config" "current" {}
 
 module "avm_res_network_privatednszone" {
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
   source  = "Azure/avm-res-network-privatednszone/azurerm"
-  version = "0.1.2"
+  version = "0.2.1"
 
   resource_group_name = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   domain_name         = each.value.zone_value.zone_name
@@ -25,6 +21,7 @@ module "avm_res_network_privatednszone" {
     vnetlinkname     = "vnet_link-${each.value.zone_key}-${vnet.vnet_key}"
     vnetid           = vnet.vnet_value.vnet_resource_id
     autoregistration = false
+    tags             = var.tags
     }
   } : {}
 
@@ -39,7 +36,7 @@ resource "azurerm_management_lock" "this" {
 
   lock_level = var.lock.kind
   name       = coalesce(var.lock.name, "lock-${var.lock.kind}")
-  scope      = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
+  scope      = local.resource_group_resource_id
   notes      = var.lock.kind == "CanNotDelete" ? "Cannot delete the resource or its child resources." : "Cannot delete or modify the resource or its child resources."
 }
 
@@ -47,7 +44,7 @@ resource "azurerm_role_assignment" "this" {
   for_each = var.resource_group_role_assignments
 
   principal_id                           = each.value.principal_id
-  scope                                  = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : data.azurerm_resource_group.this[0].id
+  scope                                  = local.resource_group_resource_id
   condition                              = each.value.condition
   condition_version                      = each.value.condition_version
   delegated_managed_identity_resource_id = each.value.delegated_managed_identity_resource_id
