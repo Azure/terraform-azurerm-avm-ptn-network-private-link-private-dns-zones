@@ -427,6 +427,10 @@ The following outputs are exported:
 
 Description: The final map of private link private DNS zones to link to virtual networks including the region name replacements as required.
 
+### <a name="output_private_dns_zone_resource_ids"></a> [private\_dns\_zone\_resource\_ids](#output\_private\_dns\_zone\_resource\_ids)
+
+Description: The map of private DNS zones to resource ids.
+
 ### <a name="output_resource_group_resource_id"></a> [resource\_group\_resource\_id](#output\_resource\_group\_resource\_id)
 
 Description: The resource ID of the resource group that the Private DNS Zones are deployed into.
