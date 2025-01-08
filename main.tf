@@ -12,7 +12,7 @@ module "avm_res_network_privatednszone" {
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
   source  = "Azure/avm-res-network-privatednszone/azurerm"
-  version = "0.2.1"
+  version = "0.2.2"
 
   resource_group_name = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   domain_name         = each.value.zone_value.zone_name
