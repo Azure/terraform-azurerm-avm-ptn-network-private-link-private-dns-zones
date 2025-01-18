@@ -268,6 +268,15 @@ variable "private_link_private_dns_zones" {
     azure_static_web_apps = {
       zone_name = "privatelink.azurestaticapps.net"
     }
+    azure_synapse_sql = {
+      zone_name = "privatelink.sql.azuresynapse.net"
+    }
+    azure_synapse_dev = {
+      zone_name = "privatelink.dev.azuresynapse.net"
+    }
+    azure_web_pubsub = {
+      zone_name = "privatelink.webpubsub.azure.com"
+    }
   }
   description = <<DESCRIPTION
 A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
@@ -345,6 +354,6 @@ A map of objects of Virtual Network Resource IDs to link to the Private Link Pri
 
 - `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 
-DESCRIPTION  
+DESCRIPTION
   nullable    = false
 }
