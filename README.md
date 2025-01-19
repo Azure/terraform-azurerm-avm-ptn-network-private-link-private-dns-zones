@@ -354,6 +354,15 @@ Default:
   },
   "azure_storage_web": {
     "zone_name": "privatelink.web.core.windows.net"
+  },
+  "azure_synapse_dev": {
+    "zone_name": "privatelink.dev.azuresynapse.net"
+  },
+  "azure_synapse_sql": {
+    "zone_name": "privatelink.sql.azuresynapse.net"
+  },
+  "azure_web_pubsub": {
+    "zone_name": "privatelink.webpubsub.azure.com"
   }
 }
 ```
