@@ -1,9 +1,9 @@
 <!-- BEGIN_TF_DOCS -->
-# Link Private DNS Zones to Virtual Networks and Deploy Private DNS Zones to an Existing Resource Group
+# Deploy to multiple regions with their own vNets
 
-This deploys the in a more advanced but more common configuration.
+This deploys the in a more advanced configuration and also allows a scale test.
 
-It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link.
+It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link for 2 regions.
 
 ```hcl
 terraform {
@@ -30,46 +30,40 @@ provider "azurerm" {
 
 data "azurerm_client_config" "current" {}
 
+# Region 1
 module "regions" {
   source  = "Azure/regions/azurerm"
   version = "~> 0.3"
 }
 
-resource "random_integer" "region_index" {
+resource "random_integer" "region_index_1" {
   max = length(module.regions.regions) - 1
   min = 0
 }
 
-module "naming" {
+module "naming_1" {
   source  = "Azure/naming/azurerm"
   version = "~> 0.3"
 }
 
-resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+resource "azurerm_resource_group" "region_1" {
+  location = module.regions.regions[random_integer.region_index_1.result].name
+  name     = module.naming_1.resource_group.name_unique
 }
 
 resource "azurerm_virtual_network" "this_1" {
   address_space       = ["10.0.1.0/24"]
-  location            = azurerm_resource_group.this.location
+  location            = azurerm_resource_group.region_1.location
   name                = "vnet1"
-  resource_group_name = azurerm_resource_group.this.name
+  resource_group_name = azurerm_resource_group.region_1.name
 }
 
-resource "azurerm_virtual_network" "this_2" {
-  address_space       = ["10.0.2.0/24"]
-  location            = azurerm_resource_group.this.location
-  name                = "vnet2"
-  resource_group_name = azurerm_resource_group.this.name
-}
-
-module "test" {
+module "test_region_1" {
   source = "../../"
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
+  location            = azurerm_resource_group.region_1.location
+  resource_group_name = azurerm_resource_group.region_1.name
 
   resource_group_creation_enabled = false
 
@@ -77,6 +71,55 @@ module "test" {
     "vnet1" = {
       vnet_resource_id = azurerm_virtual_network.this_1.id
     }
+    "vnet2" = {
+      vnet_resource_id = azurerm_virtual_network.this_2.id
+    }
+  }
+
+  resource_group_role_assignments = {
+    "rbac-asi-1" = {
+      role_definition_id_or_name       = "Reader"
+      principal_id                     = data.azurerm_client_config.current.object_id
+      skip_service_principal_aad_check = true
+    }
+  }
+
+  enable_telemetry = var.enable_telemetry
+}
+
+# Region 2
+resource "random_integer" "region_index_2" {
+  max = length(module.regions.regions) - 2
+  min = 0
+}
+
+module "naming_2" {
+  source  = "Azure/naming/azurerm"
+  version = "~> 0.3"
+}
+
+resource "azurerm_resource_group" "region_2" {
+  location = module.regions.regions[random_integer.region_index_2.result].name
+  name     = module.naming_2.resource_group.name_unique
+}
+
+resource "azurerm_virtual_network" "this_2" {
+  address_space       = ["10.0.2.0/24"]
+  location            = azurerm_resource_group.region_2.location
+  name                = "vnet2"
+  resource_group_name = azurerm_resource_group.region_2.name
+}
+
+module "test_region_2" {
+  source = "../../"
+  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
+
+  location            = azurerm_resource_group.region_2.location
+  resource_group_name = azurerm_resource_group.region_2.name
+
+  resource_group_creation_enabled = false
+
+  virtual_network_resource_ids_to_link_to = {
     "vnet2" = {
       vnet_resource_id = azurerm_virtual_network.this_2.id
     }
@@ -109,10 +152,12 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [azurerm_resource_group.region_1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
+- [azurerm_resource_group.region_2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [azurerm_virtual_network.this_1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [azurerm_virtual_network.this_2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
-- [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [random_integer.region_index_1](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
+- [random_integer.region_index_2](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 - [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
@@ -142,7 +187,13 @@ No outputs.
 
 The following Modules are called:
 
-### <a name="module_naming"></a> [naming](#module\_naming)
+### <a name="module_naming_1"></a> [naming\_1](#module\_naming\_1)
+
+Source: Azure/naming/azurerm
+
+Version: ~> 0.3
+
+### <a name="module_naming_2"></a> [naming\_2](#module\_naming\_2)
 
 Source: Azure/naming/azurerm
 
@@ -154,7 +205,13 @@ Source: Azure/regions/azurerm
 
 Version: ~> 0.3
 
-### <a name="module_test"></a> [test](#module\_test)
+### <a name="module_test_region_1"></a> [test\_region\_1](#module\_test\_region\_1)
+
+Source: ../../
+
+Version:
+
+### <a name="module_test_region_2"></a> [test\_region\_2](#module\_test\_region\_2)
 
 Source: ../../
 
