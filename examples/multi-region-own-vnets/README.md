@@ -71,9 +71,6 @@ module "test_region_1" {
     "vnet1" = {
       vnet_resource_id = azurerm_virtual_network.this_1.id
     }
-    "vnet2" = {
-      vnet_resource_id = azurerm_virtual_network.this_2.id
-    }
   }
 
   resource_group_role_assignments = {
