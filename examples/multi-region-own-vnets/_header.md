@@ -1,4 +1,4 @@
-# Deploy to multiple regions with their own vNets
+# Deploys Private Link DNS Zones to multiple regions and link with their own vNets
 
 This deploys the in a more advanced configuration and also allows a scale test.
 
