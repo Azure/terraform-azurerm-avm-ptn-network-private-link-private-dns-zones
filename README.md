@@ -412,6 +412,43 @@ Type: `map(string)`
 
 Default: `null`
 
+### <a name="input_timeouts"></a> [timeouts](#input\_timeouts)
+
+Description: A map of timeouts objects, per resource type, to apply to the creation and destruction of resources the following resources:
+
+- `dns_zones` - (Optional) The timeouts for DNS Zones.
+- `vnet_links` - (Optional) The timeouts for DNS Zones Virtual Network Links.
+
+Each timeout object has the following optional attributes:
+
+- `create` - (Optional) The timeout for creating the resource. Defaults to `5m` apart from policy assignments, where this is set to `15m`.
+- `delete` - (Optional) The timeout for deleting the resource. Defaults to `5m`.
+- `update` - (Optional) The timeout for updating the resource. Defaults to `5m`.
+- `read` - (Optional) The timeout for reading the resource. Defaults to `5m`.
+
+Type:
+
+```hcl
+object({
+    dns_zones = optional(object({
+      create = optional(string, "30m")
+      delete = optional(string, "30m")
+      update = optional(string, "30m")
+      read   = optional(string, "5m")
+      }), {}
+    )
+    vnet_links = optional(object({
+      create = optional(string, "30m")
+      delete = optional(string, "30m")
+      update = optional(string, "30m")
+      read   = optional(string, "5m")
+      }), {}
+    )
+  })
+```
+
+Default: `{}`
+
 ### <a name="input_virtual_network_resource_ids_to_link_to"></a> [virtual\_network\_resource\_ids\_to\_link\_to](#input\_virtual\_network\_resource\_ids\_to\_link\_to)
 
 Description: A map of objects of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -452,7 +489,7 @@ The following Modules are called:
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.2.2
+Version: 0.3.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
