@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # Deploys Private Link DNS Zones to multiple regions and link with their own vNets
 
-This deploys the in a more advanced configuration and also allows a scale test.
+This deploys the in a more advanced configuration and also allows a scale test for the module.
 
 It will deploy all known Azure Private DNS Zones for Azure Services that support Private Link into an existing Resource Group and will also link each of the Private DNS Zones to the Virtual Networks provided via a Private DNS Zone Virtual Network Link once in each region in the test.
 
@@ -81,6 +81,21 @@ module "test_region_1" {
     }
   }
 
+  timeouts = {
+    dns_zones = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+    vnet_links = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+  }
+
   enable_telemetry = var.enable_telemetry
 }
 
@@ -127,6 +142,21 @@ module "test_region_2" {
       role_definition_id_or_name       = "Reader"
       principal_id                     = data.azurerm_client_config.current.object_id
       skip_service_principal_aad_check = true
+    }
+  }
+
+  timeouts = {
+    dns_zones = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+    vnet_links = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
     }
   }
 

@@ -73,6 +73,21 @@ module "test_region_1" {
     }
   }
 
+  timeouts = {
+    dns_zones = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+    vnet_links = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+  }
+
   enable_telemetry = var.enable_telemetry
 }
 
@@ -119,6 +134,21 @@ module "test_region_2" {
       role_definition_id_or_name       = "Reader"
       principal_id                     = data.azurerm_client_config.current.object_id
       skip_service_principal_aad_check = true
+    }
+  }
+
+  timeouts = {
+    dns_zones = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
+    }
+    vnet_links = {
+      create = "50m"
+      delete = "50m"
+      read   = "10m"
+      update = "50m"
     }
   }
 
