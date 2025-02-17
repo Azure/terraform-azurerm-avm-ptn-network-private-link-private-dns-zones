@@ -56,7 +56,8 @@ locals {
     "eastasia" : "ea",
     "chilecentral" : "clc",
     "westus" : "wus",
-    "swedensouth" : "sds"
+    "swedensouth" : "sds",
+    "indonesiacentral" : "idc"
   }
   azure_region_short_names_display_name_as_key = {
     "australia southeast" : "australiasoutheast",
@@ -115,7 +116,8 @@ locals {
     "south africa west" : "southafricawest",
     "west us 3" : "westus3",
     "taiwan north" : "taiwannorth",
-    "sweden central" : "swedencentral"
+    "sweden central" : "swedencentral",
+    "indonesia central" : "indonesiacentral"
   }
   combined_private_link_private_dns_zones_replaced_with_vnets_to_link = length(var.virtual_network_resource_ids_to_link_to) == 0 ? {
     for item in flatten([
