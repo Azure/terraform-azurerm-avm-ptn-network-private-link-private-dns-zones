@@ -11,6 +11,10 @@ data "azurerm_client_config" "current" {}
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.5.0"
+
+  recommended_filter = false
+
+  enable_telemetry = var.enable_telemetry
 }
 
 module "avm_res_network_privatednszone" {
