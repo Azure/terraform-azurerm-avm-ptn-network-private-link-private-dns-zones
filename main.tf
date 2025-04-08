@@ -8,6 +8,11 @@ resource "azurerm_resource_group" "this" {
 
 data "azurerm_client_config" "current" {}
 
+module "regions" {
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.5.0"
+}
+
 module "avm_res_network_privatednszone" {
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 

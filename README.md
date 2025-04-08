@@ -491,6 +491,12 @@ Source: Azure/avm-res-network-privatednszone/azurerm
 
 Version: 0.3.0
 
+### <a name="module_regions"></a> [regions](#module\_regions)
+
+Source: Azure/avm-utl-regions/azurerm
+
+Version: 0.5.0
+
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
 
