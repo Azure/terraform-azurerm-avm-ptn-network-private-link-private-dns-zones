@@ -5,7 +5,11 @@ output "combined_private_link_private_dns_zones_replaced_with_vnets_to_link" {
 
 output "private_dns_zone_resource_ids" {
   description = "The map of private DNS zones to resource ids."
-  value       = { for key, mod in module.avm_res_network_privatednszone : key => mod.resource_id }
+  value = { for key, mod in module.avm_res_network_privatednszone : key => {
+    zone_id        = mod.resource_id
+    zone_group_ids = var.private_link_private_dns_zones[key].subresources
+    }
+  }
 }
 
 output "resource_group_resource_id" {
