@@ -41,79 +41,79 @@ DESCRIPTION
 variable "private_link_private_dns_zones" {
   type = map(object({
     zone_name = optional(string, null)
-    subresources = optional(list(string), null)
+    groups_ids = optional(list(string), null)
   }))
   default = {
     azure_ml = {
       zone_name = "privatelink.api.azureml.ms"
-      subresources = [
+      groups_ids = [
         "amlworkspace"
       ]
     }
     azure_ml_notebooks = {
       zone_name = "privatelink.notebooks.azure.net"
-      subresources = [
+      groups_ids = [
         "amlworkspace"
       ]
     }
     azure_ai_cog_svcs = {
       zone_name = "privatelink.cognitiveservices.azure.com"
-      subresources = [
+      groups_ids = [
         "account"
       ]
     }
     azure_ai_oai = {
       zone_name = "privatelink.openai.azure.com"
-      subresources = [
+      groups_ids = [
         "account"
       ]
     }
     azure_bot_svc_bot = {
       zone_name = "privatelink.directline.botframework.com"
-      subresources = [
+      groups_ids = [
         "Bot"
       ]
     }
     azure_bot_svc_token = {
       zone_name = "privatelink.token.botframework.com"
-      subresources = [
+      groups_ids = [
         "Token"
       ]
     }
     azure_service_hub = {
       zone_name = "privatelink.servicebus.windows.net"
-      subresources = [
+      groups_ids = [
         "namespace"
       ]
     }
     azure_data_factory = {
       zone_name = "privatelink.datafactory.azure.net"
-      subresources = [
+      groups_ids = [
         "dataFactory"
       ]
     }
     azure_data_factory_portal = {
       zone_name = "privatelink.adf.azure.com"
-      subresources = [
+      groups_ids = [
         "portal"
       ]
     }
     azure_hdinsight = {
       zone_name = "privatelink.azurehdinsight.net"
-      subresources = [
+      groups_ids = [
         "gateway",
         "headnode"
       ]
     }
     azure_data_explorer = {
       zone_name = "privatelink.{regionName}.kusto.windows.net"
-      subresources = [
+      groups_ids = [
         "cluster"
       ]
     }
     azure_storage_blob = {
       zone_name = "privatelink.blob.core.windows.net"
-      subresources = [
+      groups_ids = [
         "blob",
         "blob_secondary",
         "disks",
@@ -122,207 +122,207 @@ variable "private_link_private_dns_zones" {
     }
     azure_storage_queue = {
       zone_name = "privatelink.queue.core.windows.net"
-      subresources = [
+      groups_ids = [
         "queue",
         "queue_secondary"
       ]
     }
     azure_storage_table = {
       zone_name = "privatelink.table.core.windows.net"
-      subresources = [
+      groups_ids = [
         "table",
         "table_secondary"
       ]
     }
     azure_storage_file = {
       zone_name = "privatelink.file.core.windows.net"
-      subresources = [
+      groups_ids = [
         "file",
         "file_secondary"
       ]
     }
     azure_storage_web = {
       zone_name = "privatelink.web.core.windows.net"
-      subresources = [
+      groups_ids = [
         "web",
         "web_secondary"
       ]
     }
     azure_data_lake_gen2 = {
       zone_name = "privatelink.dfs.core.windows.net"
-      subresources = [
+      groups_ids = [
         "dfs",
         "dfs_secondary"
       ]
     }
     azure_file_sync = {
       zone_name = "privatelink.afs.azure.net"
-      subresources = [
+      groups_ids = [
         "afs"
       ]
     }
     azure_power_bi_tenant_analysis = {
       zone_name = "privatelink.analysis.windows.net"
-      subresources = [
+      groups_ids = [
         "tenant"
       ]
     }
     azure_power_bi_dedicated = {
       zone_name = "privatelink.pbidedicated.windows.net"
-      subresources = [
+      groups_ids = [
         "tenant"
       ]
     }
     azure_power_bi_power_query = {
       zone_name = "privatelink.tip1.powerquery.microsoft.com"
-      subresources = [
+      groups_ids = [
         "tenant"
       ]
     }
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
-      subresources = [
+      groups_ids = [
         "databricks_ui_api",
         "browser_authentication"
       ]
     }
     azure_batch = {
       zone_name = "privatelink.batch.azure.com"
-      subresources = [
+      groups_ids = [
         "batchAccount",
         "nodeManagement"
       ]
     }
     azure_avd_global = {
       zone_name = "privatelink-global.wvd.microsoft.com"
-      subresources = [
+      groups_ids = [
         "global"
       ]
     }
     azure_avd_feed_mgmt = {
       zone_name = "privatelink.wvd.microsoft.com"
-      subresources = [
+      groups_ids = [
         "feed",
         "connection"
       ]
     }
     azure_aks_mgmt = {
       zone_name = "privatelink.{regionName}.azmk8s.io"
-      subresources = [
+      groups_ids = [
         "management"
       ]
     }
     azure_acr_registry = {
       zone_name = "privatelink.azurecr.io"
-      subresources = [
+      groups_ids = [
         "registry"
       ]
     }
     azure_acr_data = {
       zone_name = "{regionName}.data.privatelink.azurecr.io"
-      subresources = [
+      groups_ids = [
         "registry"
       ]
     }
     azure_sql_server = {
       zone_name = "privatelink.database.windows.net"
-      subresources = [
+      groups_ids = [
         "sqlServer"
       ]
     }
     azure_cosmos_db_sql = {
       zone_name = "privatelink.documents.azure.com"
-      subresources = [
+      groups_ids = [
         "Sql"
       ]
     }
     azure_cosmos_db_mongo = {
       zone_name = "privatelink.mongo.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "MongoDB"
       ]
     }
     azure_cosmos_db_cassandra = {
       zone_name = "privatelink.cassandra.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "Cassandra"
       ]
     }
     azure_cosmos_db_gremlin = {
       zone_name = "privatelink.gremlin.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "Gremlin"
       ]
     }
     azure_cosmos_db_table = {
       zone_name = "privatelink.table.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "Table"
       ]
     }
     azure_cosmos_db_analytical = {
       zone_name = "privatelink.analytics.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "Analytical"
       ]
     }
     azure_cosmos_db_postgres = {
       zone_name = "privatelink.postgres.cosmos.azure.com"
-      subresources = [
+      groups_ids = [
         "coordinator"
       ]
     }
     azure_maria_db_server = {
       zone_name = "privatelink.mariadb.database.azure.com"
-      subresources = [
+      groups_ids = [
         "mariadbServer"
       ]
     }
     azure_postgres_sql_server = {
       zone_name = "privatelink.postgres.database.azure.com"
-      subresources = [
+      groups_ids = [
         "postgresqlServer"
       ]
     }
     azure_mysql_db_server = {
       zone_name = "privatelink.mysql.database.azure.com"
-      subresources = [
+      groups_ids = [
         "mysqlServer"
       ]
     }
     azure_redis_cache = {
       zone_name = "privatelink.redis.cache.windows.net"
-      subresources = [
+      groups_ids = [
         "redisCache"
       ]
     }
     azure_redis_enterprise = {
       zone_name = "privatelink.redisenterprise.cache.azure.net"
-      subresources = [
+      groups_ids = [
         "redisEnterprise"
       ]
     }
     azure_arc_hybrid_compute = {
       zone_name = "privatelink.his.arc.azure.com"
-      subresources = [
+      groups_ids = [
         "hybridcompute"
       ]
     }
     azure_arc_guest_configuration = {
       zone_name = "privatelink.guestconfiguration.azure.com"
-      subresources = [
+      groups_ids = [
         "hybridcompute"
       ]
     }
     azure_arc_kubernetes = {
       zone_name = "privatelink.dp.kubernetesconfiguration.azure.com"
-      subresources = [
+      groups_ids = [
         "hybridcompute"
       ]
     }
     azure_event_grid = {
       zone_name = "privatelink.eventgrid.azure.net"
-      subresources = [
+      groups_ids = [
         "topic",
         "domain",
         "partnernamespace"
@@ -330,61 +330,61 @@ variable "private_link_private_dns_zones" {
     }
     azure_api_management = {
       zone_name = "privatelink.azure-api.net"
-      subresources = [
+      groups_ids = [
         "Gateway"
       ]
     }
     azure_healthcare_workspaces = {
       zone_name = "privatelink.workspace.azurehealthcareapis.com"
-      subresources = [
+      groups_ids = [
         "healthcareworkspace"
       ]
     }
     azure_healthcare_fhir = {
       zone_name = "privatelink.fhir.azurehealthcareapis.com"
-      subresources = [
+      groups_ids = [
         "healthcareworkspace"
       ]
     }
     azure_healthcare_dicom = {
       zone_name = "privatelink.dicom.azurehealthcareapis.com"
-      subresources = [
+      groups_ids = [
         "healthcareworkspace"
       ]
     }
     azure_iot_hub = {
       zone_name = "privatelink.azure-devices.net"
-      subresources = [
+      groups_ids = [
         "iotHub"
       ]
     }
     azure_iot_hub_provisioning = {
       zone_name = "privatelink.azure-devices-provisioning.net"
-      subresources = [
+      groups_ids = [
         "iotDps"
       ]
     }
     azure_iot_hub_update = {
       zone_name = "privatelink.api.adu.microsoft.com"
-      subresources = [
+      groups_ids = [
         "DeviceUpdate"
       ]
     }
     azure_iot_central = {
       zone_name = "privatelink.azureiotcentral.com"
-      subresources = [
+      groups_ids = [
         "iotApp"
       ]
     }
     azure_digital_twins = {
       zone_name = "privatelink.digitaltwins.azure.net"
-      subresources = [
+      groups_ids = [
         "API"
       ]
     }
     azure_media_services_delivery = {
       zone_name = "privatelink.media.azure.net"
-      subresources = [
+      groups_ids = [
         "keydelivery",
         "liveevent",
         "streamingendpoint"
@@ -392,147 +392,147 @@ variable "private_link_private_dns_zones" {
     }
     azure_automation = {
       zone_name = "privatelink.azure-automation.net"
-      subresources = [
+      groups_ids = [
         "Webhook",
         "DSCAndHybridWorker"
       ]
     }
     azure_backup = {
       zone_name = "privatelink.{regionCode}.backup.windowsazure.com"
-      subresources = [
+      groups_ids = [
         "AzureBackup"
       ]
     }
     azure_site_recovery = {
       zone_name = "privatelink.siterecovery.windowsazure.com"
-      subresources = [
+      groups_ids = [
         "AzureSiteRecovery"
       ]
     }
     azure_monitor = {
       zone_name = "privatelink.monitor.azure.com"
-      subresources = [
+      groups_ids = [
         "azuremonitor"
       ]
     }
     azure_log_analytics = {
       zone_name = "privatelink.oms.opinsights.azure.com"
-      subresources = [
+      groups_ids = [
         "azuremonitor"
       ]
     }
     azure_log_analytics_data = {
       zone_name = "privatelink.ods.opinsights.azure.com"
-      subresources = [
+      groups_ids = [
         "azuremonitor"
       ]
     }
     azure_monitor_agent = {
       zone_name = "privatelink.agentsvc.azure-automation.net"
-      subresources = [
+      groups_ids = [
         "azuremonitor"
       ]
     }
     azure_purview_account = {
       zone_name = "privatelink.purview.azure.com"
-      subresources = [
+      groups_ids = [
         "account"
       ]
     }
     azure_purview_studio = {
       zone_name = "privatelink.purviewstudio.azure.com"
-      subresources = [
+      groups_ids = [
         "portal"
       ]
     }
     azure_migration_service = {
       zone_name = "privatelink.prod.migration.windowsazure.com"
-      subresources = [
+      groups_ids = [
         "Default"
       ]
     }
     azure_grafana = {
       zone_name = "privatelink.grafana.azure.com"
-      subresources = [
+      groups_ids = [
         "grafana"
       ]
     }
     azure_key_vault = {
       zone_name = "privatelink.vaultcore.azure.net"
-      subresources = [
+      groups_ids = [
         "vault"
       ]
     }
     azure_managed_hsm = {
       zone_name = "privatelink.managedhsm.azure.net"
-      subresources = [
+      groups_ids = [
         "managedhsm"
       ]
     }
     azure_app_configuration = {
       zone_name = "privatelink.azconfig.io"
-      subresources = [
+      groups_ids = [
         "configurationStores"
       ]
     }
     azure_attestation = {
       zone_name = "privatelink.attest.azure.net"
-      subresources = [
+      groups_ids = [
         "standard"
       ]
     }
     azure_search = {
       zone_name = "privatelink.search.windows.net"
-      subresources = [
+      groups_ids = [
         "searchService"
       ]
     }
     azure_app_service = {
       zone_name = "privatelink.azurewebsites.net"
-      subresources = [
+      groups_ids = [
         "sites"
       ]
     }
     azure_app_service_scm = {
       zone_name = "scm.privatelink.azurewebsites.net"
-      subresources = [
+      groups_ids = [
         "sites"
       ]
     }
     azure_signalr_service = {
       zone_name = "privatelink.service.signalr.net"
-      subresources = [
+      groups_ids = [
         "signalr"
       ]
     }
     azure_static_web_apps = {
       zone_name = "privatelink.azurestaticapps.net"
-      subresources = [
+      groups_ids = [
         "staticSites"
       ]
     }
     azure_synapse_sql = {
       zone_name = "privatelink.sql.azuresynapse.net"
-      subresources = [
+      groups_ids = [
         "Sql",
         "SqlOnDemand"
       ]
     }
     azure_synapse_dev = {
       zone_name = "privatelink.dev.azuresynapse.net"
-      subresources = [
+      groups_ids = [
         "Dev"
       ]
     }
     azure_web_pubsub = {
       zone_name = "privatelink.webpubsub.azure.com"
-      subresources = [
+      groups_ids = [
         "webpubsub"
       ]
     }
   }
   description = <<DESCRIPTION
-A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
+A set of Private Link Private DNS Zones to create, along with the private endpoint groupIds associated with them. Each element must be a valid DNS zone name.
 
 **NOTE:**
 

@@ -7,7 +7,7 @@ output "private_dns_zone_resource_ids" {
   description = "The map of private DNS zones to resource ids."
   value = { for key, mod in module.avm_res_network_privatednszone : key => {
     zone_id        = mod.resource_id
-    zone_group_ids = var.private_link_private_dns_zones[key].subresources
+    zone_group_ids = var.private_link_private_dns_zones[key].groups_ids
     }
   }
 }
