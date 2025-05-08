@@ -41,241 +41,494 @@ DESCRIPTION
 variable "private_link_private_dns_zones" {
   type = map(object({
     zone_name = optional(string, null)
+    subresources = optional(list(string), null)
   }))
   default = {
     azure_ml = {
       zone_name = "privatelink.api.azureml.ms"
+      subresources = [
+        "amlworkspace"
+      ]
     }
     azure_ml_notebooks = {
       zone_name = "privatelink.notebooks.azure.net"
+      subresources = [
+        "amlworkspace"
+      ]
     }
     azure_ai_cog_svcs = {
       zone_name = "privatelink.cognitiveservices.azure.com"
+      subresources = [
+        "account"
+      ]
     }
     azure_ai_oai = {
       zone_name = "privatelink.openai.azure.com"
+      subresources = [
+        "account"
+      ]
     }
     azure_bot_svc_bot = {
       zone_name = "privatelink.directline.botframework.com"
+      subresources = [
+        "Bot"
+      ]
     }
     azure_bot_svc_token = {
       zone_name = "privatelink.token.botframework.com"
+      subresources = [
+        "Token"
+      ]
     }
     azure_service_hub = {
       zone_name = "privatelink.servicebus.windows.net"
+      subresources = [
+        "namespace"
+      ]
     }
     azure_data_factory = {
       zone_name = "privatelink.datafactory.azure.net"
+      subresources = [
+        "dataFactory"
+      ]
     }
     azure_data_factory_portal = {
       zone_name = "privatelink.adf.azure.com"
+      subresources = [
+        "portal"
+      ]
     }
     azure_hdinsight = {
       zone_name = "privatelink.azurehdinsight.net"
+      subresources = [
+        "gateway",
+        "headnode"
+      ]
     }
     azure_data_explorer = {
       zone_name = "privatelink.{regionName}.kusto.windows.net"
+      subresources = [
+        "cluster"
+      ]
     }
     azure_storage_blob = {
       zone_name = "privatelink.blob.core.windows.net"
+      subresources = [
+        "blob",
+        "blob_secondary",
+        "disks",
+        "azuremonitor"
+      ]
     }
     azure_storage_queue = {
       zone_name = "privatelink.queue.core.windows.net"
+      subresources = [
+        "queue",
+        "queue_secondary"
+      ]
     }
     azure_storage_table = {
       zone_name = "privatelink.table.core.windows.net"
+      subresources = [
+        "table",
+        "table_secondary"
+      ]
     }
     azure_storage_file = {
       zone_name = "privatelink.file.core.windows.net"
+      subresources = [
+        "file",
+        "file_secondary"
+      ]
     }
     azure_storage_web = {
       zone_name = "privatelink.web.core.windows.net"
+      subresources = [
+        "web",
+        "web_secondary"
+      ]
     }
     azure_data_lake_gen2 = {
       zone_name = "privatelink.dfs.core.windows.net"
+      subresources = [
+        "dfs",
+        "dfs_secondary"
+      ]
     }
     azure_file_sync = {
       zone_name = "privatelink.afs.azure.net"
+      subresources = [
+        "afs"
+      ]
     }
     azure_power_bi_tenant_analysis = {
       zone_name = "privatelink.analysis.windows.net"
+      subresources = [
+        "tenant"
+      ]
     }
     azure_power_bi_dedicated = {
       zone_name = "privatelink.pbidedicated.windows.net"
+      subresources = [
+        "tenant"
+      ]
     }
     azure_power_bi_power_query = {
       zone_name = "privatelink.tip1.powerquery.microsoft.com"
+      subresources = [
+        "tenant"
+      ]
     }
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
+      subresources = [
+        "databricks_ui_api",
+        "browser_authentication"
+      ]
     }
     azure_batch = {
       zone_name = "privatelink.batch.azure.com"
+      subresources = [
+        "batchAccount",
+        "nodeManagement"
+      ]
     }
     azure_avd_global = {
       zone_name = "privatelink-global.wvd.microsoft.com"
+      subresources = [
+        "global"
+      ]
     }
     azure_avd_feed_mgmt = {
       zone_name = "privatelink.wvd.microsoft.com"
+      subresources = [
+        "feed",
+        "connection"
+      ]
     }
     azure_aks_mgmt = {
       zone_name = "privatelink.{regionName}.azmk8s.io"
+      subresources = [
+        "management"
+      ]
     }
     azure_acr_registry = {
       zone_name = "privatelink.azurecr.io"
+      subresources = [
+        "registry"
+      ]
     }
     azure_acr_data = {
       zone_name = "{regionName}.data.privatelink.azurecr.io"
+      subresources = [
+        "registry"
+      ]
     }
     azure_sql_server = {
       zone_name = "privatelink.database.windows.net"
+      subresources = [
+        "sqlServer"
+      ]
     }
     azure_cosmos_db_sql = {
       zone_name = "privatelink.documents.azure.com"
+      subresources = [
+        "Sql"
+      ]
     }
     azure_cosmos_db_mongo = {
       zone_name = "privatelink.mongo.cosmos.azure.com"
+      subresources = [
+        "MongoDB"
+      ]
     }
     azure_cosmos_db_cassandra = {
       zone_name = "privatelink.cassandra.cosmos.azure.com"
+      subresources = [
+        "Cassandra"
+      ]
     }
     azure_cosmos_db_gremlin = {
       zone_name = "privatelink.gremlin.cosmos.azure.com"
+      subresources = [
+        "Gremlin"
+      ]
     }
     azure_cosmos_db_table = {
       zone_name = "privatelink.table.cosmos.azure.com"
+      subresources = [
+        "Table"
+      ]
     }
     azure_cosmos_db_analytical = {
       zone_name = "privatelink.analytics.cosmos.azure.com"
+      subresources = [
+        "Analytical"
+      ]
     }
     azure_cosmos_db_postgres = {
       zone_name = "privatelink.postgres.cosmos.azure.com"
+      subresources = [
+        "coordinator"
+      ]
     }
     azure_maria_db_server = {
       zone_name = "privatelink.mariadb.database.azure.com"
+      subresources = [
+        "mariadbServer"
+      ]
     }
     azure_postgres_sql_server = {
       zone_name = "privatelink.postgres.database.azure.com"
+      subresources = [
+        "postgresqlServer"
+      ]
     }
     azure_mysql_db_server = {
       zone_name = "privatelink.mysql.database.azure.com"
+      subresources = [
+        "mysqlServer"
+      ]
     }
     azure_redis_cache = {
       zone_name = "privatelink.redis.cache.windows.net"
+      subresources = [
+        "redisCache"
+      ]
     }
     azure_redis_enterprise = {
       zone_name = "privatelink.redisenterprise.cache.azure.net"
+      subresources = [
+        "redisEnterprise"
+      ]
     }
     azure_arc_hybrid_compute = {
       zone_name = "privatelink.his.arc.azure.com"
+      subresources = [
+        "hybridcompute"
+      ]
     }
     azure_arc_guest_configuration = {
       zone_name = "privatelink.guestconfiguration.azure.com"
+      subresources = [
+        "hybridcompute"
+      ]
     }
     azure_arc_kubernetes = {
       zone_name = "privatelink.dp.kubernetesconfiguration.azure.com"
+      subresources = [
+        "hybridcompute"
+      ]
     }
     azure_event_grid = {
       zone_name = "privatelink.eventgrid.azure.net"
+      subresources = [
+        "topic",
+        "domain",
+        "partnernamespace"
+      ]
     }
     azure_api_management = {
       zone_name = "privatelink.azure-api.net"
+      subresources = [
+        "Gateway"
+      ]
     }
     azure_healthcare_workspaces = {
       zone_name = "privatelink.workspace.azurehealthcareapis.com"
+      subresources = [
+        "healthcareworkspace"
+      ]
     }
     azure_healthcare_fhir = {
       zone_name = "privatelink.fhir.azurehealthcareapis.com"
+      subresources = [
+        "healthcareworkspace"
+      ]
     }
     azure_healthcare_dicom = {
       zone_name = "privatelink.dicom.azurehealthcareapis.com"
+      subresources = [
+        "healthcareworkspace"
+      ]
     }
     azure_iot_hub = {
       zone_name = "privatelink.azure-devices.net"
+      subresources = [
+        "iotHub"
+      ]
     }
     azure_iot_hub_provisioning = {
       zone_name = "privatelink.azure-devices-provisioning.net"
+      subresources = [
+        "iotDps"
+      ]
     }
     azure_iot_hub_update = {
       zone_name = "privatelink.api.adu.microsoft.com"
+      subresources = [
+        "DeviceUpdate"
+      ]
     }
     azure_iot_central = {
       zone_name = "privatelink.azureiotcentral.com"
+      subresources = [
+        "iotApp"
+      ]
     }
     azure_digital_twins = {
       zone_name = "privatelink.digitaltwins.azure.net"
+      subresources = [
+        "API"
+      ]
     }
     azure_media_services_delivery = {
       zone_name = "privatelink.media.azure.net"
+      subresources = [
+        "keydelivery",
+        "liveevent",
+        "streamingendpoint"
+      ]
     }
     azure_automation = {
       zone_name = "privatelink.azure-automation.net"
+      subresources = [
+        "Webhook",
+        "DSCAndHybridWorker"
+      ]
     }
     azure_backup = {
       zone_name = "privatelink.{regionCode}.backup.windowsazure.com"
+      subresources = [
+        "AzureBackup"
+      ]
     }
     azure_site_recovery = {
       zone_name = "privatelink.siterecovery.windowsazure.com"
+      subresources = [
+        "AzureSiteRecovery"
+      ]
     }
     azure_monitor = {
       zone_name = "privatelink.monitor.azure.com"
+      subresources = [
+        "azuremonitor"
+      ]
     }
     azure_log_analytics = {
       zone_name = "privatelink.oms.opinsights.azure.com"
+      subresources = [
+        "azuremonitor"
+      ]
     }
     azure_log_analytics_data = {
       zone_name = "privatelink.ods.opinsights.azure.com"
+      subresources = [
+        "azuremonitor"
+      ]
     }
     azure_monitor_agent = {
       zone_name = "privatelink.agentsvc.azure-automation.net"
+      subresources = [
+        "azuremonitor"
+      ]
     }
     azure_purview_account = {
       zone_name = "privatelink.purview.azure.com"
+      subresources = [
+        "account"
+      ]
     }
     azure_purview_studio = {
       zone_name = "privatelink.purviewstudio.azure.com"
+      subresources = [
+        "portal"
+      ]
     }
     azure_migration_service = {
       zone_name = "privatelink.prod.migration.windowsazure.com"
+      subresources = [
+        "Default"
+      ]
     }
     azure_grafana = {
       zone_name = "privatelink.grafana.azure.com"
+      subresources = [
+        "grafana"
+      ]
     }
     azure_key_vault = {
       zone_name = "privatelink.vaultcore.azure.net"
+      subresources = [
+        "vault"
+      ]
     }
     azure_managed_hsm = {
       zone_name = "privatelink.managedhsm.azure.net"
+      subresources = [
+        "managedhsm"
+      ]
     }
     azure_app_configuration = {
       zone_name = "privatelink.azconfig.io"
+      subresources = [
+        "configurationStores"
+      ]
     }
     azure_attestation = {
       zone_name = "privatelink.attest.azure.net"
+      subresources = [
+        "standard"
+      ]
     }
     azure_search = {
       zone_name = "privatelink.search.windows.net"
+      subresources = [
+        "searchService"
+      ]
     }
     azure_app_service = {
       zone_name = "privatelink.azurewebsites.net"
+      subresources = [
+        "sites"
+      ]
     }
     azure_app_service_scm = {
       zone_name = "scm.privatelink.azurewebsites.net"
+      subresources = [
+        "sites"
+      ]
     }
     azure_signalr_service = {
       zone_name = "privatelink.service.signalr.net"
+      subresources = [
+        "signalr"
+      ]
     }
     azure_static_web_apps = {
       zone_name = "privatelink.azurestaticapps.net"
+      subresources = [
+        "staticSites"
+      ]
     }
     azure_synapse_sql = {
       zone_name = "privatelink.sql.azuresynapse.net"
+      subresources = [
+        "Sql",
+        "SqlOnDemand"
+      ]
     }
     azure_synapse_dev = {
       zone_name = "privatelink.dev.azuresynapse.net"
+      subresources = [
+        "Dev"
+      ]
     }
     azure_web_pubsub = {
       zone_name = "privatelink.webpubsub.azure.com"
+      subresources = [
+        "webpubsub"
+      ]
     }
   }
   description = <<DESCRIPTION
