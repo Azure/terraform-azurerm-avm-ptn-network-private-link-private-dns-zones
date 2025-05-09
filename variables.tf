@@ -40,7 +40,7 @@ DESCRIPTION
 
 variable "private_link_private_dns_zones" {
   type = map(object({
-    zone_name = optional(string, null)
+    zone_name  = optional(string, null)
     groups_ids = optional(list(string), null)
   }))
   default = {

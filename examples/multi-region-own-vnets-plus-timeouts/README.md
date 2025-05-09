@@ -60,19 +60,11 @@ resource "azurerm_virtual_network" "this_1" {
 
 module "test_region_1" {
   source = "../../"
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  location            = azurerm_resource_group.region_1.location
-  resource_group_name = azurerm_resource_group.region_1.name
-
+  location                        = azurerm_resource_group.region_1.location
+  resource_group_name             = azurerm_resource_group.region_1.name
+  enable_telemetry                = var.enable_telemetry
   resource_group_creation_enabled = false
-
-  virtual_network_resource_ids_to_link_to = {
-    "vnet1" = {
-      vnet_resource_id = azurerm_virtual_network.this_1.id
-    }
-  }
-
   resource_group_role_assignments = {
     "rbac-asi-1" = {
       role_definition_id_or_name       = "Reader"
@@ -80,7 +72,6 @@ module "test_region_1" {
       skip_service_principal_aad_check = true
     }
   }
-
   timeouts = {
     dns_zones = {
       create = "50m"
@@ -95,8 +86,11 @@ module "test_region_1" {
       update = "50m"
     }
   }
-
-  enable_telemetry = var.enable_telemetry
+  virtual_network_resource_ids_to_link_to = {
+    "vnet1" = {
+      vnet_resource_id = azurerm_virtual_network.this_1.id
+    }
+  }
 }
 
 # Region 2
@@ -124,19 +118,11 @@ resource "azurerm_virtual_network" "this_2" {
 
 module "test_region_2" {
   source = "../../"
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  location            = azurerm_resource_group.region_2.location
-  resource_group_name = azurerm_resource_group.region_2.name
-
+  location                        = azurerm_resource_group.region_2.location
+  resource_group_name             = azurerm_resource_group.region_2.name
+  enable_telemetry                = var.enable_telemetry
   resource_group_creation_enabled = false
-
-  virtual_network_resource_ids_to_link_to = {
-    "vnet2" = {
-      vnet_resource_id = azurerm_virtual_network.this_2.id
-    }
-  }
-
   resource_group_role_assignments = {
     "rbac-asi-1" = {
       role_definition_id_or_name       = "Reader"
@@ -144,7 +130,6 @@ module "test_region_2" {
       skip_service_principal_aad_check = true
     }
   }
-
   timeouts = {
     dns_zones = {
       create = "50m"
@@ -159,8 +144,11 @@ module "test_region_2" {
       update = "50m"
     }
   }
-
-  enable_telemetry = var.enable_telemetry
+  virtual_network_resource_ids_to_link_to = {
+    "vnet2" = {
+      vnet_resource_id = azurerm_virtual_network.this_2.id
+    }
+  }
 }
 ```
 
