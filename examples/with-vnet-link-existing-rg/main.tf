@@ -58,13 +58,18 @@ resource "azurerm_virtual_network" "this_2" {
 
 module "test" {
   source = "../../"
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-
+  location                        = azurerm_resource_group.this.location
+  resource_group_name             = azurerm_resource_group.this.name
+  enable_telemetry                = var.enable_telemetry
   resource_group_creation_enabled = false
-
+  resource_group_role_assignments = {
+    "rbac-asi-1" = {
+      role_definition_id_or_name       = "Reader"
+      principal_id                     = data.azurerm_client_config.current.object_id
+      skip_service_principal_aad_check = true
+    }
+  }
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
       vnet_resource_id = azurerm_virtual_network.this_1.id
@@ -73,14 +78,4 @@ module "test" {
       vnet_resource_id = azurerm_virtual_network.this_2.id
     }
   }
-
-  resource_group_role_assignments = {
-    "rbac-asi-1" = {
-      role_definition_id_or_name       = "Reader"
-      principal_id                     = data.azurerm_client_config.current.object_id
-      skip_service_principal_aad_check = true
-    }
-  }
-
-  enable_telemetry = var.enable_telemetry
 }
