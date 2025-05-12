@@ -43,6 +43,9 @@ variable "private_link_private_dns_zones" {
     zone_name = optional(string, null)
   }))
   default = {
+    azure_container_apps = {
+      zone_name = "privatelink.{regionName}.azurecontainerapps.io"
+    }
     azure_ml = {
       zone_name = "privatelink.api.azureml.ms"
     }

@@ -187,6 +187,9 @@ Default:
   "azure_bot_svc_token": {
     "zone_name": "privatelink.token.botframework.com"
   },
+  "azure_container_apps": {
+    "zone_name": "privatelink.{regionName}.azurecontainerapps.io"
+  },
   "azure_cosmos_db_analytical": {
     "zone_name": "privatelink.analytics.cosmos.azure.com"
   },
