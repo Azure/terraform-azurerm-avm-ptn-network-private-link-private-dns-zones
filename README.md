@@ -154,9 +154,6 @@ Default:
   "azure_app_service": {
     "zone_name": "privatelink.azurewebsites.net"
   },
-  "azure_app_service_scm": {
-    "zone_name": "scm.privatelink.azurewebsites.net"
-  },
   "azure_arc_guest_configuration": {
     "zone_name": "privatelink.guestconfiguration.azure.com"
   },
