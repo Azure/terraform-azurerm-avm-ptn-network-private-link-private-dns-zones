@@ -47,10 +47,11 @@ module "naming" {
 
 module "test" {
   source = "../../"
+
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
-
+  enable_telemetry    = var.enable_telemetry
   resource_group_role_assignments = {
     "rbac-asi-1" = {
       role_definition_id_or_name       = "Reader"
@@ -58,9 +59,6 @@ module "test" {
       skip_service_principal_aad_check = true
     }
   }
-
-  enable_telemetry = var.enable_telemetry
-
 }
 ```
 

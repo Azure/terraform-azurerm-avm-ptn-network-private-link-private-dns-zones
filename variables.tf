@@ -259,9 +259,6 @@ variable "private_link_private_dns_zones" {
     azure_app_service = {
       zone_name = "privatelink.azurewebsites.net"
     }
-    azure_app_service_scm = {
-      zone_name = "scm.privatelink.azurewebsites.net"
-    }
     azure_signalr_service = {
       zone_name = "privatelink.service.signalr.net"
     }
