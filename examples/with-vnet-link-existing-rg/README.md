@@ -149,11 +149,7 @@ Default: `true`
 
 ## Outputs
 
-The following outputs are exported:
-
-### <a name="output_test"></a> [test](#output\_test)
-
-Description: n/a
+No outputs.
 
 ## Modules
 

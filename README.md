@@ -538,10 +538,6 @@ Description: The map of private DNS zones to resource ids.
 
 Description: The resource ID of the resource group that the Private DNS Zones are deployed into.
 
-### <a name="output_test"></a> [test](#output\_test)
-
-Description: n/a
-
 ## Modules
 
 The following Modules are called:

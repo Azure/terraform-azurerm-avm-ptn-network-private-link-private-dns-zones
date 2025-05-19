@@ -12,7 +12,3 @@ output "resource_group_resource_id" {
   description = "The resource ID of the resource group that the Private DNS Zones are deployed into."
   value       = local.resource_group_resource_id
 }
-
-output "test" {
-  value = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
-}
