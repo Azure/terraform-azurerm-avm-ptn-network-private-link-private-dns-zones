@@ -1,28 +1,18 @@
 locals {
-  combined_private_link_private_dns_zones_replaced_with_vnets_to_link = length(var.virtual_network_resource_ids_to_link_to) == 0 ? {
-    for item in flatten([
-      for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : {
-        zone_key   = zone_key
-        zone_value = zone_value
-        vnets      = null
-        has_vnet   = false
-      }
-      ]
-    ) : item.zone_key => item
-    } : {
+  combined_private_link_private_dns_zones_replaced_with_vnets_to_link = {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_replaced_regionCode_map : [
         {
           zone_key   = zone_key
           zone_value = zone_value
-          vnets = [
-            for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : {
-              vnet_key   = vnet_key
-              vnet_value = vnet_value
-              has_vnet   = true
+          vnets = {
+            for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : vnet_key => {
+              vnetid           = vnet_value.vnet_resource_id
+              vnetlinkname     = vnet_value.virtual_network_link_name_override == null ? "${var.virtual_network_link_name_prefix}-${zone_key}-${vnet_key}" : vnet_value.virtual_network_link_name_override
+              autoregistration = false
+              tags             = var.tags
             }
-          ]
-          has_vnet = true
+          }
         }
       ]
       ]

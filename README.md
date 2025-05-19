@@ -449,17 +449,27 @@ object({
 
 Default: `{}`
 
+### <a name="input_virtual_network_link_name_prefix"></a> [virtual\_network\_link\_name\_prefix](#input\_virtual\_network\_link\_name\_prefix)
+
+Description: A prefix to use for the names of the Virtual Network Links created.
+
+Type: `string`
+
+Default: `"vnet_link-"`
+
 ### <a name="input_virtual_network_resource_ids_to_link_to"></a> [virtual\_network\_resource\_ids\_to\_link\_to](#input\_virtual\_network\_resource\_ids\_to\_link\_to)
 
 Description: A map of objects of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
 
 - `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
+- `virtual_network_link_name_override` - (Optional) An override for the name of the Virtual Network Link to create. If not specified, the name will be generated based on the `virtual_network_link_name_prefix` variable and the dns zone key and virtual network map key. This name will apply to every DNS zone link for that virtual network.
 
 Type:
 
 ```hcl
 map(object({
-    vnet_resource_id = optional(string, null)
+    vnet_resource_id                   = optional(string, null)
+    virtual_network_link_name_override = optional(string, null)
   }))
 ```
 
