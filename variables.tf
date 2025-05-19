@@ -100,15 +100,6 @@ variable "private_link_private_dns_zones" {
     azure_file_sync = {
       zone_name = "privatelink.afs.azure.net"
     }
-    azure_power_bi_tenant_analysis = {
-      zone_name = "privatelink.analysis.windows.net"
-    }
-    azure_power_bi_dedicated = {
-      zone_name = "privatelink.pbidedicated.windows.net"
-    }
-    azure_power_bi_power_query = {
-      zone_name = "privatelink.tip1.powerquery.microsoft.com"
-    }
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
     }
@@ -299,6 +290,9 @@ The folowing Private Link Private DNS Zones have been removed from the default v
 We have also removed the following Private Link Private DNS Zones from the default value for this variable as they should only be created and used with in specific scenarios:
 
 - `privatelink.azure.com`
+- `privatelink.analysis.windows.net`
+- `privatelink.pbidedicated.windows.net`
+- `privatelink.tip1.powerquery.microsoft.com`
 
 DESCRIPTION
   nullable    = false
