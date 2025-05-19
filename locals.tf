@@ -21,10 +21,11 @@ locals {
   }
   location_geo_code = module.regions.regions_by_name_or_display_name[var.location].geo_code
   location_name     = module.regions.regions_by_name_or_display_name[var.location].name
+  merged_private_link_private_dns_zones = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
   private_link_private_dns_zones_replaced_regionCode_map = { for k, v in local.private_link_private_dns_zones_replaced_regionName_map : k => {
     zone_name = replace(v.zone_name, "{regionCode}", local.location_geo_code)
   } }
-  private_link_private_dns_zones_replaced_regionName_map = { for k, v in var.private_link_private_dns_zones : k => {
+  private_link_private_dns_zones_replaced_regionName_map = { for k, v in local.merged_private_link_private_dns_zones : k => {
     zone_name = replace(v.zone_name, "{regionName}", local.location_name)
   } }
   resource_group_resource_id          = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
