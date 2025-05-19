@@ -333,7 +333,7 @@ variable "private_link_private_dns_zones_additional" {
       replacement_values      = map(string)
     }))
   }))
-  default = {}
+  default     = {}
   description = <<DESCRIPTION
 A set of Private Link Private DNS Zones to create in addition to the zones supplied in `private_link_private_dns_zones`. Each element must be a valid DNS zone name.
 

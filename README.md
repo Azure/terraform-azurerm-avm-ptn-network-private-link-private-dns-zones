@@ -388,6 +388,31 @@ Default:
 }
 ```
 
+### <a name="input_private_link_private_dns_zones_additional"></a> [private\_link\_private\_dns\_zones\_additional](#input\_private\_link\_private\_dns\_zones\_additional)
+
+Description: A set of Private Link Private DNS Zones to create in addition to the zones supplied in `private_link_private_dns_zones`. Each element must be a valid DNS zone name.
+
+The purpose of this variable is to allow the use of our default zones and just add any additioanl zones withput having to redefine the entire set of default zones.
+
+- `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
+  - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator key.
+  - `replacement_values` - A map of values to use for the custom iterator, where the key is the custom iterator key and the value is the value to replace in the `zone_name`.
+
+Type:
+
+```hcl
+map(object({
+    zone_name = optional(string, null)
+    custom_iterator = optional(object({
+      replacement_placeholder = string
+      replacement_values      = map(string)
+    }))
+  }))
+```
+
+Default: `{}`
+
 ### <a name="input_resource_group_creation_enabled"></a> [resource\_group\_creation\_enabled](#input\_resource\_group\_creation\_enabled)
 
 Description: This variable controls whether or not the resource group should be created. If set to false, the resource group must be created elsewhere and the resource group name must be provided to the module. If set to true, the resource group will be created by the module using the name provided in `resource_group_name`.
