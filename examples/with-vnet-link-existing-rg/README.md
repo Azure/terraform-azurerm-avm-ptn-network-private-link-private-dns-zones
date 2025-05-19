@@ -85,7 +85,7 @@ module "test" {
     }
     "vnet2" = {
       vnet_resource_id                            = azurerm_virtual_network.this_2.id
-      virtual_network_link_name_template_override = "$$(vnet_key}-link"
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
 }
