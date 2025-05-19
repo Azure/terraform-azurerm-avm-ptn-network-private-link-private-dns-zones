@@ -377,11 +377,12 @@ Each timeout object has the following optional attributes:
 DESCRIPTION
 }
 
-variable "virtual_network_link_name_prefix" {
+variable "virtual_network_link_name_template" {
   type        = string
-  default     = "vnet_link-"
+  default     = "vnet_link-$${zone_key}-$${vnet_key}"
   description = <<DESCRIPTION
 A prefix to use for the names of the Virtual Network Links created.
+The zone_key and vnet_key will be replaced with the keys of the DNS zone and Virtual Network respectively.
 DESCRIPTION
   nullable    = false
 }

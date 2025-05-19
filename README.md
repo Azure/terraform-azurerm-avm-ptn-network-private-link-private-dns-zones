@@ -449,13 +449,14 @@ object({
 
 Default: `{}`
 
-### <a name="input_virtual_network_link_name_prefix"></a> [virtual\_network\_link\_name\_prefix](#input\_virtual\_network\_link\_name\_prefix)
+### <a name="input_virtual_network_link_name_template"></a> [virtual\_network\_link\_name\_template](#input\_virtual\_network\_link\_name\_template)
 
-Description: A prefix to use for the names of the Virtual Network Links created.
+Description: A prefix to use for the names of the Virtual Network Links created.  
+The zone\_key and vnet\_key will be replaced with the keys of the DNS zone and Virtual Network respectively.
 
 Type: `string`
 
-Default: `"vnet_link-"`
+Default: `"vnet_link-${zone_key}-${vnet_key}"`
 
 ### <a name="input_virtual_network_resource_ids_to_link_to"></a> [virtual\_network\_resource\_ids\_to\_link\_to](#input\_virtual\_network\_resource\_ids\_to\_link\_to)
 

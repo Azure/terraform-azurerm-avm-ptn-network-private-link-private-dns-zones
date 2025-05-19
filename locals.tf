@@ -8,7 +8,7 @@ locals {
           vnets = {
             for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : vnet_key => {
               vnetid           = vnet_value.vnet_resource_id
-              vnetlinkname     = vnet_value.virtual_network_link_name_override == null ? "${var.virtual_network_link_name_prefix}-${zone_key}-${vnet_key}" : vnet_value.virtual_network_link_name_override
+              vnetlinkname     = vnet_value.virtual_network_link_name_override == null ? templatestring(var.virtual_network_link_name_template, { zone_key = zone_key, vnet_key = vnet_key }) : vnet_value.virtual_network_link_name_override
               autoregistration = false
               tags             = var.tags
             }
