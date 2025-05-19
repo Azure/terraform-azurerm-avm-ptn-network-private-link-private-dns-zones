@@ -21,21 +21,14 @@ module "avm_res_network_privatednszone" {
   version  = "0.3.0"
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
-  domain_name         = each.value.zone_value.zone_name
-  resource_group_name = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
-  enable_telemetry    = var.enable_telemetry
-  tags                = var.tags
-  timeouts            = var.timeouts
-  virtual_network_links = each.value.has_vnet ? { for vnet in each.value.vnets : vnet.vnet_key => {
-    vnetlinkname     = "vnet_link-${each.value.zone_key}-${vnet.vnet_key}"
-    vnetid           = vnet.vnet_value.vnet_resource_id
-    autoregistration = false
-    tags             = var.tags
-    }
-  } : {}
+  domain_name           = each.value.zone_value.zone_name
+  resource_group_name   = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
+  enable_telemetry      = var.enable_telemetry
+  tags                  = var.tags
+  timeouts              = var.timeouts
+  virtual_network_links = each.value.vnets
 }
 
-# required AVM resources interfaces
 resource "azurerm_management_lock" "this" {
   count = var.lock != null ? 1 : 0
 
