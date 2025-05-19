@@ -21,7 +21,7 @@ module "avm_res_network_privatednszone" {
   version  = "0.3.0"
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
-  domain_name           = each.value.zone_value.zone_name
+  domain_name           = each.value.zone_name
   resource_group_name   = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].name : var.resource_group_name
   enable_telemetry      = var.enable_telemetry
   tags                  = var.tags
