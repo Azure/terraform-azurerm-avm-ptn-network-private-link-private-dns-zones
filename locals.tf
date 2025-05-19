@@ -8,7 +8,7 @@ locals {
           vnets = {
             for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : vnet_key => {
               vnetid           = vnet_value.vnet_resource_id
-              vnetlinkname     = templatestring(vnet_value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : vnet_value.virtual_network_link_name_template_override, { zone_key = zone_key, vnet_key = vnet_key })
+              vnetlinkname     = templatestring(local.virtual_network_link_name_templates[vnet_key], { zone_key = zone_key, vnet_key = vnet_key })
               autoregistration = false
               tags             = var.tags
             }
@@ -26,6 +26,7 @@ locals {
   private_link_private_dns_zones_replaced_regionName_map = { for k, v in var.private_link_private_dns_zones : k => {
     zone_name = replace(v.zone_name, "{regionName}", local.location_name)
   } }
-  resource_group_resource_id         = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
-  role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
+  resource_group_resource_id          = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
+  role_definition_resource_substring  = "/providers/Microsoft.Authorization/roleDefinitions"
+  virtual_network_link_name_templates = { for key, value in var.virtual_network_resource_ids_to_link_to : key => value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : value.virtual_network_link_name_template_override }
 }
