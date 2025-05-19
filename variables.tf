@@ -41,6 +41,10 @@ DESCRIPTION
 variable "private_link_private_dns_zones" {
   type = map(object({
     zone_name = optional(string, null)
+    custom_iterator = optional(object({
+      replacement_placeholder = string
+      replacement_values      = map(string)
+    }))
   }))
   default = {
     azure_container_apps = {
@@ -268,6 +272,19 @@ variable "private_link_private_dns_zones" {
     azure_static_web_apps = {
       zone_name = "privatelink.azurestaticapps.net"
     }
+    azure_static_web_apps_partitioned = {
+      zone_name = "privatelink.{partitionId}.azurestaticapps.net"
+      custom_iterator = {
+        replacement_placeholder = "partitionId"
+        replacement_values = {
+          1 = "1"
+          2 = "2"
+          3 = "3"
+          4 = "4"
+          5 = "5"
+        }
+      }
+    }
     azure_synapse_sql = {
       zone_name = "privatelink.sql.azuresynapse.net"
     }
@@ -280,6 +297,11 @@ variable "private_link_private_dns_zones" {
   }
   description = <<DESCRIPTION
 A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
+
+- `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
+  - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
+  - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
 
 **NOTE:**
 
@@ -294,12 +316,33 @@ The folowing Private Link Private DNS Zones have been removed from the default v
 
 - `{subzone}.privatelink.{regionName}.azmk8s.io`
 - `privatelink.{dnsPrefix}.database.windows.net`
-- `privatelink.{partitionId}.azurestaticapps.net`
 
 We have also removed the following Private Link Private DNS Zones from the default value for this variable as they should only be created and used with in specific scenarios:
 
 - `privatelink.azure.com`
 
+DESCRIPTION
+  nullable    = false
+}
+
+variable "private_link_private_dns_zones_additional" {
+  type = map(object({
+    zone_name = optional(string, null)
+    custom_iterator = optional(object({
+      replacement_placeholder = string
+      replacement_values      = map(string)
+    }))
+  }))
+  default     = {}
+  description = <<DESCRIPTION
+A set of Private Link Private DNS Zones to create in addition to the zones supplied in `private_link_private_dns_zones`. Each element must be a valid DNS zone name.
+
+The purpose of this variable is to allow the use of our default zones and just add any additioanl zones without having to redefine the entire set of default zones.
+
+- `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
+  - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
+  - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
 DESCRIPTION
   nullable    = false
 }

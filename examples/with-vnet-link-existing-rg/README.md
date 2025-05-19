@@ -67,9 +67,24 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location                        = azurerm_resource_group.this.location
-  resource_group_name             = azurerm_resource_group.this.name
-  enable_telemetry                = var.enable_telemetry
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry    = var.enable_telemetry
+  private_link_private_dns_zones_additional = {
+    example_zone_1 = {
+      zone_name = "{regionCode}.example.com"
+    }
+    example_zone_2 = {
+      zone_name = "{customIterator}.example.com"
+      custom_iterator = {
+        replacement_placeholder = "customIterator"
+        replacement_values = {
+          custom1 = "custom1"
+          custom2 = "custom2"
+        }
+      }
+    }
+  }
   resource_group_creation_enabled = false
   resource_group_role_assignments = {
     "rbac-asi-1" = {
@@ -89,6 +104,7 @@ module "test" {
     }
   }
 }
+
 ```
 
 <!-- markdownlint-disable MD033 -->

@@ -99,6 +99,11 @@ Default: `null`
 
 Description: A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
 
+- `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
+  - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
+  - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
+
 **NOTE:**
 
 - Private Link Private DNS Zones that have `{{regionCode}}` in the name will be replaced with the Geo Code of the Region you specified in the `location` variable, if available, as documented [here](https://learn.microsoft.com/azure/private-link/private-endpoint-dns#:~:text=Note-,In%20the%20above%20text%2C%20%7BregionCode%7D%20refers%20to%20the%20region%20code%20(for%20example%2C%20eus%20for%20East%20US%20and%20ne%20for%20North%20Europe).%20Refer%20to%20the%20following%20lists%20for%20regions%20codes%3A,-All%20public%20clouds).
@@ -112,7 +117,6 @@ The folowing Private Link Private DNS Zones have been removed from the default v
 
 - `{subzone}.privatelink.{regionName}.azmk8s.io`
 - `privatelink.{dnsPrefix}.database.windows.net`
-- `privatelink.{partitionId}.azurestaticapps.net`
 
 We have also removed the following Private Link Private DNS Zones from the default value for this variable as they should only be created and used with in specific scenarios:
 
@@ -123,6 +127,10 @@ Type:
 ```hcl
 map(object({
     zone_name = optional(string, null)
+    custom_iterator = optional(object({
+      replacement_placeholder = string
+      replacement_values      = map(string)
+    }))
   }))
 ```
 
@@ -340,6 +348,19 @@ Default:
   "azure_static_web_apps": {
     "zone_name": "privatelink.azurestaticapps.net"
   },
+  "azure_static_web_apps_partitioned": {
+    "custom_iterator": {
+      "replacement_placeholder": "partitionId",
+      "replacement_values": {
+        "1": "1",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5"
+      }
+    },
+    "zone_name": "privatelink.{partitionId}.azurestaticapps.net"
+  },
   "azure_storage_blob": {
     "zone_name": "privatelink.blob.core.windows.net"
   },
@@ -366,6 +387,31 @@ Default:
   }
 }
 ```
+
+### <a name="input_private_link_private_dns_zones_additional"></a> [private\_link\_private\_dns\_zones\_additional](#input\_private\_link\_private\_dns\_zones\_additional)
+
+Description: A set of Private Link Private DNS Zones to create in addition to the zones supplied in `private_link_private_dns_zones`. Each element must be a valid DNS zone name.
+
+The purpose of this variable is to allow the use of our default zones and just add any additioanl zones without having to redefine the entire set of default zones.
+
+- `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
+  - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
+  - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
+
+Type:
+
+```hcl
+map(object({
+    zone_name = optional(string, null)
+    custom_iterator = optional(object({
+      replacement_placeholder = string
+      replacement_values      = map(string)
+    }))
+  }))
+```
+
+Default: `{}`
 
 ### <a name="input_resource_group_creation_enabled"></a> [resource\_group\_creation\_enabled](#input\_resource\_group\_creation\_enabled)
 
