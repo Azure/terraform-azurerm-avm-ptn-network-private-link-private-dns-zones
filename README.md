@@ -249,6 +249,9 @@ Default:
   "azure_hdinsight": {
     "zone_name": "privatelink.azurehdinsight.net"
   },
+  "azure_healthcare": {
+    "zone_name": "privatelink.azurehealthcareapis.com"
+  },
   "azure_healthcare_dicom": {
     "zone_name": "privatelink.dicom.azurehealthcareapis.com"
   },
@@ -375,6 +378,9 @@ Default:
   },
   "azure_storage_web": {
     "zone_name": "privatelink.web.core.windows.net"
+  },
+  "azure_synapse": {
+    "zone_name": "privatelink.azuresynapse.net"
   },
   "azure_synapse_dev": {
     "zone_name": "privatelink.dev.azuresynapse.net"

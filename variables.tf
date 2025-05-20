@@ -288,7 +288,7 @@ variable "private_link_private_dns_zones" {
         }
       }
     }
-    azure_synapse_sql = {
+    azure_synapse = {
       zone_name = "privatelink.azuresynapse.net"
     }
     azure_synapse_sql = {
