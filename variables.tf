@@ -188,6 +188,9 @@ variable "private_link_private_dns_zones" {
     azure_api_management = {
       zone_name = "privatelink.azure-api.net"
     }
+    azure_healthcare = {
+      zone_name = "privatelink.azurehealthcareapis.com"
+    }
     azure_healthcare_workspaces = {
       zone_name = "privatelink.workspace.azurehealthcareapis.com"
     }
@@ -284,6 +287,9 @@ variable "private_link_private_dns_zones" {
           5 = "5"
         }
       }
+    }
+    azure_synapse = {
+      zone_name = "privatelink.azuresynapse.net"
     }
     azure_synapse_sql = {
       zone_name = "privatelink.sql.azuresynapse.net"
