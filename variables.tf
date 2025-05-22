@@ -38,6 +38,12 @@ DESCRIPTION
   }
 }
 
+variable "private_link_excluded_zones" {
+  type        = set(string)
+  default     = []
+  description = "A set of Private Link Private DNS Zones to exclude. Either DNS zone names or the `private_link_private_dns_zones` map key name (e.g. 'azure_ml') must match what is provided as the default values or any input to the private_link_private_dns_zones parameter e.g. privatelink.api.azureml.ms or privatelink.{regionCode}.backup.windowsazure.com or azure_ml."
+}
+
 variable "private_link_private_dns_zones" {
   type = map(object({
     zone_name = optional(string, null)
@@ -343,7 +349,7 @@ variable "private_link_private_dns_zones_additional" {
   description = <<DESCRIPTION
 A set of Private Link Private DNS Zones to create in addition to the zones supplied in `private_link_private_dns_zones`. Each element must be a valid DNS zone name.
 
-The purpose of this variable is to allow the use of our default zones and just add any additioanl zones without having to redefine the entire set of default zones.
+The purpose of this variable is to allow the use of our default zones and just add any additional zones without having to redefine the entire set of default zones.
 
 - `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
