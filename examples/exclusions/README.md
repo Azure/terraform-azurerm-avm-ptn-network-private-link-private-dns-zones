@@ -28,8 +28,6 @@ provider "azurerm" {
   }
 }
 
-data "azurerm_client_config" "current" {}
-
 module "regions" {
   source  = "Azure/regions/azurerm"
   version = "~> 0.3"
@@ -49,10 +47,14 @@ module "test" {
   source = "../../"
 
   # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
-  location                    = module.regions.regions[random_integer.region_index.result].name
-  resource_group_name         = module.naming.resource_group.name_unique
-  enable_telemetry            = var.enable_telemetry
-  private_link_excluded_zones = ["azure_ml_notebooks", "privatelink.{regionName}.azurecontainerapps.io", "privatelink.tip1.powerquery.microsoft.com"]
+  location            = module.regions.regions[random_integer.region_index.result].name
+  resource_group_name = module.naming.resource_group.name_unique
+  enable_telemetry    = var.enable_telemetry
+  private_link_excluded_zones = [
+    "azure_ml_notebooks",
+    "privatelink.{regionName}.azurecontainerapps.io",
+    "privatelink.tip1.powerquery.microsoft.com"
+  ]
   private_link_private_dns_zones = {
     azure_container_apps = {
       zone_name = "privatelink.{regionName}.azurecontainerapps.io"
@@ -91,7 +93,6 @@ The following requirements are needed by this module:
 The following resources are used by this module:
 
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
-- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->
 ## Required Inputs
