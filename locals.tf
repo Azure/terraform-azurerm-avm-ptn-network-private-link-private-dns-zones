@@ -4,20 +4,18 @@ locals {
 }
 
 locals {
-  merged_private_link_private_dns_zones = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
-
   filtered_private_link_private_dns_zones = {
-    for k, v in local.merged_private_link_private_dns_zones : k => v if !(contains(var.private_link_excluded_zones, v.zone_name))
+    for k, v in local.merged_private_link_private_dns_zones : k => v if !(contains(var.private_link_excluded_zones, v.zone_name) || contains(var.private_link_excluded_zones, k))
   }
-
-  private_link_private_dns_zones_replaced_regionName_map = {
-    for k, v in local.filtered_private_link_private_dns_zones : k => {
-      zone_name = replace(v.zone_name, "{regionName}", local.location_name)
-    }
-  }
+  merged_private_link_private_dns_zones = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
   private_link_private_dns_zones_replaced_regionCode_map = {
     for k, v in local.private_link_private_dns_zones_replaced_regionName_map : k => {
       zone_name = replace(v.zone_name, "{regionCode}", local.location_geo_code)
+    }
+  }
+  private_link_private_dns_zones_replaced_regionName_map = {
+    for k, v in local.filtered_private_link_private_dns_zones : k => {
+      zone_name = replace(v.zone_name, "{regionName}", local.location_name)
     }
   }
   virtual_network_link_name_templates = { for key, value in var.virtual_network_resource_ids_to_link_to : key => value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : value.virtual_network_link_name_template_override }

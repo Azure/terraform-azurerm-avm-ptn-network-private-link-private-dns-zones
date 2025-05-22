@@ -38,6 +38,12 @@ DESCRIPTION
   }
 }
 
+variable "private_link_excluded_zones" {
+  type        = set(string)
+  default     = []
+  description = "A list of Private Link Private DNS Zones to exclude. The DNS zone names must match what is provided as the default values or any input to the private_link_private_dns_zones parameter e.g. privatelink.api.azureml.ms or privatelink.{regionCode}.backup.windowsazure.com or privatelink.{regionName}.azmk8s.io."
+}
+
 variable "private_link_private_dns_zones" {
   type = map(object({
     zone_name = optional(string, null)
@@ -351,12 +357,6 @@ The purpose of this variable is to allow the use of our default zones and just a
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
 DESCRIPTION
   nullable    = false
-}
-
-variable "private_link_excluded_zones" {
-  default = ["privatelink.pbidedicated.windows.net", "privatelink.analysis.windows.net", "privatelink.tip1.powerquery.microsoft.com"]
-  type = list(string)
-  description = "A list of Private Link Private DNS Zones to exclude. The DNS zone names must match what is provided as the default values or any input to the private_link_private_dns_zones parameter e.g. privatelink.api.azureml.ms or privatelink.{regionCode}.backup.windowsazure.com or privatelink.{regionName}.azmk8s.io."
 }
 
 variable "resource_group_creation_enabled" {
