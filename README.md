@@ -97,7 +97,7 @@ Default: `null`
 
 ### <a name="input_private_link_excluded_zones"></a> [private\_link\_excluded\_zones](#input\_private\_link\_excluded\_zones)
 
-Description: A list of Private Link Private DNS Zones to exclude. The DNS zone names must match what is provided as the default values or any input to the private\_link\_private\_dns\_zones parameter e.g. privatelink.api.azureml.ms or privatelink.{regionCode}.backup.windowsazure.com or privatelink.{regionName}.azmk8s.io.
+Description: A list of Private Link Private DNS Zones to exclude. Either DNS zone names or the `private_link_private_dns_zones` map key name (e.g. 'azure\_ml') must match what is provided as the default values or any input to the private\_link\_private\_dns\_zones parameter e.g. privatelink.api.azureml.ms or privatelink.{regionCode}.backup.windowsazure.com or azure\_ml.
 
 Type: `set(string)`
 
