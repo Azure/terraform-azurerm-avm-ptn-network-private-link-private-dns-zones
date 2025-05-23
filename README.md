@@ -158,6 +158,9 @@ Default:
   "azure_ai_oai": {
     "zone_name": "privatelink.openai.azure.com"
   },
+  "azure_ai_services": {
+    "zone_name": "privatelink.services.ai.azure.com"
+  },
   "azure_aks_mgmt": {
     "zone_name": "privatelink.{regionName}.azmk8s.io"
   },
