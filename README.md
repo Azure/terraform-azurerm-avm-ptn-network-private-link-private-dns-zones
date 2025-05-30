@@ -427,6 +427,23 @@ map(object({
 
 Default: `{}`
 
+### <a name="input_private_link_private_dns_zones_regex_filter"></a> [private\_link\_private\_dns\_zones\_regex\_filter](#input\_private\_link\_private\_dns\_zones\_regex\_filter)
+
+Description: This variable controls whether or not the Private Link Private DNS Zones should be filtered based on the zone name. If enabled, the `regex_filter` will be used to filter the Private Link Private DNS Zones based on the zone name.
+- `enabled` - (Optional) Whether to enable filtering of the Private Link Private DNS Zones. Defaults to `false`.
+- `regex_filter` - (Optional) The regular expression filter to apply to the Private Link Private DNS Zones. The default value is `{regionName}|{regionCode}`, which will filter for regional Private Link Private DNS Zones often needed for secondary regions. You can specify a custom filter to match your requirements.
+
+Type:
+
+```hcl
+object({
+    enabled      = optional(bool, false)
+    regex_filter = optional(string, "{regionName}|{regionCode}")
+  })
+```
+
+Default: `{}`
+
 ### <a name="input_resource_group_creation_enabled"></a> [resource\_group\_creation\_enabled](#input\_resource\_group\_creation\_enabled)
 
 Description: This variable controls whether or not the resource group should be created. If set to false, the resource group must be created elsewhere and the resource group name must be provided to the module. If set to true, the resource group will be created by the module using the name provided in `resource_group_name`.
