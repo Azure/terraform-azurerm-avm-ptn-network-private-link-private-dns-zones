@@ -18,8 +18,8 @@ locals {
       zone_name = replace(v.zone_name, "{regionName}", local.location_name)
     }
   }
-  regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_filter.enabled ? {
-    for k, v in local.merged_private_link_private_dns_zones : k => v if length(regexall(var.private_link_private_dns_zones_filter.filter, v.zone_name)) > 0
+  regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
+    for k, v in local.merged_private_link_private_dns_zones : k => v if length(regexall(var.private_link_private_dns_zones_regex_filter.regex_filter, v.zone_name)) > 0
   } : local.merged_private_link_private_dns_zones
   virtual_network_link_name_templates = { for key, value in var.virtual_network_resource_ids_to_link_to : key => value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : value.virtual_network_link_name_template_override }
 }

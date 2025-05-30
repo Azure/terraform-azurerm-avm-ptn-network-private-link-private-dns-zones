@@ -359,19 +359,16 @@ DESCRIPTION
   nullable    = false
 }
 
-variable "private_link_private_dns_zones_filter" {
+variable "private_link_private_dns_zones_regex_filter" {
   type = object({
-    enabled = optional(bool, false)
-    filter  = optional(string, "{regionName}|{regionCode}")
+    enabled      = optional(bool, false)
+    regex_filter = optional(string, "{regionName}|{regionCode}")
   })
-  default = {
-    enabled = true
-    filter  = null
-  }
+  default     = {}
   description = <<DESCRIPTION
-This variable controls whether or not the Private Link Private DNS Zones should be filtered based on the region name and region code. If enabled, the `filter` will be used to filter the Private Link Private DNS Zones based on the region name and region code.
+This variable controls whether or not the Private Link Private DNS Zones should be filtered based on the zone name. If enabled, the `regex_filter` will be used to filter the Private Link Private DNS Zones based on the zone name.
 - `enabled` - (Optional) Whether to enable filtering of the Private Link Private DNS Zones. Defaults to `false`.
-- `filter` - (Optional) The regular expression filter to apply to the Private Link Private DNS Zones. The default value is `{regionName}|{regionCode}`, which will filter for regional Private Link Private DNS Zones often needed for secondary regions. You can specify a custom filter to match your requirements.
+- `regex_filter` - (Optional) The regular expression filter to apply to the Private Link Private DNS Zones. The default value is `{regionName}|{regionCode}`, which will filter for regional Private Link Private DNS Zones often needed for secondary regions. You can specify a custom filter to match your requirements.
 DESCRIPTION
   nullable    = false
 }
