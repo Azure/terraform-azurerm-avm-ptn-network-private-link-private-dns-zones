@@ -5,7 +5,7 @@ locals {
 
 locals {
   filtered_private_link_private_dns_zones = {
-    for k, v in local.merged_private_link_private_dns_zones : k => v if !(contains(var.private_link_excluded_zones, v.zone_name) || contains(var.private_link_excluded_zones, k))
+    for k, v in local.regex_filtered_private_link_private_dns_zones : k => v if !(contains(var.private_link_excluded_zones, v.zone_name) || contains(var.private_link_excluded_zones, k))
   }
   merged_private_link_private_dns_zones = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
   private_link_private_dns_zones_replaced_regionCode_map = {
@@ -18,6 +18,9 @@ locals {
       zone_name = replace(v.zone_name, "{regionName}", local.location_name)
     }
   }
+  regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_filter.enabled ? {
+    for k, v in local.merged_private_link_private_dns_zones : k => v if length(regexall(var.private_link_private_dns_zones_filter.filter, v.zone_name)) > 0
+  } : local.merged_private_link_private_dns_zones
   virtual_network_link_name_templates = { for key, value in var.virtual_network_resource_ids_to_link_to : key => value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : value.virtual_network_link_name_template_override }
 }
 
