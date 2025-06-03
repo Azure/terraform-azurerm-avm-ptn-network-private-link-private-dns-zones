@@ -68,6 +68,9 @@ variable "private_link_private_dns_zones" {
     azure_ai_oai = {
       zone_name = "privatelink.openai.azure.com"
     }
+    azure_ai_services = {
+      zone_name = "privatelink.services.ai.azure.com"
+    }
     azure_bot_svc_bot = {
       zone_name = "privatelink.directline.botframework.com"
     }
