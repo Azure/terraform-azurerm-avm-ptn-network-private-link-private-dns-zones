@@ -1,5 +1,6 @@
 terraform {
   required_version = "~> 1.5"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -44,10 +45,10 @@ resource "azurerm_resource_group" "region_1" {
 }
 
 resource "azurerm_virtual_network" "this_1" {
-  address_space       = ["10.0.1.0/24"]
   location            = azurerm_resource_group.region_1.location
   name                = "vnet1"
   resource_group_name = azurerm_resource_group.region_1.name
+  address_space       = ["10.0.1.0/24"]
 }
 
 module "test_region_1" {
@@ -102,10 +103,10 @@ resource "azurerm_resource_group" "region_2" {
 }
 
 resource "azurerm_virtual_network" "this_2" {
-  address_space       = ["10.0.2.0/24"]
   location            = azurerm_resource_group.region_2.location
   name                = "vnet2"
   resource_group_name = azurerm_resource_group.region_2.name
+  address_space       = ["10.0.2.0/24"]
 }
 
 module "test_region_2" {

@@ -266,6 +266,9 @@ variable "private_link_private_dns_zones" {
     azure_managed_hsm = {
       zone_name = "privatelink.managedhsm.azure.net"
     }
+    azure_managed_prometheus = {
+      zone_name = "privatelink.{regionName}.prometheus.monitor.azure.com"
+    }
     azure_app_configuration = {
       zone_name = "privatelink.azconfig.io"
     }
