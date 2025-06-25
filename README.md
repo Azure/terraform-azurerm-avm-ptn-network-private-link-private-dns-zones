@@ -296,6 +296,9 @@ Default:
   "azure_managed_hsm": {
     "zone_name": "privatelink.managedhsm.azure.net"
   },
+  "azure_managed_prometheus": {
+    "zone_name": "privatelink.{regionName}.prometheus.monitor.azure.com"
+  },
   "azure_maria_db_server": {
     "zone_name": "privatelink.mariadb.database.azure.com"
   },
