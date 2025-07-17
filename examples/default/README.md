@@ -8,6 +8,7 @@ It will deploy all known Azure Private DNS Zones for Azure Services that support
 ```hcl
 terraform {
   required_version = "~> 1.5"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
