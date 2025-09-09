@@ -149,9 +149,6 @@ Default:
 
 ```json
 {
-  "azure_acr_data": {
-    "zone_name": "{regionName}.data.privatelink.azurecr.io"
-  },
   "azure_acr_registry": {
     "zone_name": "privatelink.azurecr.io"
   },
@@ -223,6 +220,9 @@ Default:
   },
   "azure_cosmos_db_mongo": {
     "zone_name": "privatelink.mongo.cosmos.azure.com"
+  },
+  "azure_cosmos_db_mongo_vcore": {
+    "zone_name": "privatelink.mongocluster.cosmos.azure.com"
   },
   "azure_cosmos_db_postgres": {
     "zone_name": "privatelink.postgres.cosmos.azure.com"
@@ -298,6 +298,9 @@ Default:
   },
   "azure_managed_hsm": {
     "zone_name": "privatelink.managedhsm.azure.net"
+  },
+  "azure_managed_prometheus": {
+    "zone_name": "privatelink.{regionName}.prometheus.monitor.azure.com"
   },
   "azure_maria_db_server": {
     "zone_name": "privatelink.mariadb.database.azure.com"
