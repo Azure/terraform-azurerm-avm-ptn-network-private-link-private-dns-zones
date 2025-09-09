@@ -26,7 +26,7 @@ data "azurerm_client_config" "current" {}
 # Region 1
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  version = "0.3.1"
 }
 
 resource "random_integer" "region_index_1" {
