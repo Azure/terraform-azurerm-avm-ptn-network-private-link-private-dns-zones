@@ -45,7 +45,7 @@ resource "random_integer" "region_index_1" {
 
 module "naming_1" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3"
 }
 
 resource "azurerm_resource_group" "region_1" {
@@ -103,7 +103,7 @@ resource "random_integer" "region_index_2" {
 
 module "naming_2" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3"
 }
 
 resource "azurerm_resource_group" "region_2" {
