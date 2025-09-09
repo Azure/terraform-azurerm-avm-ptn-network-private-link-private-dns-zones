@@ -45,7 +45,7 @@ resource "random_integer" "region_index_1" {
 
 module "naming_1" {
   source  = "Azure/naming/azurerm"
-  version = "0.3"
+  version = "0.3.0"
 }
 
 resource "azurerm_resource_group" "region_1" {
@@ -103,7 +103,7 @@ resource "random_integer" "region_index_2" {
 
 module "naming_2" {
   source  = "Azure/naming/azurerm"
-  version = "0.3"
+  version = "0.3.0"
 }
 
 resource "azurerm_resource_group" "region_2" {
@@ -208,13 +208,13 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.3
+Version: 0.3.0
 
 ### <a name="module_naming_2"></a> [naming\_2](#module\_naming\_2)
 
 Source: Azure/naming/azurerm
 
-Version: 0.3
+Version: 0.3.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 

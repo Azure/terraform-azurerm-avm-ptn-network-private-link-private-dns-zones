@@ -28,7 +28,7 @@ provider "azurerm" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3"
+  version = "0.3.0"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -96,7 +96,7 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.3
+Version: 0.3.0
 
 ### <a name="module_test"></a> [test](#module\_test)
 
