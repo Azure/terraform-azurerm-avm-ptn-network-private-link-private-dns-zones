@@ -32,7 +32,7 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  version = "0.3.1"
 }
 
 resource "random_integer" "region_index" {
@@ -42,7 +42,7 @@ resource "random_integer" "region_index" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3.0"
 }
 
 module "test" {
@@ -127,13 +127,13 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: ~> 0.3
+Version: 0.3.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
 Source: Azure/regions/azurerm
 
-Version: ~> 0.3
+Version: 0.3.1
 
 ### <a name="module_test"></a> [test](#module\_test)
 

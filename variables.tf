@@ -141,9 +141,6 @@ variable "private_link_private_dns_zones" {
     azure_acr_registry = {
       zone_name = "privatelink.azurecr.io"
     }
-    azure_acr_data = {
-      zone_name = "{regionName}.data.privatelink.azurecr.io"
-    }
     azure_sql_server = {
       zone_name = "privatelink.database.windows.net"
     }
@@ -152,6 +149,9 @@ variable "private_link_private_dns_zones" {
     }
     azure_cosmos_db_mongo = {
       zone_name = "privatelink.mongo.cosmos.azure.com"
+    }
+    azure_cosmos_db_mongo_vcore = {
+      zone_name = "privatelink.mongocluster.cosmos.azure.com"
     }
     azure_cosmos_db_cassandra = {
       zone_name = "privatelink.cassandra.cosmos.azure.com"
@@ -248,6 +248,9 @@ variable "private_link_private_dns_zones" {
     }
     azure_monitor_agent = {
       zone_name = "privatelink.agentsvc.azure-automation.net"
+    }
+    azure_managed_prometheus = {
+      zone_name = "privatelink.{regionName}.prometheus.monitor.azure.com"
     }
     azure_purview_account = {
       zone_name = "privatelink.purview.azure.com"

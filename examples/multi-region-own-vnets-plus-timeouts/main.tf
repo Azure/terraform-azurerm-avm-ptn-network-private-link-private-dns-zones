@@ -26,7 +26,7 @@ data "azurerm_client_config" "current" {}
 # Region 1
 module "regions" {
   source  = "Azure/regions/azurerm"
-  version = "~> 0.3"
+  version = "0.3.1"
 }
 
 resource "random_integer" "region_index_1" {
@@ -36,7 +36,7 @@ resource "random_integer" "region_index_1" {
 
 module "naming_1" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3.0"
 }
 
 resource "azurerm_resource_group" "region_1" {
@@ -94,7 +94,7 @@ resource "random_integer" "region_index_2" {
 
 module "naming_2" {
   source  = "Azure/naming/azurerm"
-  version = "~> 0.3"
+  version = "0.3.0"
 }
 
 resource "azurerm_resource_group" "region_2" {
