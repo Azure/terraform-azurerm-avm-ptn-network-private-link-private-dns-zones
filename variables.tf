@@ -48,7 +48,8 @@ variable "private_link_excluded_zones" {
 
 variable "private_link_private_dns_zones" {
   type = map(object({
-    zone_name = optional(string, null)
+    zone_name                              = optional(string, null)
+    private_dns_zone_supports_private_link = optional(bool, true)
     custom_iterator = optional(object({
       replacement_placeholder = string
       replacement_values      = map(string)
@@ -319,6 +320,7 @@ variable "private_link_private_dns_zones" {
 A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
 
 - `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `private_dns_zone_supports_private_link` - (Optional) Whether the Private Link Private DNS Zone supports Private Link. Defaults to `true`.
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
@@ -347,7 +349,8 @@ DESCRIPTION
 
 variable "private_link_private_dns_zones_additional" {
   type = map(object({
-    zone_name = optional(string, null)
+    zone_name                              = optional(string, null)
+    private_dns_zone_supports_private_link = optional(bool, true)
     custom_iterator = optional(object({
       replacement_placeholder = string
       replacement_values      = map(string)
@@ -360,6 +363,7 @@ A set of Private Link Private DNS Zones to create in addition to the zones suppl
 The purpose of this variable is to allow the use of our default zones and just add any additional zones without having to redefine the entire set of default zones.
 
 - `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `private_dns_zone_supports_private_link` - (Optional) Whether the Private Link Private DNS Zone supports Private Link. Defaults to `true`.
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
@@ -470,8 +474,7 @@ variable "virtual_network_resource_ids_to_link_to" {
   type = map(object({
     vnet_resource_id                            = optional(string, null)
     virtual_network_link_name_template_override = optional(string, null)
-    private_dns_zone_supports_private_link      = optional(bool)
-    resolution_policy                           = optional(string)
+    resolution_policy                           = optional(string, "Default")
   }))
   default     = {}
   description = <<DESCRIPTION
@@ -479,7 +482,6 @@ A map of objects of Virtual Network Resource IDs to link to the Private Link Pri
 
 - `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 - `virtual_network_link_name_template_override` - (Optional) An override for the name of the Virtual Network Link to create. If not specified, the name will be generated based on the `virtual_network_link_name_template` variable and the dns zone key and virtual network map key. This name will apply to every DNS zone link for that virtual network.
-- `private_dns_zone_supports_private_link` - (Optional) Whether the Private Link Private DNS Zone supports Private Link. If true, the Virtual Network Link will be created with `registration_enabled` set to false.
 - `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
 
 DESCRIPTION

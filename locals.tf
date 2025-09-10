@@ -37,7 +37,7 @@ locals {
               virtual_network_id                     = vnet_value.vnet_resource_id
               name                                   = templatestring(local.virtual_network_link_name_templates[vnet_key], { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_key })
               registration_enabled                   = false
-              private_dns_zone_supports_private_link = vnet_value.private_dns_zone_supports_private_link
+              private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
               resolution_policy                      = vnet_value.resolution_policy
               tags                                   = var.tags
             }
