@@ -71,6 +71,5 @@ module "test" {
     azure_power_bi_power_query = {
       zone_name = "privatelink.tip1.powerquery.microsoft.com"
     }
-
   }
 }
