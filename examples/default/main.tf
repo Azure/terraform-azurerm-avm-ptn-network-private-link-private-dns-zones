@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 4.0, < 5.0"
     }
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
@@ -24,8 +28,8 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.3.1"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.7.0"
 }
 
 resource "random_integer" "region_index" {
@@ -35,7 +39,7 @@ resource "random_integer" "region_index" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.2"
 }
 
 module "test" {
@@ -45,11 +49,4 @@ module "test" {
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
   enable_telemetry    = var.enable_telemetry
-  resource_group_role_assignments = {
-    "rbac-asi-1" = {
-      role_definition_id_or_name       = "Reader"
-      principal_id                     = data.azurerm_client_config.current.object_id
-      skip_service_principal_aad_check = true
-    }
-  }
 }
