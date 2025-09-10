@@ -69,3 +69,10 @@ resource "azapi_resource" "role_assignments" {
   read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
 }
+
+moved {
+  from = module.avm_res_network_privatednszone["custom_zone_1"].azurerm_private_dns_zone.this
+  to = module.avm_res_network_privatednszone["custom_zone_1"].azapi_resource.private_dns_zone
+}
+
+
