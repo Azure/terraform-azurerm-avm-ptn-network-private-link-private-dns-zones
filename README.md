@@ -9,8 +9,41 @@ The module also has logic built in to it to handle the replacements of the follo
 - `...{regionName}...`
 - `...{regionCode}...`
 
-> [!NOTE]  
+> [!NOTE]
 > This module only supports Azure Public/Commercial today and **NOT** Azure US Government Cloud (a.k.a. Fairfax) or Azure China Cloud (a.k.a. Mooncake). If you would like to see support added for these clouds please raise an issue/feature request on this repo/module.
+
+## Migrating from versions `v0.17.0` and prior to `v0.18.0` and later
+
+Versions `v0.17.0` and prior of this module used `azurerm` as its primary provider as the version of the `Azure/avm-res-network-privatednszone/azurerm` module it leveraged was built using `azurerm` as its primary provider also.
+
+As of version `v0.18.0` and later of this module, the module has been re-architected to use `azapi` as its primary provider as the version of the `Azure/avm-res-network-privatednszone/azurerm` module (`v0.4.1`) it now leverages is built using `azapi` as its primary provider also.
+
+> Version `v0.18.0` of this module includes support for the Resolution Policy on the Private DNS Zone Virtual Network Links to allow for NXDomain Redirects to be configured, as documented in [Fallback to internet for Azure Private DNS zones](https://learn.microsoft.com/azure/dns/private-dns-fallback); see the new input properties in the `private_link_private_dns_zones` (`private_dns_zone_supports_private_link`), `private_link_private_dns_zones_additional` (`private_dns_zone_supports_private_link`), and `virtual_network_resource_ids_to_link_to` (`resolution_policy`) input variables.
+
+This means that if you are using version `v0.17.0` or prior of this module and wish to upgrade to version `v0.18.0` or later, you will need to make some changes to your code to complete a successful upgrade.
+
+Whilst we have used `moved` blocks in the module itself, see [`moved.tf`](moved.tf), to help with the migration, we have only been able to do this for the resources that are default created by the module. These are:
+
+- The Private Link Private DNS Zones declared in the default value of the `private_link_private_dns_zones` input variable.
+- The Resource Group created by the module if you are not using an existing Resource Group, as controlled by the `resource_group_creation_enabled` input variable.
+
+For other resources that can be created by this module, you will need to declare your own `moved` blocks in your code (root module) to help with the migration. These resources are:
+
+- Private DNS Zones declared in the `private_link_private_dns_zones_additional` input variable.
+- Private DNS Zones Virtual Network Links declared in the `virtual_network_resource_ids_to_link_to` input variable.
+- Role Assignments created on the Resource Group declared in the `resource_group_role_assignments` input variable.
+- Locks created on the Resource Group declared in the `lock` input variable.
+
+> You may decide it is not worth migrating some of these resources and instead allow Terraform to delete and recreate them. Such as the Role Assignments and Locks on the Resource Group. However, you should consider the impact of this before doing so based on your understanding of your environment and code.
+
+To help with this we have provided some example `moved` blocks that you can copy, paste, and amend/edit into your code (root module) to help with the migration. You can find these example `moved` blocks in the following example's `main.tf` files:
+
+- [custom-zones-vnet-link-existing-rg-including-moved-blocks](examples/custom-zones-vnet-link-existing-rg-including-moved-blocks/main.tf) - lines `106` onwards
+- [with-vnet-link-existing-rg-including-moved-blocks](examples/with-vnet-link-existing-rg-including-moved-blocks/main.tf) - lines `104` onwards
+
+You will also note that there are a number of new resources to be created relating to telemetry and the `modtm` provider, these do not need any `moved` blocks and are expected to be created as new resources to improve our AVM modules telemetry and insights.
+
+If you have any questions or need any help with the migration please raise an issue on this repo/module and we will do our best to help. However, we believe we have provided comprehensive guidance and examples to help with the migration to prevent the deletion of critical resources.
 
 ---
 
@@ -26,27 +59,25 @@ The module also has logic built in to it to handle the replacements of the follo
 
 The following requirements are needed by this module:
 
-- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
+- <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.4)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 4.0, < 5.0)
-
 - <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
-- <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
+- <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.1, < 5.0)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
+- [azapi_resource.lock](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.rg](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
+- [azapi_resource.role_assignments](https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource) (resource)
 - [modtm_telemetry.telemetry](https://registry.terraform.io/providers/Azure/modtm/latest/docs/resources/telemetry) (resource)
 - [random_uuid.telemetry](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) (resource)
+- [azapi_client_config.current](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
 - [azapi_client_config.telemetry](https://registry.terraform.io/providers/Azure/azapi/latest/docs/data-sources/client_config) (data source)
-- [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 - [modtm_module_source.telemetry](https://registry.terraform.io/providers/Azure/modtm/latest/docs/data-sources/module_source) (data source)
 
 <!-- markdownlint-disable MD013 -->
@@ -111,6 +142,7 @@ Default: `[]`
 Description: A set of Private Link Private DNS Zones to create. Each element must be a valid DNS zone name.
 
 - `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `private_dns_zone_supports_private_link` - (Optional) Whether the Private Link Private DNS Zone supports Private Link. Defaults to `true`.
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
@@ -137,7 +169,8 @@ Type:
 
 ```hcl
 map(object({
-    zone_name = optional(string, null)
+    zone_name                              = optional(string, null)
+    private_dns_zone_supports_private_link = optional(bool, true)
     custom_iterator = optional(object({
       replacement_placeholder = string
       replacement_values      = map(string)
@@ -418,6 +451,7 @@ Description: A set of Private Link Private DNS Zones to create in addition to th
 The purpose of this variable is to allow the use of our default zones and just add any additional zones without having to redefine the entire set of default zones.
 
 - `zone_name` - The name of the Private Link Private DNS Zone to create. This can include placeholders for the region code and region name, which will be replaced with the appropriate values based on the `location` variable.
+- `private_dns_zone_supports_private_link` - (Optional) Whether the Private Link Private DNS Zone supports Private Link. Defaults to `true`.
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
@@ -426,7 +460,8 @@ Type:
 
 ```hcl
 map(object({
-    zone_name = optional(string, null)
+    zone_name                              = optional(string, null)
+    private_dns_zone_supports_private_link = optional(bool, true)
     custom_iterator = optional(object({
       replacement_placeholder = string
       replacement_values      = map(string)
@@ -467,8 +502,9 @@ Description: A map of role assignments to create on the Resource Group. The map 
 
 - `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
 - `principal_id` - The ID of the principal to assign the role to.
+- `principal_type` - (Optional) The type of the principal. Possible values are `User`, `Group`, and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
 - `description` - The description of the role assignment.
-- `skip_service_principal_aad_check` - If set to true, skips the Azure Active Directory check for the service principal in the tenant. Defaults to false.
+- `skip_service_principal_aad_check` - If set to true, skips the Entra ID check for the service principal in the tenant. Defaults to `false`.
 - `condition` - The condition which will be used to scope the role assignment.
 - `condition_version` - The version of the condition syntax. Valid values are '2.0'.
 
@@ -480,6 +516,7 @@ Type:
 map(object({
     role_definition_id_or_name             = string
     principal_id                           = string
+    principal_type                         = optional(string, null)
     description                            = optional(string, null)
     skip_service_principal_aad_check       = optional(bool, false)
     condition                              = optional(string, null)
@@ -550,6 +587,7 @@ Description: A map of objects of Virtual Network Resource IDs to link to the Pri
 
 - `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 - `virtual_network_link_name_template_override` - (Optional) An override for the name of the Virtual Network Link to create. If not specified, the name will be generated based on the `virtual_network_link_name_template` variable and the dns zone key and virtual network map key. This name will apply to every DNS zone link for that virtual network.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
 
 Type:
 
@@ -557,6 +595,7 @@ Type:
 map(object({
     vnet_resource_id                            = optional(string, null)
     virtual_network_link_name_template_override = optional(string, null)
+    resolution_policy                           = optional(string, "Default")
   }))
 ```
 
@@ -582,17 +621,23 @@ Description: The resource ID of the resource group that the Private DNS Zones ar
 
 The following Modules are called:
 
+### <a name="module_avm_interfaces"></a> [avm\_interfaces](#module\_avm\_interfaces)
+
+Source: Azure/avm-utl-interfaces/azure
+
+Version: 0.5.0
+
 ### <a name="module_avm_res_network_privatednszone"></a> [avm\_res\_network\_privatednszone](#module\_avm\_res\_network\_privatednszone)
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.3.0
+Version: 0.4.1
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.5.0
+Version: 0.7.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection

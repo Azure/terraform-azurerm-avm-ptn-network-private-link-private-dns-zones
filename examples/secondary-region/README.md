@@ -11,6 +11,10 @@ terraform {
   required_version = "~> 1.5"
 
   required_providers {
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 4.0, < 5.0"
@@ -28,7 +32,7 @@ provider "azurerm" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.2"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -39,7 +43,6 @@ resource "azurerm_resource_group" "this" {
 module "test" {
   source = "../../"
 
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = "uksouth"
   resource_group_name = azurerm_resource_group.this.name
   enable_telemetry    = var.enable_telemetry
@@ -56,6 +59,8 @@ module "test" {
 The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
+
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 4.0, < 5.0)
 
@@ -96,7 +101,7 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.3.0
+Version: 0.4.2
 
 ### <a name="module_test"></a> [test](#module\_test)
 

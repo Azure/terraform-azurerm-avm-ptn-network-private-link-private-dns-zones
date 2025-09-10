@@ -2,13 +2,13 @@ terraform {
   required_version = "~> 1.5"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
-    }
     azapi = {
       source  = "Azure/azapi"
       version = "~> 2.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.0, < 5.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -63,13 +63,10 @@ resource "azurerm_virtual_network" "this_2" {
 
 module "test" {
   source = "../../"
-  # source  = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
-  location = azurerm_resource_group.this.location
-
-  resource_group_name             = azurerm_resource_group.this.name
-  resource_group_creation_enabled = false
-  enable_telemetry                = var.enable_telemetry
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry    = var.enable_telemetry
   private_link_private_dns_zones_additional = {
     example_zone_1 = {
       zone_name                              = "{regionCode}.example.com"
@@ -87,6 +84,7 @@ module "test" {
       }
     }
   }
+  resource_group_creation_enabled = false
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
       vnet_resource_id                            = azurerm_virtual_network.this_1.id

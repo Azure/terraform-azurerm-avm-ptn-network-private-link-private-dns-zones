@@ -26,7 +26,6 @@ variable "lock" {
     name = optional(string, null)
   })
   default     = null
-  nullable    = true
   description = <<DESCRIPTION
 Controls the Resource Lock configuration for the Resource Group that hosts the Private DNS Zones. The following properties can be specified:
 

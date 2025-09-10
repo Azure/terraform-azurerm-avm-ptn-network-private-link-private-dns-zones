@@ -2,13 +2,13 @@ terraform {
   required_version = "~> 1.5"
 
   required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
-    }
     azapi = {
       source  = "Azure/azapi"
       version = "~> 2.0"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.0, < 5.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -63,7 +63,6 @@ resource "azurerm_virtual_network" "this_2" {
 
 module "test" {
   source = "../../"
-  # source  = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
 
   location            = azurerm_resource_group.this.location
   resource_group_name = azurerm_resource_group.this.name

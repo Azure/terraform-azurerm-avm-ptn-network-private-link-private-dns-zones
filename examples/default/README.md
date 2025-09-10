@@ -11,6 +11,10 @@ terraform {
   required_version = "~> 1.5"
 
   required_providers {
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
+    }
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">= 4.0, < 5.0"
@@ -33,8 +37,8 @@ provider "azurerm" {
 data "azurerm_client_config" "current" {}
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.3.1"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.7.0"
 }
 
 resource "random_integer" "region_index" {
@@ -44,23 +48,15 @@ resource "random_integer" "region_index" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.2"
 }
 
 module "test" {
   source = "../../"
 
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
   enable_telemetry    = var.enable_telemetry
-  resource_group_role_assignments = {
-    "rbac-asi-1" = {
-      role_definition_id_or_name       = "Reader"
-      principal_id                     = data.azurerm_client_config.current.object_id
-      skip_service_principal_aad_check = true
-    }
-  }
 }
 ```
 
@@ -70,6 +66,8 @@ module "test" {
 The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (~> 1.5)
+
+- <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.0)
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 4.0, < 5.0)
 
@@ -99,7 +97,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ## Outputs
 
@@ -113,13 +111,13 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.3.0
+Version: 0.4.2
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.3.1
+Version: 0.7.0
 
 ### <a name="module_test"></a> [test](#module\_test)
 
