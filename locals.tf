@@ -49,6 +49,7 @@ locals {
 }
 
 locals {
-  resource_group_resource_id         = var.resource_group_creation_enabled ? azapi_resource.rg[0].id : "${data.azapi_client_config.current.subscription_resource_id}/resourceGroups/${var.resource_group_name}"
+  resource_group_id_string           = "${data.azapi_client_config.current.subscription_resource_id}/resourceGroups/${var.resource_group_name}"
+  resource_group_dependency_id       = var.resource_group_creation_enabled ? azapi_resource.rg[0].id : null
   role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
 }

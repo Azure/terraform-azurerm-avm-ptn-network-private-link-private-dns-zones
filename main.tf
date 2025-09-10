@@ -15,10 +15,10 @@ module "avm_interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
   version = "0.5.0"
 
-  lock                                      = var.lock
-  enable_telemetry                          = var.enable_telemetry
-  role_assignment_definition_scope          = local.resource_group_resource_id
-  role_assignments                          = var.resource_group_role_assignments
+  lock                             = var.lock
+  enable_telemetry                 = var.enable_telemetry
+  role_assignment_definition_scope = local.resource_group_id_string
+  role_assignments                 = var.resource_group_role_assignments
 
 }
 
@@ -35,44 +35,48 @@ module "avm_res_network_privatednszone" {
   version  = "0.4.1"
   for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
 
-  parent_id = local.resource_group_resource_id
+  parent_id = local.resource_group_id_string
 
   domain_name           = each.value.zone_name
   enable_telemetry      = var.enable_telemetry
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.vnets
+
+  depends_on = [azapi_resource.rg]
+
 }
 
 resource "azapi_resource" "lock" {
   count = var.lock != null ? 1 : 0
 
-  name           = coalesce(module.avm_interfaces.lock_azapi.name, "lock-${azapi_resource.rg[0].name}")
-  parent_id      = local.resource_group_resource_id
+  name           = coalesce(module.avm_interfaces.lock_azapi.name, "lock-${var.resource_group_name}")
+  parent_id      = local.resource_group_id_string
   type           = module.avm_interfaces.lock_azapi.type
   body           = module.avm_interfaces.lock_azapi.body
   create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+
+  depends_on = [azapi_resource.rg]
+
 }
 
 resource "azapi_resource" "role_assignments" {
   for_each = module.avm_interfaces.role_assignments_azapi
 
   name           = each.value.name
-  parent_id      = local.resource_group_resource_id
+  parent_id      = local.resource_group_id_string
   type           = each.value.type
   body           = each.value.body
   create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
+
+  depends_on = [azapi_resource.rg]
 }
 
-moved {
-  from = module.avm_res_network_privatednszone["custom_zone_1"].azurerm_private_dns_zone.this
-  to = module.avm_res_network_privatednszone["custom_zone_1"].azapi_resource.private_dns_zone
-}
 
 

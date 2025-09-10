@@ -1,3 +1,10 @@
+# Resource Group
+moved {
+  from = azurerm_resource_group.this
+  to = azapi_resource.rg
+}
+
+# DNS Zones
 moved {
   from = module.avm_res_network_privatednszone["azure_container_apps"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_container_apps"].azapi_resource.private_dns_zone
@@ -418,22 +425,21 @@ moved {
   to   = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_1"].azapi_resource.private_dns_zone
 }
 moved {
-
   from = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_2"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_2"].azapi_resource.private_dns_zone
 }
-moved {
 
+moved {
   from = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_3"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_3"].azapi_resource.private_dns_zone
 }
-moved {
 
+moved {
   from = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_4"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_4"].azapi_resource.private_dns_zone
 }
-moved {
 
+moved {
   from = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_5"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_static_web_apps_partitioned_5"].azapi_resource.private_dns_zone
 }

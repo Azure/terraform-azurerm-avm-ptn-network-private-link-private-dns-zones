@@ -10,5 +10,5 @@ output "private_dns_zone_resource_ids" {
 
 output "resource_group_resource_id" {
   description = "The resource ID of the resource group that the Private DNS Zones are deployed into."
-  value       = local.resource_group_resource_id
+  value       = local.resource_group_id_string
 }
