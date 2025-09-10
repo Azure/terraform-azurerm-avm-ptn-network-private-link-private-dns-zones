@@ -45,7 +45,6 @@ module "naming" {
 module "test" {
   source = "../../"
   # source  = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
-  # version = "0.17.0"
 
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
