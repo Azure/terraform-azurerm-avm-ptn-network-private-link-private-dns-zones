@@ -19,7 +19,7 @@ provider "azurerm" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.2"
 }
 
 resource "azurerm_resource_group" "this" {
@@ -30,7 +30,6 @@ resource "azurerm_resource_group" "this" {
 module "test" {
   source = "../../"
 
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = "uksouth"
   resource_group_name = azurerm_resource_group.this.name
   enable_telemetry    = var.enable_telemetry

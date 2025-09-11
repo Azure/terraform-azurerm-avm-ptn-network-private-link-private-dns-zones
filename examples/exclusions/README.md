@@ -31,8 +31,8 @@ provider "azurerm" {
 }
 
 module "regions" {
-  source  = "Azure/regions/azurerm"
-  version = "0.3.1"
+  source  = "Azure/avm-utl-regions/azurerm"
+  version = "0.7.0"
 }
 
 resource "random_integer" "region_index" {
@@ -42,13 +42,12 @@ resource "random_integer" "region_index" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.3.0"
+  version = "0.4.2"
 }
 
 module "test" {
   source = "../../"
 
-  # source             = "Azure/avm-ptn-network-private-link-private-dns-zones/azurerm"
   location            = module.regions.regions[random_integer.region_index.result].name
   resource_group_name = module.naming.resource_group.name_unique
   enable_telemetry    = var.enable_telemetry
@@ -74,7 +73,6 @@ module "test" {
     azure_power_bi_power_query = {
       zone_name = "privatelink.tip1.powerquery.microsoft.com"
     }
-
   }
 }
 ```
@@ -127,13 +125,13 @@ The following Modules are called:
 
 Source: Azure/naming/azurerm
 
-Version: 0.3.0
+Version: 0.4.2
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
-Source: Azure/regions/azurerm
+Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.3.1
+Version: 0.7.0
 
 ### <a name="module_test"></a> [test](#module\_test)
 

@@ -34,10 +34,12 @@ locals {
           zone_name = custom_iterator_value == null ? zone_value.zone_name : replace(zone_value.zone_name, "{${local.filtered_private_link_private_dns_zones[zone_key].custom_iterator.replacement_placeholder}}", custom_iterator_key)
           vnets = {
             for vnet_key, vnet_value in var.virtual_network_resource_ids_to_link_to : vnet_key => {
-              vnetid           = vnet_value.vnet_resource_id
-              vnetlinkname     = templatestring(local.virtual_network_link_name_templates[vnet_key], { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_key })
-              autoregistration = false
-              tags             = var.tags
+              virtual_network_id                     = vnet_value.vnet_resource_id
+              name                                   = templatestring(local.virtual_network_link_name_templates[vnet_key], { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_key })
+              registration_enabled                   = false
+              private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
+              resolution_policy                      = vnet_value.resolution_policy
+              tags                                   = var.tags
             }
           }
         }
@@ -47,6 +49,5 @@ locals {
 }
 
 locals {
-  resource_group_resource_id         = var.resource_group_creation_enabled ? azurerm_resource_group.this[0].id : "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${var.resource_group_name}"
-  role_definition_resource_substring = "/providers/Microsoft.Authorization/roleDefinitions"
+  resource_group_id_string = "${data.azapi_client_config.current.subscription_resource_id}/resourceGroups/${var.resource_group_name}"
 }
