@@ -21,7 +21,6 @@ locals {
   regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
     for k, v in local.merged_private_link_private_dns_zones : k => v if length(regexall(var.private_link_private_dns_zones_regex_filter.regex_filter, v.zone_name)) > 0
   } : local.merged_private_link_private_dns_zones
-
   virtual_network_link_name_templates = {
     for item in flatten([
       for k, v in local.filtered_private_link_private_dns_zones : [
@@ -33,9 +32,6 @@ locals {
       ]
     ]) : item.key_name => item.virtual_network_link_name_template
   }
-
-
-
 }
 
 locals {
