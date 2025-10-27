@@ -76,6 +76,12 @@ module "test" {
     example_zone_1 = {
       zone_name                              = "{regionCode}.example.com"
       private_dns_zone_supports_private_link = false
+      virtual_network_links = {
+        "vnet1" = {
+          virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
+          virtual_network_link_name_template_override = "vnet1-link"
+        }
+      }
     }
     example_zone_2 = {
       zone_name                              = "{customIterator}.example.com"
@@ -88,10 +94,6 @@ module "test" {
         }
       }
       virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-          virtual_network_link_name_template_override = "vnet1-link"
-        }
         "vnet2" = {
           virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
           virtual_network_link_name_template_override = "$${vnet_key}-link"
