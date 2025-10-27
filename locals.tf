@@ -14,7 +14,7 @@ locals {
       resolution_policy = v.resolution_policy
       private_dns_zone_supports_private_link = v.private_dns_zone_supports_private_link
       # custom_iterator = try(v.custom_iterator, null)
-      virtual_network_link = v.virtual_network_links
+      virtual_network_links = v.virtual_network_links
     }
   }
   private_link_private_dns_zones_replaced_regionName_map = {
@@ -23,7 +23,7 @@ locals {
       resolution_policy = v.resolution_policy
       private_dns_zone_supports_private_link = v.private_dns_zone_supports_private_link
       # custom_iterator = try(v.custom_iterator, null)
-      virtual_network_link = v.virtual_network_links
+      virtual_network_links = v.virtual_network_links
     }
   }
   regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
@@ -40,9 +40,9 @@ locals {
           zone_key  = custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"
           zone_name = custom_iterator_value == null ? zone_value.zone_name : replace(zone_value.zone_name, "{${local.filtered_private_link_private_dns_zones[zone_key].custom_iterator.replacement_placeholder}}", custom_iterator_key)
           virtual_network_links = {
-            for vnet_key, vnet_value in zone_value.virtual_network_links : vnet_key => {
-              virtual_network_id                     = vnet_value.virtual_network_resource_id
-              name                                   = templatestring(vnet_value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : vnet_value.virtual_network_link_name_template_override, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_key })
+            for vnet_link_key, vnet_link_value in zone_value.virtual_network_links : vnet_link_key => {
+              virtual_network_id                     = vnet_link_value.virtual_network_resource_id
+              name                                   = templatestring(vnet_link_value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : vnet_link_value.virtual_network_link_name_template_override, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_key })
               registration_enabled                   = false
               private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
               resolution_policy                      = zone_value.resolution_policy
