@@ -72,12 +72,12 @@ module "test" {
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
         vnet1 = {
-          virtual_network_id = azurerm_virtual_network.this_1.id
-          resolution_policy  = "NxDomainRedirect"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "NxDomainRedirect"
         }
         vnet2 = {
-          virtual_network_id = azurerm_virtual_network.this_2.id
-          resolution_policy  = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "Default"
         }
       }
     }
@@ -86,12 +86,12 @@ module "test" {
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
         vnet1 = {
-          virtual_network_id = azurerm_virtual_network.this_1.id
-          resolution_policy  = "NxDomainRedirect"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "NxDomainRedirect"
         }
         vnet2 = {
-          virtual_network_id = azurerm_virtual_network.this_2.id
-          resolution_policy  = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "Default"
         }
       }
     }
@@ -100,12 +100,12 @@ module "test" {
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
         vnet1 = {
-          virtual_network_id = azurerm_virtual_network.this_1.id
-          resolution_policy  = "NxDomainRedirect"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "NxDomainRedirect"
         }
         vnet2 = {
-          virtual_network_id = azurerm_virtual_network.this_2.id
-          resolution_policy  = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "Default"
         }
       }
     }
@@ -114,12 +114,12 @@ module "test" {
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
         vnet1 = {
-          virtual_network_id = azurerm_virtual_network.this_1.id
-          resolution_policy  = "NxDomainRedirect"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "NxDomainRedirect"
         }
         vnet2 = {
-          virtual_network_id = azurerm_virtual_network.this_2.id
-          resolution_policy  = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "Default"
         }
       }
     }
@@ -128,12 +128,12 @@ module "test" {
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
         vnet1 = {
-          virtual_network_id = azurerm_virtual_network.this_1.id
-          resolution_policy  = "NxDomainRedirect"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "NxDomainRedirect"
         }
         vnet2 = {
-          virtual_network_id = azurerm_virtual_network.this_2.id
-          resolution_policy  = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "Default"
         }
       }
     }
