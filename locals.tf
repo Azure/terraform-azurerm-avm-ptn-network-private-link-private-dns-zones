@@ -36,7 +36,7 @@ locals {
           zone_key  = custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"
           zone_name = custom_iterator_value == null ? zone_value.zone_name : replace(zone_value.zone_name, "{${local.filtered_private_link_private_dns_zones[zone_key].custom_iterator.replacement_placeholder}}", custom_iterator_key)
           virtual_network_links = {
-            for vnet_link_key, vnet_link_value in zone_value.virtual_network_links : vnet_link_key => {
+            for vnet_link_key, vnet_link_value in try(zone_value.virtual_network_links, {}) : vnet_link_key => {
               virtual_network_id                     = vnet_link_value.virtual_network_resource_id
               name                                   = vnet_link_value.virtual_network_link_name_template_override == null ? templatestring(var.virtual_network_link_name_template, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_link_key }) : templatestring(vnet_link_value.virtual_network_link_name_template_override, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_link_key })
               registration_enabled                   = false
