@@ -21,6 +21,21 @@ locals {
   regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
     for k, v in local.merged_private_link_private_dns_zones : k => v if length(regexall(var.private_link_private_dns_zones_regex_filter.regex_filter, v.zone_name)) > 0
   } : local.merged_private_link_private_dns_zones
+
+  virtual_network_link_name_templates = {
+    for item in flatten([
+      for k, v in local.filtered_private_link_private_dns_zones : [
+        for key, value in v.virtual_network_links :
+        {
+          key_name                           = "${k}_${key}"
+          virtual_network_link_name_template = value.virtual_network_link_name_template_override == null ? var.virtual_network_link_name_template : value.virtual_network_link_name_template_override
+        }
+      ]
+    ]) : item.key_name => item.virtual_network_link_name_template
+  }
+
+
+
 }
 
 locals {
@@ -34,7 +49,7 @@ locals {
           virtual_network_links = {
             for vnet_link_key, vnet_link_value in try(local.filtered_private_link_private_dns_zones[zone_key].virtual_network_links, {}) : vnet_link_key => {
               virtual_network_id                     = vnet_link_value.virtual_network_resource_id
-              name                                   = vnet_link_value.virtual_network_link_name_template_override == null ? templatestring(var.virtual_network_link_name_template, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_link_key }) : templatestring(vnet_link_value.virtual_network_link_name_template_override, { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_link_key })
+              name                                   = templatestring(local.virtual_network_link_name_templates["${zone_key}_${vnet_link_key}"], { zone_key = (custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"), vnet_key = vnet_link_key })
               registration_enabled                   = false
               private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
               resolution_policy                      = vnet_link_value.resolution_policy
