@@ -11,11 +11,19 @@ locals {
   private_link_private_dns_zones_replaced_regionCode_map = {
     for k, v in local.private_link_private_dns_zones_replaced_regionName_map : k => {
       zone_name = replace(v.zone_name, "{regionCode}", local.location_geo_code)
+      resolution_policy = v.resolution_policy
+      private_dns_zone_supports_private_link = v.private_dns_zone_supports_private_link
+      # custom_iterator = try(v.custom_iterator, null)
+      virtual_network_link = v.virtual_network_links
     }
   }
   private_link_private_dns_zones_replaced_regionName_map = {
     for k, v in local.filtered_private_link_private_dns_zones : k => {
       zone_name = replace(v.zone_name, "{regionName}", local.location_name)
+      resolution_policy = v.resolution_policy
+      private_dns_zone_supports_private_link = v.private_dns_zone_supports_private_link
+      # custom_iterator = try(v.custom_iterator, null)
+      virtual_network_link = v.virtual_network_links
     }
   }
   regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
