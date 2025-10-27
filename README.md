@@ -179,7 +179,7 @@ map(object({
       virtual_network_resource_id                 = optional(string, null)
       virtual_network_link_name_template_override = optional(string, null)
       resolution_policy                           = optional(string, "Default")
-    })))
+    })), {})
   }))
 ```
 

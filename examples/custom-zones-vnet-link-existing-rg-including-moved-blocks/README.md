@@ -80,12 +80,12 @@ module "test" {
       private_dns_zone_supports_private_link = false
       virtual_network_links = {
         "vnet1" = {
-          vnet_resource_id  = azurerm_virtual_network.this_1.id
-          resolution_policy = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
         }
         "vnet2" = {
-          vnet_resource_id  = azurerm_virtual_network.this_2.id
-          resolution_policy = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
         }
       }
     }
@@ -94,12 +94,12 @@ module "test" {
       private_dns_zone_supports_private_link = false
       virtual_network_links = {
         "vnet1" = {
-          vnet_resource_id  = azurerm_virtual_network.this_1.id
-          resolution_policy = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
         }
         "vnet2" = {
-          vnet_resource_id  = azurerm_virtual_network.this_2.id
-          resolution_policy = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
         }
       }
     }
@@ -108,12 +108,12 @@ module "test" {
       private_dns_zone_supports_private_link = false
       virtual_network_links = {
         "vnet1" = {
-          vnet_resource_id  = azurerm_virtual_network.this_1.id
-          resolution_policy = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
         }
         "vnet2" = {
-          vnet_resource_id  = azurerm_virtual_network.this_2.id
-          resolution_policy = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
         }
       }
     }
@@ -122,12 +122,12 @@ module "test" {
       private_dns_zone_supports_private_link = false
       virtual_network_links = {
         "vnet1" = {
-          vnet_resource_id  = azurerm_virtual_network.this_1.id
-          resolution_policy = "Default"
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
         }
         "vnet2" = {
-          vnet_resource_id  = azurerm_virtual_network.this_2.id
-          resolution_policy = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
         }
       }
     }
