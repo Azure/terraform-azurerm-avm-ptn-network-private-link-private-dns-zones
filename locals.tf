@@ -10,12 +10,12 @@ locals {
   merged_private_link_private_dns_zones = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
   private_link_private_dns_zones_replaced_regionCode_map = {
     for k, v in local.private_link_private_dns_zones_replaced_regionName_map : k => {
-      zone_name                              = replace(v.zone_name, "{regionCode}", local.location_geo_code)
+      zone_name = replace(v.zone_name, "{regionCode}", local.location_geo_code)
     }
   }
   private_link_private_dns_zones_replaced_regionName_map = {
     for k, v in local.filtered_private_link_private_dns_zones : k => {
-      zone_name                              = replace(v.zone_name, "{regionName}", local.location_name)
+      zone_name = replace(v.zone_name, "{regionName}", local.location_name)
     }
   }
   regex_filtered_private_link_private_dns_zones = var.private_link_private_dns_zones_regex_filter.enabled ? {
