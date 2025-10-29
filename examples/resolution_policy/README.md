@@ -79,20 +79,12 @@ module "test" {
           virtual_network_resource_id = azurerm_virtual_network.this_1.id
           resolution_policy           = "NxDomainRedirect"
         }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
       }
     }
     azure_ml = {
       zone_name                              = "privatelink.api.azureml.ms"
       private_dns_zone_supports_private_link = true
       virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
         vnet2 = {
           virtual_network_resource_id = azurerm_virtual_network.this_2.id
           resolution_policy           = "Default"
