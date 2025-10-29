@@ -146,6 +146,13 @@ Description: A set of Private Link Private DNS Zones to create. Each element mus
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
+- `virtual_network_links` - (Optional) A map of virtual network links to create for the Private Link Private DNS Zone. Each element must contain:
+  - `virtual_network_resource_id` - (Optional) The resource ID of the virtual network to link to the Private DNS Zone
+  - `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. If this option is not provided, the default of `var.virtual_network_link_name_template` will be used. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
+  - `resolution_policy` - (Optional) The resolution policy for the virtual network link. Possible values are `Default` and `NxDomainRedirect`. Defaults to `Default`.
 
 **NOTE:**
 
@@ -584,8 +591,10 @@ Default: `{}`
 
 ### <a name="input_virtual_network_link_name_template"></a> [virtual\_network\_link\_name\_template](#input\_virtual\_network\_link\_name\_template)
 
-Description: A prefix to use for the names of the Virtual Network Links created.  
-The zone\_key and vnet\_key will be replaced with the keys of the DNS zone and Virtual Network respectively.
+Description: A prefix to use for the names of the Virtual Network Links created. A template for the default name of the virtual network link. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
 
 Type: `string`
 
