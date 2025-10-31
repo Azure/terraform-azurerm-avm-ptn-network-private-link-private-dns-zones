@@ -287,6 +287,9 @@ Default:
   "azure_event_grid": {
     "zone_name": "privatelink.eventgrid.azure.net"
   },
+  "azure_fabric": {
+    "zone_name": "privatelink.fabric.microsoft.com"
+  },
   "azure_file_sync": {
     "zone_name": "privatelink.afs.azure.net"
   },
