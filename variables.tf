@@ -127,6 +127,9 @@ variable "private_link_private_dns_zones" {
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
     }
+    azure_fabric = {
+      zone_name = "privatelink.fabric.microsoft.com"
+    }
     azure_batch = {
       zone_name = "privatelink.batch.azure.com"
     }
