@@ -36,12 +36,17 @@ module "naming" {
   version = "0.4.2"
 }
 
+resource "azurerm_resource_group" "this" {
+  location = module.regions.regions[random_integer.region_index.result].name
+  name     = module.naming.resource_group.name_unique
+}
+
 module "test" {
   source = "../../"
 
-  location            = module.regions.regions[random_integer.region_index.result].name
-  resource_group_name = module.naming.resource_group.name_unique
-  enable_telemetry    = var.enable_telemetry
+  parent_id        = azurerm_resource_group.this.id
+  location         = module.regions.regions[random_integer.region_index.result].name
+  enable_telemetry = var.enable_telemetry
   private_link_excluded_zones = [
     "azure_ml_notebooks",
     "privatelink.{regionName}.azurecontainerapps.io",

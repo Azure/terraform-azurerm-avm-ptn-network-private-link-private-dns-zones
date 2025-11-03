@@ -58,9 +58,9 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
+  parent_id        = azurerm_resource_group.this.id
+  location         = azurerm_resource_group.this.location
+  enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones_additional = {
     example_zone_1 = {
       zone_name                              = "{regionCode}.example.com"
@@ -89,7 +89,6 @@ module "test" {
       }
     }
   }
-  resource_group_creation_enabled = false
 }
 
 # Moved block examples based on above declaration. Use as starting point for your own migrations/upgrades to the latest version of the module using the azapi provider.

@@ -4,9 +4,17 @@ variable "location" {
   nullable    = false
 }
 
-variable "resource_group_name" {
+variable "parent_id" {
   type        = string
-  description = "The resource group where the resources will be deployed. Either the name of the new resource group to create or the name of an existing resource group."
+  description = "The resource ID of the existing Resource Group. e.g. `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}`."
+
+  validation {
+    condition = (
+      can(regex("^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[A-Za-z0-9._()-]*[A-Za-z0-9_()-]$", var.parent_id))
+      && length(split(var.parent_id, "/")[4]) <= 90
+    )
+    error_message = "The provided parent_id_existing_resource_group must be a valid resource group resource ID with a name that is 1-90 characters, uses only letters, numbers, `.`, `_`, `(', ')`, or `-`, and does not end with a period, or `null`. e.g. `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}`."
+  }
 }
 
 variable "enable_telemetry" {
@@ -410,13 +418,6 @@ This variable controls whether or not the Private Link Private DNS Zones should 
 - `enabled` - (Optional) Whether to enable filtering of the Private Link Private DNS Zones. Defaults to `false`.
 - `regex_filter` - (Optional) The regular expression filter to apply to the Private Link Private DNS Zones. The default value is `{regionName}|{regionCode}`, which will filter for regional Private Link Private DNS Zones often needed for secondary regions. You can specify a custom filter to match your requirements.
 DESCRIPTION
-  nullable    = false
-}
-
-variable "resource_group_creation_enabled" {
-  type        = bool
-  default     = true
-  description = "This variable controls whether or not the resource group should be created. If set to false, the resource group must be created elsewhere and the resource group name must be provided to the module. If set to true, the resource group will be created by the module using the name provided in `resource_group_name`."
   nullable    = false
 }
 

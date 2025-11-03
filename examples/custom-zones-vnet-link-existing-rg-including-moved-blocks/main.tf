@@ -58,9 +58,9 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
+  parent_id        = azurerm_resource_group.this.id
+  location         = azurerm_resource_group.this.location
+  enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones = {
     "custom_zone_1" = {
       zone_name                              = "custom-example-1.int"
@@ -119,7 +119,6 @@ module "test" {
       }
     }
   }
-  resource_group_creation_enabled = false
   tags = {
     "env"             = "example"
     "example-tag-key" = "example tag value"

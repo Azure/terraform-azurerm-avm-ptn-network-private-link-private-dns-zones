@@ -1,19 +1,3 @@
-resource "azapi_resource" "rg" {
-  count = var.resource_group_creation_enabled ? 1 : 0
-
-  location       = var.location
-  name           = var.resource_group_name
-  parent_id      = data.azapi_client_config.current.subscription_resource_id
-  type           = "Microsoft.Resources/resourceGroups@2025-04-01"
-  create_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-  tags           = var.tags
-  update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-}
-
-data "azapi_client_config" "current" {}
-
 module "avm_interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
   version = "0.5.0"
@@ -43,14 +27,12 @@ module "avm_res_network_privatednszone" {
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.virtual_network_links
-
-  depends_on = [azapi_resource.rg]
 }
 
 resource "azapi_resource" "lock" {
   count = var.lock != null ? 1 : 0
 
-  name           = coalesce(module.avm_interfaces.lock_azapi.name, "lock-${var.resource_group_name}")
+  name           = coalesce(module.avm_interfaces.lock_azapi.name, "lock-${local.resource_group_name}")
   parent_id      = local.resource_group_id_string
   type           = module.avm_interfaces.lock_azapi.type
   body           = module.avm_interfaces.lock_azapi.body
@@ -58,8 +40,6 @@ resource "azapi_resource" "lock" {
   delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-
-  depends_on = [azapi_resource.rg]
 }
 
 resource "azapi_resource" "role_assignments" {
@@ -73,8 +53,6 @@ resource "azapi_resource" "role_assignments" {
   delete_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   read_headers   = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
   update_headers = var.enable_telemetry ? { "User-Agent" : local.avm_azapi_header } : null
-
-  depends_on = [azapi_resource.rg]
 }
 
 
