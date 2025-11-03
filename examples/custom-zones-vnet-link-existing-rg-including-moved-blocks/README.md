@@ -78,34 +78,64 @@ module "test" {
     "custom_zone_1" = {
       zone_name                              = "custom-example-1.int"
       private_dns_zone_supports_private_link = false
+      virtual_network_links = {
+        "vnet1" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
+        }
+        "vnet2" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+        }
+      }
     }
     "custom_zone_2" = {
       zone_name                              = "custom-example-2.local"
       private_dns_zone_supports_private_link = false
+      virtual_network_links = {
+        "vnet1" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
+        }
+        "vnet2" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+        }
+      }
     }
     "custom_zone_3" = {
       zone_name                              = "custom-example-3-{regionName}.local"
       private_dns_zone_supports_private_link = false
+      virtual_network_links = {
+        "vnet1" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
+        }
+        "vnet2" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+        }
+      }
     }
     "custom_zone_4" = {
       zone_name                              = "custom-example-4-{regionCode}.local"
       private_dns_zone_supports_private_link = false
+      virtual_network_links = {
+        "vnet1" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_1.id
+          resolution_policy           = "Default"
+        }
+        "vnet2" = {
+          virtual_network_resource_id = azurerm_virtual_network.this_2.id
+          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+        }
+      }
     }
   }
   resource_group_creation_enabled = false
   tags = {
     "env"             = "example"
     "example-tag-key" = "example tag value"
-  }
-  virtual_network_resource_ids_to_link_to = {
-    "vnet1" = {
-      vnet_resource_id  = azurerm_virtual_network.this_1.id
-      resolution_policy = "Default"
-    }
-    "vnet2" = {
-      vnet_resource_id  = azurerm_virtual_network.this_2.id
-      resolution_policy = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
-    }
   }
 }
 
