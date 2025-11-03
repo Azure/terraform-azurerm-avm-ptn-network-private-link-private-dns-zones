@@ -30,8 +30,8 @@ resource "azurerm_resource_group" "this" {
 module "test" {
   source = "../../"
 
-  parent_id        = azurerm_resource_group.this.id
   location         = "uksouth"
+  parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones_regex_filter = {
     enabled = true

@@ -44,7 +44,7 @@ resource "azurerm_resource_group" "this" {
 module "test" {
   source = "../../"
 
-  parent_id        = azurerm_resource_group.this.id
   location         = module.regions.regions[random_integer.region_index.result].name
+  parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
 }

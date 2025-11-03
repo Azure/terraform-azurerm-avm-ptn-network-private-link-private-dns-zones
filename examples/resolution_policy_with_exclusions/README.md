@@ -67,9 +67,9 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
+  location         = azurerm_resource_group.this.location
+  parent_id        = azurerm_resource_group.this.id
+  enable_telemetry = var.enable_telemetry
   private_link_excluded_zones = [
     "azure_ml_notebooks",
     "privatelink.{regionName}.azurecontainerapps.io",
@@ -147,7 +147,6 @@ module "test" {
       }
     }
   }
-  resource_group_creation_enabled = false
 }
 ```
 
