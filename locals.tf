@@ -68,5 +68,5 @@ locals {
 
 locals {
   resource_group_id_string = var.parent_id
-  resource_group_name      = split(local.resource_group_id_string, "/")[4]
+  resource_group_name      = split("/", local.resource_group_id_string)[4]
 }

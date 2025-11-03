@@ -11,7 +11,7 @@ variable "parent_id" {
   validation {
     condition = (
       can(regex("^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[A-Za-z0-9._()-]*[A-Za-z0-9_()-]$", var.parent_id))
-      && length(split(var.parent_id, "/")[4]) <= 90
+      && length(split("/", var.parent_id)[4]) <= 90
     )
     error_message = "The provided parent_id_existing_resource_group must be a valid resource group resource ID with a name that is 1-90 characters, uses only letters, numbers, `.`, `_`, `(', ')`, or `-`, and does not end with a period, or `null`. e.g. `/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}`."
   }
