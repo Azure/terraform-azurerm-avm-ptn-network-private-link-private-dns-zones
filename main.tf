@@ -42,7 +42,7 @@ module "avm_res_network_privatednszone" {
   enable_telemetry      = var.enable_telemetry
   tags                  = var.tags
   timeouts              = var.timeouts
-  virtual_network_links = each.value.vnets
+  virtual_network_links = each.value.virtual_network_links
 
   depends_on = [azapi_resource.rg]
 }

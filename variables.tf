@@ -53,6 +53,11 @@ variable "private_link_private_dns_zones" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
+    virtual_network_links = optional(map(object({
+      virtual_network_resource_id                 = optional(string, null)
+      virtual_network_link_name_template_override = optional(string, null)
+      resolution_policy                           = optional(string, "Default")
+    })), {})
   }))
   default = {
     azure_container_apps = {
@@ -326,6 +331,14 @@ A set of Private Link Private DNS Zones to create. Each element must be a valid 
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
+- `virtual_network_links` - (Optional) A map of virtual network links to create for the Private Link Private DNS Zone. Each element must contain:
+  - `virtual_network_resource_id` - (Optional) The resource ID of the virtual network to link to the Private DNS Zone
+  - `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. If this option is not provided, the default of `var.virtual_network_link_name_template` will be used. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
+    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
+  - `resolution_policy` - (Optional) The resolution policy for the virtual network link. Possible values are `Default` and `NxDomainRedirect`. Defaults to `Default`.
 
 **NOTE:**
 
@@ -357,6 +370,11 @@ variable "private_link_private_dns_zones_additional" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
+    virtual_network_links = optional(map(object({
+      virtual_network_resource_id                 = optional(string, null)
+      virtual_network_link_name_template_override = optional(string, null)
+      resolution_policy                           = optional(string, "Default")
+    })), {})
   }))
   default     = {}
   description = <<DESCRIPTION
@@ -369,6 +387,14 @@ The purpose of this variable is to allow the use of our default zones and just a
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
+- `virtual_network_links` - (Optional) A map of virtual network links to create for the Private Link Private DNS Zone. Each element must contain:
+  - `virtual_network_resource_id` - (Optional) The resource ID of the virtual network to link to the Private DNS Zone
+  - `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. If this option is not provided, the default of `var.virtual_network_link_name_template` will be used. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
+    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
+  - `resolution_policy` - (Optional) The resolution policy for the virtual network link. Possible values are `Default` and `NxDomainRedirect`. Defaults to `Default`.
 DESCRIPTION
   nullable    = false
 }
@@ -466,26 +492,13 @@ variable "virtual_network_link_name_template" {
   type        = string
   default     = "vnet_link-$${zone_key}-$${vnet_key}"
   description = <<DESCRIPTION
-A prefix to use for the names of the Virtual Network Links created.
-The zone_key and vnet_key will be replaced with the keys of the DNS zone and Virtual Network respectively.
-DESCRIPTION
-  nullable    = false
-}
+A prefix to use for the names of the Virtual Network Links created. A template for the default name of the virtual network link. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network the link is associated with.
+    - `{vnet_key}` - The map key of the virtual network link.
+    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
 
-variable "virtual_network_resource_ids_to_link_to" {
-  type = map(object({
-    vnet_resource_id                            = optional(string, null)
-    virtual_network_link_name_template_override = optional(string, null)
-    resolution_policy                           = optional(string, "Default")
-  }))
-  default     = {}
-  description = <<DESCRIPTION
-A map of objects of Virtual Network Resource IDs to link to the Private Link Private DNS Zones created. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
-
-- `vnet_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
-- `virtual_network_link_name_template_override` - (Optional) An override for the name of the Virtual Network Link to create. If not specified, the name will be generated based on the `virtual_network_link_name_template` variable and the dns zone key and virtual network map key. This name will apply to every DNS zone link for that virtual network.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
-
+**NOTE**: If `virtual_network_link_name_template_override` is provided in the `virtual_network_links` object for a specific Private DNS Zone, that value will be used instead of this template.
 DESCRIPTION
   nullable    = false
 }
