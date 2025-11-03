@@ -45,12 +45,17 @@ module "naming" {
   version = "0.4.2"
 }
 
+resource "azurerm_resource_group" "this" {
+  location = module.regions.regions[random_integer.region_index.result].name
+  name     = module.naming.resource_group.name_unique
+}
+
 module "test" {
   source = "../../"
 
-  location            = module.regions.regions[random_integer.region_index.result].name
-  resource_group_name = module.naming.resource_group.name_unique
-  enable_telemetry    = var.enable_telemetry
+  location         = module.regions.regions[random_integer.region_index.result].name
+  parent_id        = azurerm_resource_group.this.id
+  enable_telemetry = var.enable_telemetry
 }
 ```
 
@@ -69,6 +74,7 @@ The following requirements are needed by this module:
 
 The following resources are used by this module:
 
+- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->

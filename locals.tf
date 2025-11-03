@@ -67,5 +67,6 @@ locals {
 }
 
 locals {
-  resource_group_id_string = "${data.azapi_client_config.current.subscription_resource_id}/resourceGroups/${var.resource_group_name}"
+  resource_group_id_string = var.parent_id
+  resource_group_name      = split("/", local.resource_group_id_string)[4]
 }

@@ -35,6 +35,13 @@ module "regions" {
   version = "0.7.0"
 }
 
+locals {
+  # Filter regions to those with a geo code to avoid null replacements in the module locals.
+  regions_with_geo_code = [
+    for region in module.regions.regions : region if try(region.geo_code, null) != null
+  ]
+}
+
 resource "random_integer" "region_index" {
   max = length(module.regions.regions) - 1
   min = 0
@@ -46,7 +53,7 @@ module "naming" {
 }
 
 resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = local.regions_with_geo_code[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
 
@@ -67,9 +74,9 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location            = azurerm_resource_group.this.location
-  resource_group_name = azurerm_resource_group.this.name
-  enable_telemetry    = var.enable_telemetry
+  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  parent_id        = azurerm_resource_group.this.id
+  enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones = {
     azure_container_apps = {
       zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
@@ -134,7 +141,6 @@ module "test" {
       }
     }
   }
-  resource_group_creation_enabled = false
 }
 ```
 
