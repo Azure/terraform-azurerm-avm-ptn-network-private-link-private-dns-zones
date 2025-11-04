@@ -221,12 +221,6 @@ variable "private_link_private_dns_zones" {
     azure_healthcare = {
       zone_name = "privatelink.azurehealthcareapis.com"
     }
-    azure_healthcare_workspaces = {
-      zone_name = "privatelink.workspace.azurehealthcareapis.com"
-    }
-    azure_healthcare_fhir = {
-      zone_name = "privatelink.fhir.azurehealthcareapis.com"
-    }
     azure_healthcare_dicom = {
       zone_name = "privatelink.dicom.azurehealthcareapis.com"
     }
