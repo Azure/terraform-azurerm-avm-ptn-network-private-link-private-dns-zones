@@ -278,6 +278,9 @@ variable "private_link_private_dns_zones" {
     azure_purview_studio = {
       zone_name = "privatelink.purviewstudio.azure.com"
     }
+    azure_purview_service = {
+      zone_name = "privatelink.purview-service.microsoft.com"
+    }
     azure_migration_service = {
       zone_name = "privatelink.prod.migration.windowsazure.com"
     }
