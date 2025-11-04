@@ -298,6 +298,9 @@ Default:
   "azure_event_grid": {
     "zone_name": "privatelink.eventgrid.azure.net"
   },
+  "azure_event_grid_mqtt": {
+    "zone_name": "privatelink.ts.eventgrid.azure.net"
+  },
   "azure_fabric": {
     "zone_name": "privatelink.fabric.microsoft.com"
   },
@@ -315,12 +318,6 @@ Default:
   },
   "azure_healthcare_dicom": {
     "zone_name": "privatelink.dicom.azurehealthcareapis.com"
-  },
-  "azure_healthcare_fhir": {
-    "zone_name": "privatelink.fhir.azurehealthcareapis.com"
-  },
-  "azure_healthcare_workspaces": {
-    "zone_name": "privatelink.workspace.azurehealthcareapis.com"
   },
   "azure_iot_central": {
     "zone_name": "privatelink.azureiotcentral.com"
@@ -387,6 +384,9 @@ Default:
   },
   "azure_purview_account": {
     "zone_name": "privatelink.purview.azure.com"
+  },
+  "azure_purview_service": {
+    "zone_name": "privatelink.purview-service.microsoft.com"
   },
   "azure_purview_studio": {
     "zone_name": "privatelink.purviewstudio.azure.com"
