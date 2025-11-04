@@ -212,6 +212,9 @@ variable "private_link_private_dns_zones" {
     azure_event_grid = {
       zone_name = "privatelink.eventgrid.azure.net"
     }
+    azure_event_grid_mqtt = {
+      zone_name = "privatelink.ts.eventgrid.azure.net"
+    }
     azure_api_management = {
       zone_name = "privatelink.azure-api.net"
     }
