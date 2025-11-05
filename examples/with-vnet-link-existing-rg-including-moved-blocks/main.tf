@@ -76,17 +76,18 @@ module "test" {
           custom2 = "custom2"
         }
       }
-      virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-          virtual_network_link_name_template_override = "vnet1-link"
-        }
-        "vnet2" = {
-          virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
-          virtual_network_link_name_template_override = "$${vnet_key}-link"
-          resolution_policy                           = "Default"
-        }
-      }
+    }
+  }
+  virtual_network_resource_ids_to_link_to = {
+    "vnet1" = {
+      vnet_resource_id                            = azurerm_virtual_network.this_1.id
+      virtual_network_link_name_template_override = "vnet1-link"
+      resolution_policy                           = "NxDomainRedirect"
+    }
+    "vnet2" = {
+      vnet_resource_id                            = azurerm_virtual_network.this_2.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "Default"
     }
   }
 }
