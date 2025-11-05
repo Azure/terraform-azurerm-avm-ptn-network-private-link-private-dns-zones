@@ -125,11 +125,11 @@ module "test" {
   }
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
-      vnet_resource_id                            = azurerm_virtual_network.this_1.id
+      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
       virtual_network_link_name_template_override = "vnet1-link"
     }
     "vnet2" = {
-      vnet_resource_id                            = azurerm_virtual_network.this_2.id
+      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
       resolution_policy                           = "NxDomainRedirect"
     }
