@@ -36,7 +36,7 @@ locals {
             for vnet_link_key, vnet_link_value in var.virtual_network_resource_ids_to_link_to : vnet_link_key => {
               virtual_network_id = vnet_link_value.virtual_network_resource_id
               name = templatestring(
-                local.virtual_network_link_name_templates["${zone_key}_${vnet_link_key}"],
+                local.virtual_network_link_name_templates[vnet_link_key],
                 {
                   zone_key  = custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"
                   vnet_key  = vnet_link_key
@@ -46,7 +46,7 @@ locals {
               )
               registration_enabled                   = false
               private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
-              resolution_policy                      = coalesce(local.filtered_private_link_private_dns_zones[zone_key].virtual_network_links[vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, "Default")
+              resolution_policy                      = coalesce(try(local.filtered_private_link_private_dns_zones[zone_key].virtual_network_links[vnet_link_key].resolution_policy, null), vnet_link_value.resolution_policy, "Default")
               tags                                   = var.tags
             }
           }
