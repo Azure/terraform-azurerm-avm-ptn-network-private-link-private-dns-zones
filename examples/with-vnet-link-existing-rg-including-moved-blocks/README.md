@@ -92,7 +92,7 @@ module "test" {
   virtual_network_resource_ids_to_link_to = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-      virtual_network_link_name_template_override = "vnet1-link"
+      virtual_network_link_name_template_override = "{vnet_name}-link-{zone_key}"
       resolution_policy                           = "NxDomainRedirect"
     }
     "vnet2" = {
