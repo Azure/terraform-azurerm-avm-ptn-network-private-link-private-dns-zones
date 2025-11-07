@@ -690,7 +690,7 @@ Version: 0.4.1
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.7.0
+Version: 0.9.1
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
