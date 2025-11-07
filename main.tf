@@ -10,9 +10,10 @@ module "avm_interfaces" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.1"
+  version = "0.9.2"
 
   enable_telemetry = var.enable_telemetry
+  is_recommended   = true
 }
 
 module "avm_res_network_privatednszone" {

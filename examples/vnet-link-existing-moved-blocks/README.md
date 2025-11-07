@@ -35,7 +35,7 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.1"
+  version = "0.9.2"
 }
 
 resource "random_integer" "region_index" {
@@ -93,7 +93,7 @@ module "test" {
   virtual_network_links_default = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-      virtual_network_link_name_template_override = "{vnet_name}-link-{zone_key}"
+      virtual_network_link_name_template_override = "$${vnet_name}-link-$${zone_key}"
       resolution_policy                           = "NxDomainRedirect"
     }
     "vnet2" = {
@@ -1019,7 +1019,7 @@ Version: 0.4.2
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.9.1
+Version: 0.9.2
 
 ### <a name="module_test"></a> [test](#module\_test)
 
