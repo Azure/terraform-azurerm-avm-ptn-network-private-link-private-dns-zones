@@ -46,7 +46,7 @@ locals {
               )
               registration_enabled                   = false
               private_dns_zone_supports_private_link = local.filtered_private_link_private_dns_zones[zone_key].private_dns_zone_supports_private_link
-              resolution_policy                      = coalesce(try(local.filtered_private_link_private_dns_zones[zone_key].virtual_network_links[vnet_link_key].resolution_policy, null), vnet_link_value.resolution_policy, "Default")
+              resolution_policy                      = coalesce(local.filtered_private_link_private_dns_zones[zone_key].resolution_policy, vnet_link_value.resolution_policy, "Default")
               tags                                   = var.tags
             }
           }

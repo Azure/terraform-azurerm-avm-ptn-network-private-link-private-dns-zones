@@ -174,7 +174,7 @@ map(object({
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    resolution_policy = optional(string)
+    resolution_policy = optional(string, null)
   }))
 ```
 
@@ -470,7 +470,7 @@ map(object({
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    resolution_policy = optional(string, "Default")
+    resolution_policy = optional(string, null)
   }))
 ```
 

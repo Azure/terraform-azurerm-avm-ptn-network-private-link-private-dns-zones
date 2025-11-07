@@ -61,7 +61,7 @@ variable "private_link_private_dns_zones" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    resolution_policy = optional(string)
+    resolution_policy = optional(string, null)
   }))
   default = {
     azure_container_apps = {
@@ -367,7 +367,7 @@ variable "private_link_private_dns_zones_additional" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    resolution_policy = optional(string, "Default")
+    resolution_policy = optional(string, null)
   }))
   default     = {}
   description = <<DESCRIPTION
