@@ -72,11 +72,7 @@ module "test" {
     azure_container_apps = {
       zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
       private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        "vnet1" = {
-          resolution_policy = "NxDomainRedirect"
-        }
-      }
+      resolution_policy                      = "NxDomainRedirect"
     }
     azure_ml = {
       zone_name                              = "privatelink.api.azureml.ms"
@@ -85,14 +81,7 @@ module "test" {
     azure_ml_notebooks = {
       zone_name                              = "privatelink.notebooks.azure.net"
       private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        "vnet1" = {
-          resolution_policy = "NxDomainRedirect"
-        }
-        "vnet2" = {
-          resolution_policy = "Default"
-        }
-      }
+      resolution_policy                      = "NxDomainRedirect"
     }
     azure_power_bi_dedicated = {
       zone_name                              = "privatelink.pbidedicated.windows.net"
@@ -101,12 +90,7 @@ module "test" {
     azure_power_bi_power_query = {
       zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
       private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-      }
+      resolution_policy                      = "NxDomainRedirect"
     }
   }
   virtual_network_resource_ids_to_link_to = {
@@ -117,7 +101,6 @@ module "test" {
     "vnet2" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
-      resolution_policy                           = "NxDomainRedirect"
     }
   }
 }

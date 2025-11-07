@@ -61,9 +61,7 @@ variable "private_link_private_dns_zones" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    virtual_network_links = optional(map(object({
-      resolution_policy = optional(string)
-    })), {})
+    resolution_policy = optional(string)
   }))
   default = {
     azure_container_apps = {
@@ -337,8 +335,7 @@ A set of Private Link Private DNS Zones to create. Each element must be a valid 
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
-- `virtual_network_links` - (Optional) A map of virtual network links to create for the Private Link Private DNS Zone. Each element must contain:
-  - `resolution_policy` - (Optional) The resolution policy for the private link private dns zone to override the value specified in the `virtual_network_resource_ids_to_link_to` variable for a private link private DNS zone's virtual network link. The map keys must be the same. Possible values are `Default` and `NxDomainRedirect`.
+- `resolution_policy` - (Optional) The resolution policy for the private link private dns zone to override the value specified in the `virtual_network_resource_ids_to_link_to` variable for a private link private DNS zone's virtual network link. Possible values are `Default` and `NxDomainRedirect`.
 
 **NOTE:**
 
@@ -370,9 +367,7 @@ variable "private_link_private_dns_zones_additional" {
       replacement_placeholder = string
       replacement_values      = map(string)
     }))
-    virtual_network_links = optional(map(object({
-      resolution_policy = optional(string, "Default")
-    })), {})
+    resolution_policy = optional(string, "Default")
   }))
   default     = {}
   description = <<DESCRIPTION
@@ -385,8 +380,7 @@ The purpose of this variable is to allow the use of our default zones and just a
 - `custom_iterator` - (Optional) An object that defines a custom iterator for the Private Link Private DNS Zone. This is used to create multiple Private Link Private DNS Zones with the same base name but different replacements. The object must contain:
   - `replacement_placeholder` - The placeholder to replace in the `zone_name` with the custom iterator replacement value.
   - `replacement_values` - A map of values to use for the custom iterator, where the value is the value to replace in the `zone_name`.
-- `virtual_network_links` - (Optional) A map of virtual network links to create for the Private Link Private DNS Zone. Each element must contain:
-  - `resolution_policy` - (Optional) The resolution policy for the private link private dns zone to override the value specified in the `virtual_network_resource_ids_to_link_to` variable for a private link private DNS zone's virtual network link. The map keys must be the same. Possible values are `Default` and `NxDomainRedirect`.
+- `resolution_policy` - (Optional) The resolution policy for the private link private dns zone to override the value specified in the `virtual_network_resource_ids_to_link_to` variable for a private link private DNS zone's virtual network link. Possible values are `Default` and `NxDomainRedirect`.
 DESCRIPTION
   nullable    = false
 }
@@ -505,7 +499,7 @@ A map of objects of Virtual Network Resource IDs to link to the Private Link Pri
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden in the `virtual_network_links` object of the specific Private DNS Zone in the `private_link_private_dns_zones` variable. The map keys must be the same.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
 
 DESCRIPTION
   nullable    = false
