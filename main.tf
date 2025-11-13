@@ -13,7 +13,7 @@ module "regions" {
   version = "0.9.2"
 
   enable_telemetry = var.enable_telemetry
-  is_recommended   = true
+  is_recommended   = false
 }
 
 module "avm_res_network_privatednszone" {
