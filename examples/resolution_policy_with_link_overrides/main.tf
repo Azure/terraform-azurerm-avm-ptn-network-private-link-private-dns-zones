@@ -75,29 +75,27 @@ module "test" {
     "privatelink.{regionName}.azurecontainerapps.io",
     "privatelink.tip1.powerquery.microsoft.com"
   ]
-  private_link_private_dns_zones = {
+  virtual_network_link_overrides = {
     azure_container_apps = {
-      zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_ml = {
-      zone_name                              = "privatelink.api.azureml.ms"
-      private_dns_zone_supports_private_link = true
+      vnet2 = {
+        zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
+        private_dns_zone_supports_private_link = true
+        resolution_policy                      = "NxDomainRedirect"
+      }
     }
     azure_ml_notebooks = {
-      zone_name                              = "privatelink.notebooks.azure.net"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_power_bi_dedicated = {
-      zone_name                              = "privatelink.pbidedicated.windows.net"
-      private_dns_zone_supports_private_link = true
+      vnet2 = {
+        zone_name                              = "privatelink.notebooks.azure.net"
+        private_dns_zone_supports_private_link = true
+        resolution_policy                      = "NxDomainRedirect"
+      }
     }
     azure_power_bi_power_query = {
-      zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
+      vnet2 = {
+        zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
+        private_dns_zone_supports_private_link = true
+        resolution_policy                      = "NxDomainRedirect"
+      }
     }
   }
   virtual_network_links_default = {
