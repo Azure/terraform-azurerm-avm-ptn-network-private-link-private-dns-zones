@@ -87,23 +87,17 @@ module "test" {
   virtual_network_link_overrides = {
     azure_container_apps = {
       vnet2 = {
-        zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
-        private_dns_zone_supports_private_link = true
-        resolution_policy                      = "NxDomainRedirect"
+        resolution_policy = "NxDomainRedirect"
       }
     }
     azure_ml_notebooks = {
       vnet2 = {
-        zone_name                              = "privatelink.notebooks.azure.net"
-        private_dns_zone_supports_private_link = true
-        resolution_policy                      = "NxDomainRedirect"
+        resolution_policy = "NxDomainRedirect"
       }
     }
     azure_power_bi_power_query = {
       vnet2 = {
-        zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
-        private_dns_zone_supports_private_link = true
-        resolution_policy                      = "NxDomainRedirect"
+        resolution_policy = "NxDomainRedirect"
       }
     }
   }
