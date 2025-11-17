@@ -36,7 +36,7 @@ locals {
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -70,29 +70,26 @@ module "test" {
   location         = local.regions_with_geo_code[random_integer.region_index.result].name
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
-  private_link_private_dns_zones = {
+  private_link_excluded_zones = [
+    "azure_ml_notebooks",
+    "privatelink.{regionName}.azurecontainerapps.io",
+    "privatelink.tip1.powerquery.microsoft.com"
+  ]
+  virtual_network_link_overrides = {
     azure_container_apps = {
-      zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_ml = {
-      zone_name                              = "privatelink.api.azureml.ms"
-      private_dns_zone_supports_private_link = true
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
     }
     azure_ml_notebooks = {
-      zone_name                              = "privatelink.notebooks.azure.net"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_power_bi_dedicated = {
-      zone_name                              = "privatelink.pbidedicated.windows.net"
-      private_dns_zone_supports_private_link = true
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
     }
     azure_power_bi_power_query = {
-      zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
     }
   }
   virtual_network_links_default = {

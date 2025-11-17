@@ -17,7 +17,7 @@ Versions `v0.17.0` and prior of this module used `azurerm` as its primary provid
 
 As of version `v0.18.0` and later of this module, the module has been re-architected to use `azapi` as its primary provider as the version of the `Azure/avm-res-network-privatednszone/azurerm` module (`v0.4.1`) it now leverages is built using `azapi` as its primary provider also.
 
-> Version `v0.18.0` of this module includes support for the Resolution Policy on the Private DNS Zone Virtual Network Links to allow for NXDomain Redirects to be configured, as documented in [Fallback to internet for Azure Private DNS zones](https://learn.microsoft.com/azure/dns/private-dns-fallback); see the new input properties in the `private_link_private_dns_zones` (`private_dns_zone_supports_private_link`), `private_link_private_dns_zones_additional` (`private_dns_zone_supports_private_link`), and `virtual_network_resource_ids_to_link_to` (`resolution_policy`) input variables.
+> Version `v0.18.0` of this module includes support for the Resolution Policy on the Private DNS Zone Virtual Network Links to allow for NXDomain Redirects to be configured, as documented in [Fallback to internet for Azure Private DNS zones](https://learn.microsoft.com/azure/dns/private-dns-fallback); see the new input properties in the `private_link_private_dns_zones` (`private_dns_zone_supports_private_link`), `private_link_private_dns_zones_additional` (`private_dns_zone_supports_private_link`), and `virtual_network_links` (`resolution_policy`) input variables.
 
 This means that if you are using version `v0.17.0` or prior of this module and wish to upgrade to version `v0.18.0` or later, you will need to make some changes to your code to complete a successful upgrade.
 
@@ -29,7 +29,7 @@ Whilst we have used `moved` blocks in the module itself, see [`moved.tf`](moved.
 For other resources that can be created by this module, you will need to declare your own `moved` blocks in your code (root module) to help with the migration. These resources are:
 
 - Private DNS Zones declared in the `private_link_private_dns_zones_additional` input variable.
-- Private DNS Zones Virtual Network Links declared in the `virtual_network_resource_ids_to_link_to` input variable.
+- Private DNS Zones Virtual Network Links declared in the `virtual_network_links` input variable.
 - Role Assignments created on the Resource Group declared in the `resource_group_role_assignments` input variable.
 - Locks created on the Resource Group declared in the `lock` input variable.
 

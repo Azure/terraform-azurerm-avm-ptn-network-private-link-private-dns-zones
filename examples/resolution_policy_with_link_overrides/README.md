@@ -32,7 +32,9 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.7.0"
+  version = "0.9.2"
+
+  is_recommended = true
 }
 
 locals {
@@ -82,76 +84,31 @@ module "test" {
     "privatelink.{regionName}.azurecontainerapps.io",
     "privatelink.tip1.powerquery.microsoft.com"
   ]
-  private_link_private_dns_zones = {
+  virtual_network_link_overrides = {
     azure_container_apps = {
-      zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
-      private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
-      }
-    }
-    azure_ml = {
-      zone_name                              = "privatelink.api.azureml.ms"
-      private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
       }
     }
     azure_ml_notebooks = {
-      zone_name                              = "privatelink.notebooks.azure.net"
-      private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
-      }
-    }
-    azure_power_bi_dedicated = {
-      zone_name                              = "privatelink.pbidedicated.windows.net"
-      private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
       }
     }
     azure_power_bi_power_query = {
-      zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
-      private_dns_zone_supports_private_link = true
-      virtual_network_links = {
-        vnet1 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "NxDomainRedirect"
-        }
-        vnet2 = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "Default"
-        }
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
       }
+    }
+  }
+  virtual_network_links_default = {
+    "vnet1" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
+      virtual_network_link_name_template_override = "vnet1-link"
+    }
+    "vnet2" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
 }
@@ -214,7 +171,7 @@ Version: 0.4.2
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.7.0
+Version: 0.9.2
 
 ### <a name="module_test"></a> [test](#module\_test)
 

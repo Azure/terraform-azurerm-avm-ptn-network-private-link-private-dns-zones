@@ -23,7 +23,9 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.7.0"
+  version = "0.9.2"
+
+  is_recommended = true
 }
 
 resource "random_integer" "region_index" {
