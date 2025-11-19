@@ -76,7 +76,7 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
   private_link_excluded_zones = [

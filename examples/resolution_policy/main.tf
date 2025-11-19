@@ -36,7 +36,7 @@ locals {
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -67,7 +67,7 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones = {
