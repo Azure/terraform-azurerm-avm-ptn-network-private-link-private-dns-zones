@@ -568,7 +568,7 @@ This is merged with the `virtual_network_link_defaults` after `virtual_network_l
 
 The first key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
 
-The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_default` variable, this entry will take precedence.
+The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_defaults` variable, this entry will take precedence.
 
 - `virtual_network_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 - `name` - (Optional) The name of the virtual network link.
