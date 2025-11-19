@@ -85,6 +85,13 @@ resource "azurerm_virtual_network" "vnet4" {
   address_space       = ["10.0.4.0/24"]
 }
 
+resource "azurerm_virtual_network" "vnet5" {
+  location            = azurerm_resource_group.this.location
+  name                = "vnet5"
+  resource_group_name = azurerm_resource_group.this.name
+  address_space       = ["10.0.5.0/24"]
+}
+
 module "test" {
   source = "../../"
 
@@ -111,22 +118,33 @@ module "test" {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet4.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
+    "vnet5" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet5.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+    }
   }
-  virtual_network_link_defaults_overrides = {
+  virtual_network_link_defaults_overrides_by_virtual_network = {
     "vnet1" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
+      virtual_network_link_name_template_override = "overridden-by-vnet-$${vnet_key}-link"
       resolution_policy                           = "NxDomainRedirect"
     }
     "vnet2" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
+      virtual_network_link_name_template_override = "overridden-by-vnet-$${vnet_key}-link"
       resolution_policy                           = "Default"
     }
     "vnet3" = {
       enabled = false
     }
     "vnet4" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
+      virtual_network_link_name_template_override = "overridden-by-vnet-$${vnet_key}-link"
     }
+  }
+  virtual_network_link_defaults_overrides_by_zone = {
+    "azure_container_apps" = {
+      virtual_network_link_name_template_override = "overridden-by-zone-$${vnet_key}-link"
+      resolution_policy                           = "Default"
+    }
+
   }
   virtual_network_link_resolution_policy_default = "NxDomainRedirect"
 }
@@ -153,6 +171,7 @@ The following resources are used by this module:
 - [azurerm_virtual_network.vnet2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [azurerm_virtual_network.vnet3](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [azurerm_virtual_network.vnet4](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
+- [azurerm_virtual_network.vnet5](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->

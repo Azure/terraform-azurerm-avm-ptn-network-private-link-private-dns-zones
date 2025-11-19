@@ -27,10 +27,20 @@ locals {
 }
 
 locals {
-  virtual_network_link_defaults_overrides = {
+  virtual_network_link_defaults_overrides_by_virtual_network = {
     for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => {
       for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key =>
-      try(var.virtual_network_link_defaults_overrides[vnet_link_key], {
+      try(var.virtual_network_link_defaults_overrides_by_virtual_network[vnet_link_key], {
+        virtual_network_link_name_template_override = null
+        resolution_policy                           = null
+        enabled                                     = true
+      })
+    }
+  }
+  virtual_network_link_defaults_overrides_by_zone = {
+    for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => {
+      for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key =>
+      try(var.virtual_network_link_defaults_overrides_by_zone[zone_key], {
         virtual_network_link_name_template_override = null
         resolution_policy                           = null
         enabled                                     = true
@@ -41,9 +51,9 @@ locals {
     for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => {
       for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key => {
         virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
-        virtual_network_link_name_template_override = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].virtual_network_link_name_template_override, vnet_link_value.virtual_network_link_name_template_override, var.virtual_network_link_name_template)
-        resolution_policy                           = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
-      } if local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].enabled
+        virtual_network_link_name_template_override = coalesce(local.virtual_network_link_defaults_overrides_by_zone[zone_key][vnet_link_key].virtual_network_link_name_template_override, local.virtual_network_link_defaults_overrides_by_virtual_network[zone_key][vnet_link_key].virtual_network_link_name_template_override, vnet_link_value.virtual_network_link_name_template_override, var.virtual_network_link_name_template)
+        resolution_policy                           = coalesce(local.virtual_network_link_defaults_overrides_by_zone[zone_key][vnet_link_key].resolution_policy, local.virtual_network_link_defaults_overrides_by_virtual_network[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
+      } if local.virtual_network_link_defaults_overrides_by_zone[zone_key][vnet_link_key].enabled && local.virtual_network_link_defaults_overrides_by_virtual_network[zone_key][vnet_link_key].enabled
     }
   }
   virtual_network_link_merged = {
