@@ -104,7 +104,7 @@ module "test" {
       resolution_policy                      = "NxDomainRedirect"
     }
   }
-  virtual_network_link_defaults = {
+  virtual_network_link_default_virtual_networks = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
       virtual_network_link_name_template_override = "vnet1-link"

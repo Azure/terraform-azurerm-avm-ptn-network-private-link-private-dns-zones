@@ -91,7 +91,7 @@ module "test" {
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
-  virtual_network_link_defaults = {
+  virtual_network_link_default_virtual_networks = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"

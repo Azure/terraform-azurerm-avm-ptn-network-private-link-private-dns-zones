@@ -29,12 +29,12 @@ locals {
 locals {
   virtual_network_link_merged = {
     for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => merge(
-      { for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key => {
+      { for vnet_link_key, vnet_link_value in var.virtual_network_link_default_virtual_networks : vnet_link_key => {
         virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
         virtual_network_link_name_template_override = vnet_link_value.virtual_network_link_name_template_override
         resolution_policy                           = vnet_link_value.resolution_policy
       } },
-      { for vnet_link_key, vnet_link_value in lookup(var.virtual_network_link_for_zone, zone_key, {}) : vnet_link_key => {
+      { for vnet_link_key, vnet_link_value in lookup(var.virtual_network_link_by_zone_and_virtual_network, zone_key, {}) : vnet_link_key => {
         virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
         virtual_network_link_name_template_override = vnet_link_value.name
         resolution_policy                           = vnet_link_value.resolution_policy
