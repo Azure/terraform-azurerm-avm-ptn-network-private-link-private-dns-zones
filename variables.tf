@@ -501,7 +501,7 @@ A map overrides for the default Virtual Network Links.
 
 This is applied to the `virtual_network_link_defaults` variable, allowing overriding of the default virtual network links for all zones. This is useful in situations where the default links are supplied by an automation outside of the users control.
 
-The key is the the Default Virtual Network Link map key from the `virtual_network_link_defaults` variables.
+The key is the Default Virtual Network Link map key from the `virtual_network_link_defaults` variables.
 
 - `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
     - `{zone_key}` - The map key of the Private DNS Zone.
