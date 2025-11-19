@@ -94,7 +94,7 @@ module "test" {
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
-  virtual_network_link_overrides = {
+  virtual_network_link_overrides_by_zone_and_virtual_network = {
     azure_container_apps = {
       vnet2 = {
         resolution_policy = "NxDomainRedirect"
