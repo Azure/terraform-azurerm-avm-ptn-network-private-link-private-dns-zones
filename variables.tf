@@ -497,7 +497,7 @@ variable "virtual_network_link_defaults_overrides" {
   }))
   default     = {}
   description = <<DESCRIPTION
-A map overrides for the default Virtual Network Links.
+A map of overrides for the default Virtual Network Links.
 
 This is applied to the `virtual_network_link_defaults` variable, allowing overriding of the default virtual network links for all zones. This is useful in situations where the default links are supplied by an automation outside of the users control.
 
