@@ -579,7 +579,7 @@ Description: A map of objects of Virtual Network Resource IDs to link to all the
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
 
 Type:
 
@@ -595,18 +595,18 @@ Default: `{}`
 
 ### <a name="input_virtual_network_link_defaults_overrides"></a> [virtual\_network\_link\_defaults\_overrides](#input\_virtual\_network\_link\_defaults\_overrides)
 
-Description: A map overrides for the default Virtual Network Links.
+Description: A map of overrides for the default Virtual Network Links.
 
 This is applied to the `virtual_network_link_defaults` variable, allowing overriding of the default virtual network links for all zones. This is useful in situations where the default links are supplied by an automation outside of the users control.
 
-The key is the the Default Virtual Network Link map key from the `virtual_network_link_defaults` variables.
+The key is the Default Virtual Network Link map key from the `virtual_network_link_defaults` variables.
 
 - `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
     - `{zone_key}` - The map key of the Private DNS Zone.
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
 - `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
 
 Type:
@@ -669,7 +669,7 @@ This is merged with the `virtual_network_link_defaults` after `virtual_network_l
 
 The first key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
 
-The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_default` variable, this entry will take precedence.
+The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_defaults` variable, this entry will take precedence.
 
 - `virtual_network_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 - `name` - (Optional) The name of the virtual network link.
