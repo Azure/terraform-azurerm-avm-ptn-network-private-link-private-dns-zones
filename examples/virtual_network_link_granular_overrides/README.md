@@ -103,7 +103,31 @@ module "test" {
       resolution_policy                           = "NxDomainRedirect"
     }
   }
-  virtual_network_link_overrides = {
+  virtual_network_link_for_zone = {
+    azure_container_apps = {
+      "vnet1" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
+        name                        = "vnet4-link-aca-override-vnet1"
+        resolution_policy           = "Default"
+      }
+      "vnet3" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
+        name                        = "vnet3-link-aca"
+      }
+    }
+    azure_ml = {
+      "vnet3" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
+        name                        = "this-will-be-overridden-by-override-block"
+        resolution_policy           = "Default"
+      }
+      "vnet4" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
+        resolution_policy           = "NxDomainRedirect"
+      }
+    }
+  }
+  virtual_network_link_overrides_by_zone_and_virtual_network = {
     azure_container_apps = {
       vnet1 = {
         resolution_policy = "NxDomainRedirect"
@@ -125,30 +149,6 @@ module "test" {
       vnet3 = {
         name              = "custom-vnet3-link-name-aml"
         resolution_policy = "NxDomainRedirect"
-      }
-    }
-  }
-  virtual_network_link_per_zone = {
-    azure_container_apps = {
-      "vnet1" = {
-        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
-        name                        = "vnet4-link-aca-override-vnet1"
-        resolution_policy           = "Default"
-      }
-      "vnet3" = {
-        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
-        name                        = "vnet3-link-aca"
-      }
-    }
-    azure_ml = {
-      "vnet3" = {
-        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
-        name                        = "this-will-be-overridden-by-override-block"
-        resolution_policy           = "Default"
-      }
-      "vnet4" = {
-        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
-        resolution_policy           = "NxDomainRedirect"
       }
     }
   }

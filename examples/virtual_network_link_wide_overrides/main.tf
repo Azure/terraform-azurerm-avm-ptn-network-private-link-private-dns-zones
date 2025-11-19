@@ -116,7 +116,7 @@ module "test" {
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
-  virtual_network_link_defaults_overrides_by_virtual_network = {
+  virtual_network_link_overrides_by_virtual_network = {
     "vnet1" = {
       virtual_network_link_name_template_override = "overridden-by-vnet-$${vnet_key}-link"
       resolution_policy                           = "NxDomainRedirect"
@@ -132,7 +132,7 @@ module "test" {
       virtual_network_link_name_template_override = "overridden-by-vnet-$${vnet_key}-link"
     }
   }
-  virtual_network_link_defaults_overrides_by_zone = {
+  virtual_network_link_overrides_by_zone = {
     "azure_container_apps" = {
       virtual_network_link_name_template_override = "overridden-by-zone-$${vnet_key}-link"
       resolution_policy                           = "Default"

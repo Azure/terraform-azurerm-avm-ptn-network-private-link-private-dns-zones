@@ -483,63 +483,31 @@ A map of objects of Virtual Network Resource IDs to link to all the Private Link
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_defaults_overrides_by_zone`, `virtual_network_link_defaults_overrides_by_virtual_network`, `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_overrides_by_zone`, `virtual_network_link_overrides_by_virtual_network`, `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence.
 
 DESCRIPTION
   nullable    = false
 }
 
-variable "virtual_network_link_defaults_overrides_by_virtual_network" {
-  type = map(object({
-    virtual_network_link_name_template_override = optional(string)
-    resolution_policy                           = optional(string)
-    enabled                                     = optional(bool, true)
-  }))
+variable "virtual_network_link_for_zone" {
+  type = map(map(object({
+    virtual_network_resource_id = optional(string)
+    name                        = optional(string)
+    resolution_policy           = optional(string)
+  })))
   default     = {}
   description = <<DESCRIPTION
-A map of overrides for the default Virtual Network Links.
+A map of maps of objects of Virtual Network Resource IDs to link to specific Private Link Private DNS Zones. This is designed to be used in conjunction with `virtual_network_link_defaults` to link specific zones to other virtual networks.
 
-This is applied to the `virtual_network_link_defaults` variable, allowing overriding of the default virtual network links for all zones. This is useful in situations where the default links are supplied by an automation outside of the users control.
+This is merged with the `virtual_network_link_defaults` after `virtual_network_link_overrides_by_zone` and `virtual_network_link_overrides_by_virtual_network` has been applied to create the final set of virtual network links for each Private DNS Zone.
 
-This is applied before the `virtual_network_link_defaults_overrides_by_zone` variable, with the exception of the `enabled` setting which is combined.
+The first key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
 
-The key is the Default Virtual Network Link map key from the `virtual_network_link_defaults` variables.
+The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_defaults` variable, this entry will take precedence.
 
-- `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
-    - `{zone_key}` - The map key of the Private DNS Zone.
-    - `{vnet_name}` - The name of the virtual network.
-    - `{vnet_key}` - The map key of the virtual network link.
-    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
-- `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
-
-DESCRIPTION
-  nullable    = false
-}
-
-variable "virtual_network_link_defaults_overrides_by_zone" {
-  type = map(object({
-    virtual_network_link_name_template_override = optional(string)
-    resolution_policy                           = optional(string)
-    enabled                                     = optional(bool, true)
-  }))
-  default     = {}
-  description = <<DESCRIPTION
-A map of overrides for the default Virtual Network Links.
-
-This is applied to the `virtual_network_link_defaults` variable, allowing overriding of the default virtual network links for all zones. This is useful in situations where the default links are supplied by an automation outside of the users control.
-
-This takes precedence over the `virtual_network_link_defaults_overrides_by_virtual_network` variable, with the exception of the `enabled` setting which is combined.
-
-The key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
-
-- `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
-    - `{zone_key}` - The map key of the Private DNS Zone.
-    - `{vnet_name}` - The name of the virtual network.
-    - `{vnet_key}` - The map key of the virtual network link.
-    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
-- `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
+- `virtual_network_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
+- `name` - (Optional) The name of the virtual network link.
+- `resolution_policy` -  (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence
 
 DESCRIPTION
   nullable    = false
@@ -559,7 +527,63 @@ DESCRIPTION
   nullable    = false
 }
 
-variable "virtual_network_link_overrides" {
+variable "virtual_network_link_overrides_by_virtual_network" {
+  type = map(object({
+    virtual_network_link_name_template_override = optional(string)
+    resolution_policy                           = optional(string)
+    enabled                                     = optional(bool, true)
+  }))
+  default     = {}
+  description = <<DESCRIPTION
+A map of overrides for the default Virtual Network Links applied per virtual network.
+
+This is applied to all virtual network links, including those defined in the `virtual_network_link_defaults` and `virtual_network_link_by_zone`.
+
+The precedence order of overrides is `virtual_network_link_override_by_virtual_network`, `virtual_network_link_override_by_zone`, and then `virtual_network_link_overrides_by_zone_and_virtual_network`.
+
+The key is the Virtual Network Link map key from the `virtual_network_link_defaults` or the second map key from `virtual_network_link_for_zone`.
+
+- `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
+    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
+- `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
+
+DESCRIPTION
+  nullable    = false
+}
+
+variable "virtual_network_link_overrides_by_zone" {
+  type = map(object({
+    virtual_network_link_name_template_override = optional(string)
+    resolution_policy                           = optional(string)
+    enabled                                     = optional(bool, true)
+  }))
+  default     = {}
+  description = <<DESCRIPTION
+A map of overrides for the default Virtual Network Links applied per DNS zone.
+
+This is applied to all virtual network links, including those defined in the `virtual_network_link_defaults` and `virtual_network_link_by_zone`.
+
+The precedence order of overrides is `virtual_network_link_override_by_virtual_network`, `virtual_network_link_override_by_zone`, and then `virtual_network_link_overrides_by_zone_and_virtual_network`.
+
+The key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
+
+- `virtual_network_link_name_template_override` - (Optional) A template to override the default name of the virtual network link. The template can include the following placeholders:
+    - `{zone_key}` - The map key of the Private DNS Zone.
+    - `{vnet_name}` - The name of the virtual network.
+    - `{vnet_key}` - The map key of the virtual network link.
+    - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
+- `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
+
+DESCRIPTION
+  nullable    = false
+}
+
+variable "virtual_network_link_overrides_by_zone_and_virtual_network" {
   type = map(map(object({
     name              = optional(string)
     resolution_policy = optional(string)
@@ -567,41 +591,19 @@ variable "virtual_network_link_overrides" {
   })))
   default     = {}
   description = <<DESCRIPTION
-A map of maps overrides for specific Virtual Network Links. This is used to override specific properties of or turn off specific virtual network links for specific zones.
+A map of overrides for the default Virtual Network Links applied per DNS zone and Virtual Network.
 
-This is applied after all other virtual network link settings, including the `virtual_network_link_defaults`, `virtual_network_link_defaults_overrides_by_zone`, `virtual_network_link_defaults_overrides_by_virtual_network`, and `virtual_network_link_per_zone` variables.
+This is applied to all virtual network links, including those defined in the `virtual_network_link_defaults` and `virtual_network_link_by_zone`.
+
+The precedence order of overrides is `virtual_network_link_override_by_virtual_network`, `virtual_network_link_override_by_zone`, and then `virtual_network_link_overrides_by_zone_and_virtual_network`.
 
 The first key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
 
-The second key is the Virtual Network Link map key from `virtual_network_link_defaults` or the second map key from `virtual_network_link_per_zone`.
+The second key is the Virtual Network Link map key from `virtual_network_link_defaults` or the second map key from `virtual_network_link_for_zone`.
 
 - `name` - (Optional) The name of the virtual network link to override the default name.
 - `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
 - `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
-
-DESCRIPTION
-  nullable    = false
-}
-
-variable "virtual_network_link_per_zone" {
-  type = map(map(object({
-    virtual_network_resource_id = optional(string)
-    name                        = optional(string)
-    resolution_policy           = optional(string)
-  })))
-  default     = {}
-  description = <<DESCRIPTION
-A map of maps of objects of Virtual Network Resource IDs to link to specific Private Link Private DNS Zones.
-
-This is merged with the `virtual_network_link_defaults` after `virtual_network_link_defaults_overrides_by_zone` and `virtual_network_link_defaults_overrides_by_virtual_network` has been applied to create the final set of virtual network links for each Private DNS Zone.
-
-The first key is the the Private DNS Zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.
-
-The second key is an arbitrary map key for the Virtual Network Link. If this key matches a key in the `virtual_network_link_defaults` variable, this entry will take precedence.
-
-- `virtual_network_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
-- `name` - (Optional) The name of the virtual network link.
-- `resolution_policy` -  (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence
 
 DESCRIPTION
   nullable    = false
