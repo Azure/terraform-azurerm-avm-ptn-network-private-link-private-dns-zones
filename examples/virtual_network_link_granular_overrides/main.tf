@@ -84,10 +84,34 @@ module "test" {
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
-  virtual_network_link_defaults = {
+  virtual_network_link_by_zone_and_virtual_network = {
+    azure_container_apps = {
+      "vnet1" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
+        name                        = "vnet4-link-aca-override-vnet1"
+        resolution_policy           = "Default"
+      }
+      "vnet3" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
+        name                        = "vnet3-link-aca"
+      }
+    }
+    azure_ml = {
+      "vnet3" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet3.id
+        name                        = "this-will-be-overridden-by-override-block"
+        resolution_policy           = "Default"
+      }
+      "vnet4" = {
+        virtual_network_resource_id = azurerm_virtual_network.vnet4.id
+        resolution_policy           = "NxDomainRedirect"
+      }
+    }
+  }
+  virtual_network_link_default_virtual_networks = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      virtual_network_link_name_template_override = "vnet1-link"
       resolution_policy                           = "Default"
     }
     "vnet2" = {
@@ -95,32 +119,31 @@ module "test" {
       virtual_network_link_name_template_override = "$${vnet_key}-link"
       resolution_policy                           = "NxDomainRedirect"
     }
-    "vnet3" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet3.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
-      resolution_policy                           = "Default"
+  }
+  virtual_network_link_overrides_by_zone_and_virtual_network = {
+    azure_container_apps = {
+      vnet1 = {
+        resolution_policy = "NxDomainRedirect"
+      }
+      vnet2 = {
+        name              = "custom-vnet2-link-name-aca"
+        resolution_policy = "Default"
+      }
     }
-    "vnet4" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet4.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
+    azure_ml = {
+      vnet1 = {
+        name              = "custom-vnet1-link-name-aml"
+        resolution_policy = "Default"
+        enabled           = true
+      }
+      vnet2 = {
+        enabled = false
+      }
+      vnet3 = {
+        name              = "custom-vnet3-link-name-aml"
+        resolution_policy = "NxDomainRedirect"
+      }
     }
   }
-  virtual_network_link_defaults_overrides = {
-    "vnet1" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
-      resolution_policy                           = "NxDomainRedirect"
-    }
-    "vnet2" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
-      resolution_policy                           = "Default"
-    }
-    "vnet3" = {
-      enabled = false
-    }
-    "vnet4" = {
-      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
-    }
-  }
-  virtual_network_link_resolution_policy_default = "NxDomainRedirect"
 }
 

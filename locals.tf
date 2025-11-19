@@ -27,53 +27,105 @@ locals {
 }
 
 locals {
-  virtual_network_link_defaults_overrides = {
-    for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => {
-      for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key =>
-      try(var.virtual_network_link_defaults_overrides[vnet_link_key], {
+  virtual_network_link_merged = {
+    for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => merge(
+      { for vnet_link_key, vnet_link_value in var.virtual_network_link_default_virtual_networks : vnet_link_key => {
+        virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
+        virtual_network_link_name_template_override = vnet_link_value.virtual_network_link_name_template_override
+        resolution_policy                           = vnet_link_value.resolution_policy
+      } },
+      { for vnet_link_key, vnet_link_value in lookup(var.virtual_network_link_by_zone_and_virtual_network, zone_key, {}) : vnet_link_key => {
+        virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
+        virtual_network_link_name_template_override = vnet_link_value.name
+        resolution_policy                           = vnet_link_value.resolution_policy
+      } }
+    )
+  }
+}
+
+locals {
+  virtual_network_link_overrides_by_virtual_network = {
+    for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
+      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key =>
+      try(var.virtual_network_link_overrides_by_virtual_network[vnet_link_key], {
         virtual_network_link_name_template_override = null
         resolution_policy                           = null
         enabled                                     = true
       })
     }
   }
-  virtual_network_link_defaults_with_overrides = {
-    for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : zone_key => {
-      for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key => {
-        virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
-        virtual_network_link_name_template_override = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].virtual_network_link_name_template_override, vnet_link_value.virtual_network_link_name_template_override, var.virtual_network_link_name_template)
-        resolution_policy                           = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
-      } if local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].enabled
-    }
-  }
-  virtual_network_link_merged = {
-    for zone_key, zone_value in local.virtual_network_link_defaults_with_overrides : zone_key => merge(
-      zone_value,
-      { for vnet_link_key, vnet_link_value in lookup(var.virtual_network_link_per_zone, zone_key, {}) : vnet_link_key => {
-        virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
-        virtual_network_link_name_template_override = coalesce(vnet_link_value.name, var.virtual_network_link_name_template)
-        resolution_policy                           = vnet_link_value.resolution_policy
-      } }
-    )
-  }
-  virtual_network_link_merged_with_overrides = {
-    for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
-      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key => {
-        virtual_network_id                     = vnet_link_value.virtual_network_resource_id
-        name                                   = coalesce(local.virtual_network_link_overrides[zone_key][vnet_link_key].name, vnet_link_value.virtual_network_link_name_template_override)
-        private_dns_zone_supports_private_link = local.private_link_private_dns_zones_filtered_and_processed[zone_key].private_dns_zone_supports_private_link
-        resolution_policy                      = coalesce(local.virtual_network_link_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
-      } if local.virtual_network_link_overrides[zone_key][vnet_link_key].enabled
-    }
-  }
-  virtual_network_link_overrides = {
+  virtual_network_link_overrides_by_zone = {
     for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
       for vnet_link_key, vnet_link_value in zone_value : vnet_link_key =>
-      try(var.virtual_network_link_overrides[zone_key][vnet_link_key], {
+      try(var.virtual_network_link_overrides_by_zone[zone_key], {
+        virtual_network_link_name_template_override = null
+        resolution_policy                           = null
+        enabled                                     = true
+      })
+    }
+  }
+  virtual_network_link_overrides_by_zone_and_virtual_network = {
+    for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
+      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key =>
+      try(var.virtual_network_link_overrides_by_zone_and_virtual_network[zone_key][vnet_link_key], {
         name              = null
         resolution_policy = null
         enabled           = true
       })
+    }
+  }
+  virtual_network_link_overrides_final = {
+    for zone_key, zone_value in local.virtual_network_link_overrides_merged : zone_key => {
+      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key => {
+        name              = vnet_link_value.name == "null" ? null : vnet_link_value.name
+        resolution_policy = vnet_link_value.resolution_policy == "null" ? null : vnet_link_value.resolution_policy
+        enabled           = vnet_link_value.enabled
+      }
+    }
+  }
+  virtual_network_link_overrides_merged = {
+    for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
+      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key => {
+        name = coalesce(
+          local.virtual_network_link_overrides_by_zone_and_virtual_network[zone_key][vnet_link_key].name,
+          local.virtual_network_link_overrides_by_zone[zone_key][vnet_link_key].virtual_network_link_name_template_override,
+          local.virtual_network_link_overrides_by_virtual_network[zone_key][vnet_link_key].virtual_network_link_name_template_override,
+          "null"
+        )
+        resolution_policy = coalesce(
+          local.virtual_network_link_overrides_by_zone_and_virtual_network[zone_key][vnet_link_key].resolution_policy,
+          local.virtual_network_link_overrides_by_zone[zone_key][vnet_link_key].resolution_policy,
+          local.virtual_network_link_overrides_by_virtual_network[zone_key][vnet_link_key].resolution_policy,
+          "null"
+        )
+        enabled = (
+          local.virtual_network_link_overrides_by_zone_and_virtual_network[zone_key][vnet_link_key].enabled &&
+          local.virtual_network_link_overrides_by_zone[zone_key][vnet_link_key].enabled &&
+          local.virtual_network_link_overrides_by_virtual_network[zone_key][vnet_link_key].enabled
+        )
+      }
+    }
+  }
+}
+
+locals {
+  virtual_network_link_merged_with_overrides = {
+    for zone_key, zone_value in local.virtual_network_link_merged : zone_key => {
+      for vnet_link_key, vnet_link_value in zone_value : vnet_link_key => {
+        virtual_network_id = vnet_link_value.virtual_network_resource_id
+        name = coalesce(
+          local.virtual_network_link_overrides_final[zone_key][vnet_link_key].name,
+          vnet_link_value.virtual_network_link_name_template_override,
+          var.virtual_network_link_name_template
+        )
+        resolution_policy = coalesce(
+          local.virtual_network_link_overrides_final[zone_key][vnet_link_key].resolution_policy,
+          vnet_link_value.resolution_policy,
+          local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy,
+          var.virtual_network_link_resolution_policy_default
+        )
+        private_dns_zone_supports_private_link = local.private_link_private_dns_zones_filtered_and_processed[zone_key].private_dns_zone_supports_private_link
+      } if local.virtual_network_link_overrides_final[zone_key][vnet_link_key].enabled
     }
   }
 }
