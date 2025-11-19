@@ -483,7 +483,7 @@ A map of objects of Virtual Network Resource IDs to link to all the Private Link
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
 
 DESCRIPTION
   nullable    = false
