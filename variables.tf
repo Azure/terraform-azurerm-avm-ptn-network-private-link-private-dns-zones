@@ -508,7 +508,7 @@ The key is the Default Virtual Network Link map key from the `virtual_network_li
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`.
 - `enabled` - (Optional) Whether the virtual network link is enabled. Defaults to `true`.
 
 DESCRIPTION
