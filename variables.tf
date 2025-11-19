@@ -469,9 +469,9 @@ DESCRIPTION
 
 variable "virtual_network_link_defaults" {
   type = map(object({
-    virtual_network_resource_id                 = optional(string, null)
-    virtual_network_link_name_template_override = optional(string, null)
-    resolution_policy                           = optional(string, "Default")
+    virtual_network_resource_id                 = optional(string)
+    virtual_network_link_name_template_override = optional(string)
+    resolution_policy                           = optional(string)
   }))
   default     = {}
   description = <<DESCRIPTION
@@ -483,7 +483,7 @@ A map of objects of Virtual Network Resource IDs to link to all the Private Link
     - `{vnet_name}` - The name of the virtual network.
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
+- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_defaults_overrides`, `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence.
 
 DESCRIPTION
   nullable    = false
@@ -525,7 +525,6 @@ A prefix to use for the names of the Virtual Network Links created. A template f
     - `{vnet_key}` - The map key of the virtual network link.
     - `{location}` - The location of the resource group where the Private DNS Zone is created. In the case of multi-region deployment, this may refer to the primary region only. The `vnet_name` may be better suited to identify the VNet location in such cases.
 
-**NOTE**: If `virtual_network_link_name_template_override` is provided in the `virtual_network_links` object for a specific Private DNS Zone, that value will be used instead of this template.
 DESCRIPTION
   nullable    = false
 }
@@ -556,9 +555,9 @@ DESCRIPTION
 
 variable "virtual_network_link_per_zone" {
   type = map(map(object({
-    virtual_network_resource_id = optional(string, null)
-    name                        = optional(string, null)
-    resolution_policy           = optional(string, "Default")
+    virtual_network_resource_id = optional(string)
+    name                        = optional(string)
+    resolution_policy           = optional(string)
   })))
   default     = {}
   description = <<DESCRIPTION
@@ -572,8 +571,22 @@ The second key is an arbitrary map key for the Virtual Network Link. If this key
 
 - `virtual_network_resource_id` - (Optional) The resource ID of the Virtual Network to link to the Private Link Private DNS Zones created to.
 - `name` - (Optional) The name of the virtual network link.
-- `resolution_policy` - (Optional) The resolution policy for the Virtual Network Link. Possible value are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
+- `resolution_policy` -  (Optional) The resolution policy for the Virtual Network Link. Possible values are `Default` and `NxDomainRedirect`. If not specified, the value from `virtual_network_link_overrides`, `private_link_dns_zones`, `private_link_dns_zones_additional`, or `virtual_network_link_resolution_policy_default` variable will be used in that precedence
 
 DESCRIPTION
   nullable    = false
+}
+
+variable "virtual_network_link_resolution_policy_default" {
+  type        = string
+  default     = "Default"
+  description = <<DESCRIPTION
+The default resolution policy for the Virtual Network Links created. Possible values are `Default` and `NxDomainRedirect`. If a specific private DNS zone requires a different resolution policy, this can be overridden by assigning the `resolution_policy` attribute in the specific Private DNS Zone's declaration.
+DESCRIPTION
+  nullable    = false
+
+  validation {
+    condition     = contains(["Default", "NxDomainRedirect"], var.virtual_network_link_resolution_policy_default)
+    error_message = "The virtual_network_link_resolution_policy_default must be one of: 'Default', or 'NxDomainRedirect'."
+  }
 }

@@ -42,7 +42,7 @@ locals {
       for vnet_link_key, vnet_link_value in var.virtual_network_link_defaults : vnet_link_key => {
         virtual_network_resource_id                 = vnet_link_value.virtual_network_resource_id
         virtual_network_link_name_template_override = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].virtual_network_link_name_template_override, vnet_link_value.virtual_network_link_name_template_override, var.virtual_network_link_name_template)
-        resolution_policy                           = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy)
+        resolution_policy                           = coalesce(local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
       } if local.virtual_network_link_defaults_overrides[zone_key][vnet_link_key].enabled
     }
   }
@@ -62,7 +62,7 @@ locals {
         virtual_network_id                     = vnet_link_value.virtual_network_resource_id
         name                                   = coalesce(local.virtual_network_link_overrides[zone_key][vnet_link_key].name, vnet_link_value.virtual_network_link_name_template_override)
         private_dns_zone_supports_private_link = local.private_link_private_dns_zones_filtered_and_processed[zone_key].private_dns_zone_supports_private_link
-        resolution_policy                      = coalesce(local.virtual_network_link_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, "Default")
+        resolution_policy                      = coalesce(local.virtual_network_link_overrides[zone_key][vnet_link_key].resolution_policy, vnet_link_value.resolution_policy, local.private_link_private_dns_zones_filtered_and_processed[zone_key].resolution_policy, var.virtual_network_link_resolution_policy_default)
       } if local.virtual_network_link_overrides[zone_key][vnet_link_key].enabled
     }
   }
