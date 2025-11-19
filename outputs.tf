@@ -9,6 +9,6 @@ output "private_link_private_dns_zones_map" {
 }
 
 output "resource_group_resource_id" {
-  description = "The resource ID of the resource group that the Private DNS Zones are deployed into."
+  description = "The resource ID of the resource group that the private link private DNS zones are deployed into."
   value       = local.resource_group_id_string
 }
