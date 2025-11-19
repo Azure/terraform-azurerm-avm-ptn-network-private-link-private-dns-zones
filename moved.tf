@@ -251,16 +251,6 @@ moved {
 }
 
 moved {
-  from = module.avm_res_network_privatednszone["azure_healthcare_workspaces"].azurerm_private_dns_zone.this
-  to   = module.avm_res_network_privatednszone["azure_healthcare_workspaces"].azapi_resource.private_dns_zone
-}
-
-moved {
-  from = module.avm_res_network_privatednszone["azure_healthcare_fhir"].azurerm_private_dns_zone.this
-  to   = module.avm_res_network_privatednszone["azure_healthcare_fhir"].azapi_resource.private_dns_zone
-}
-
-moved {
   from = module.avm_res_network_privatednszone["azure_healthcare_dicom"].azurerm_private_dns_zone.this
   to   = module.avm_res_network_privatednszone["azure_healthcare_dicom"].azapi_resource.private_dns_zone
 }
