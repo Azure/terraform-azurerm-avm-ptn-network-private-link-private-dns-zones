@@ -36,7 +36,7 @@ locals {
 }
 
 resource "random_integer" "region_index" {
-  max = length(local.regions_with_geo_code) - 1
+  max = length(module.regions.regions) - 1
   min = 0
 }
 
@@ -50,19 +50,27 @@ resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
 }
 
-resource "azurerm_virtual_network" "this_1" {
+resource "azurerm_virtual_network" "vnet1" {
   location            = azurerm_resource_group.this.location
   name                = "vnet1"
   resource_group_name = azurerm_resource_group.this.name
   address_space       = ["10.0.1.0/24"]
 }
 
-resource "azurerm_virtual_network" "this_2" {
+resource "azurerm_virtual_network" "vnet2" {
   location            = azurerm_resource_group.this.location
   name                = "vnet2"
   resource_group_name = azurerm_resource_group.this.name
   address_space       = ["10.0.2.0/24"]
 }
+
+resource "azurerm_virtual_network" "vnet3" {
+  location            = azurerm_resource_group.this.location
+  name                = "vnet3"
+  resource_group_name = azurerm_resource_group.this.name
+  address_space       = ["10.0.3.0/24"]
+}
+
 
 module "test" {
   source = "../../"
@@ -70,36 +78,35 @@ module "test" {
   location         = local.regions_with_geo_code[random_integer.region_index.result].name
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
-  private_link_excluded_zones = [
-    "azure_ml_notebooks",
-    "privatelink.{regionName}.azurecontainerapps.io",
-    "privatelink.tip1.powerquery.microsoft.com"
-  ]
   virtual_network_link_defaults = {
     "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-      virtual_network_link_name_template_override = "vnet1-link"
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "Default"
     }
     "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "NxDomainRedirect"
+    }
+    "vnet3" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet3.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "Default"
     }
   }
-  virtual_network_link_overrides = {
-    azure_container_apps = {
-      vnet2 = {
-        resolution_policy = "NxDomainRedirect"
-      }
+  virtual_network_link_defaults_overrides = {
+    "vnet1" = {
+      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
+      resolution_policy                           = "NxDomainRedirect"
     }
-    azure_ml_notebooks = {
-      vnet2 = {
-        resolution_policy = "NxDomainRedirect"
-      }
+    "vnet2" = {
+      virtual_network_link_name_template_override = "overridden-$${vnet_key}-link"
+      resolution_policy                           = "Default"
     }
-    azure_power_bi_power_query = {
-      vnet2 = {
-        resolution_policy = "NxDomainRedirect"
-      }
+    "vnet3" = {
+      enabled = false
     }
   }
 }
+

@@ -84,6 +84,16 @@ module "test" {
     "privatelink.{regionName}.azurecontainerapps.io",
     "privatelink.tip1.powerquery.microsoft.com"
   ]
+  virtual_network_link_defaults = {
+    "vnet1" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
+      virtual_network_link_name_template_override = "vnet1-link"
+    }
+    "vnet2" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+    }
+  }
   virtual_network_link_overrides = {
     azure_container_apps = {
       vnet2 = {
@@ -99,16 +109,6 @@ module "test" {
       vnet2 = {
         resolution_policy = "NxDomainRedirect"
       }
-    }
-  }
-  virtual_network_links_default = {
-    "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
-      virtual_network_link_name_template_override = "vnet1-link"
-    }
-    "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
 }

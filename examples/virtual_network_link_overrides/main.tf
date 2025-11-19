@@ -84,6 +84,18 @@ module "test" {
   location         = local.regions_with_geo_code[random_integer.region_index.result].name
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
+  virtual_network_link_defaults = {
+    "vnet1" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
+      virtual_network_link_name_template_override = "vnet1-link"
+      resolution_policy                           = "Default"
+    }
+    "vnet2" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "NxDomainRedirect"
+    }
+  }
   virtual_network_link_overrides = {
     azure_container_apps = {
       vnet1 = {
@@ -109,19 +121,7 @@ module "test" {
       }
     }
   }
-  virtual_network_links_default = {
-    "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
-      virtual_network_link_name_template_override = "vnet1-link"
-      resolution_policy                           = "Default"
-    }
-    "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
-      resolution_policy                           = "NxDomainRedirect"
-    }
-  }
-  virtual_network_links_per_zone = {
+  virtual_network_link_per_zone = {
     azure_container_apps = {
       "vnet1" = {
         virtual_network_resource_id = azurerm_virtual_network.vnet4.id
@@ -146,3 +146,4 @@ module "test" {
     }
   }
 }
+

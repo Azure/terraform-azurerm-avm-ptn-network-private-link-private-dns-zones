@@ -17,8 +17,8 @@ module "regions" {
 
 module "avm_res_network_privatednszone" {
   source   = "Azure/avm-res-network-privatednszone/azurerm"
-  version  = "0.4.1"
-  for_each = local.combined_private_link_private_dns_zones_replaced_with_vnets_to_link
+  version  = "0.4.2"
+  for_each = local.private_link_private_dns_zones_final
 
   domain_name           = each.value.zone_name
   parent_id             = local.resource_group_id_string

@@ -85,7 +85,7 @@ module "test" {
     "env"             = "example"
     "example-tag-key" = "example tag value"
   }
-  virtual_network_links_default = {
+  virtual_network_link_defaults = {
     "vnet1" = {
       virtual_network_resource_id = azurerm_virtual_network.this_1.id
       resolution_policy           = "Default"
