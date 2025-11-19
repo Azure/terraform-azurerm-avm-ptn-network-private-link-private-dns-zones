@@ -45,7 +45,7 @@ locals {
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -76,7 +76,7 @@ resource "azurerm_virtual_network" "this_2" {
 module "test" {
   source = "../../"
 
-  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones = {
@@ -104,7 +104,7 @@ module "test" {
       resolution_policy                      = "NxDomainRedirect"
     }
   }
-  virtual_network_links_default = {
+  virtual_network_link_defaults = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
       virtual_network_link_name_template_override = "vnet1-link"

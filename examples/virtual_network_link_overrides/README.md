@@ -43,7 +43,7 @@ locals {
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -88,9 +88,21 @@ resource "azurerm_virtual_network" "vnet4" {
 module "test" {
   source = "../../"
 
-  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
+  virtual_network_link_defaults = {
+    "vnet1" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
+      virtual_network_link_name_template_override = "vnet1-link"
+      resolution_policy                           = "Default"
+    }
+    "vnet2" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
+      virtual_network_link_name_template_override = "$${vnet_key}-link"
+      resolution_policy                           = "NxDomainRedirect"
+    }
+  }
   virtual_network_link_overrides = {
     azure_container_apps = {
       vnet1 = {
@@ -116,19 +128,7 @@ module "test" {
       }
     }
   }
-  virtual_network_links_default = {
-    "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
-      virtual_network_link_name_template_override = "vnet1-link"
-      resolution_policy                           = "Default"
-    }
-    "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
-      resolution_policy                           = "NxDomainRedirect"
-    }
-  }
-  virtual_network_links_per_zone = {
+  virtual_network_link_per_zone = {
     azure_container_apps = {
       "vnet1" = {
         virtual_network_resource_id = azurerm_virtual_network.vnet4.id
@@ -153,6 +153,7 @@ module "test" {
     }
   }
 }
+
 ```
 
 <!-- markdownlint-disable MD033 -->
@@ -198,7 +199,11 @@ Default: `true`
 
 ## Outputs
 
-No outputs.
+The following outputs are exported:
+
+### <a name="output_test_private_dns_zone_resource_ids"></a> [test\_private\_dns\_zone\_resource\_ids](#output\_test\_private\_dns\_zone\_resource\_ids)
+
+Description: n/a
 
 ## Modules
 

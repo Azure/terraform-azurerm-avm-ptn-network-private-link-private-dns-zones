@@ -28,8 +28,15 @@ module "regions" {
   is_recommended = true
 }
 
+locals {
+  # Filter regions to those with a geo code to avoid null replacements in the module locals.
+  regions_with_geo_code = [
+    for region in module.regions.regions : region if try(region.geo_code, null) != null
+  ]
+}
+
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -39,7 +46,7 @@ module "naming" {
 }
 
 resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = local.regions_with_geo_code[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
 
@@ -85,7 +92,7 @@ module "test" {
     "env"             = "example"
     "example-tag-key" = "example tag value"
   }
-  virtual_network_links_default = {
+  virtual_network_link_defaults = {
     "vnet1" = {
       virtual_network_resource_id = azurerm_virtual_network.this_1.id
       resolution_policy           = "Default"
