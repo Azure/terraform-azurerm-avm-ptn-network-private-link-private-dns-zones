@@ -757,7 +757,7 @@ Version: 0.5.0
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.4.2
+Version: 0.4.3
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 

@@ -17,7 +17,7 @@ module "regions" {
 
 module "avm_res_network_privatednszone" {
   source   = "Azure/avm-res-network-privatednszone/azurerm"
-  version  = "0.4.2"
+  version  = "0.4.3"
   for_each = local.private_link_private_dns_zones_final
 
   domain_name           = each.value.zone_name
