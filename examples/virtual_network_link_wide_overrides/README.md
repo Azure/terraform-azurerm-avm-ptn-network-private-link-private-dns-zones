@@ -98,6 +98,13 @@ module "test" {
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
+  virtual_network_link_additional_virtual_networks = {
+    "vnet5" = {
+      virtual_network_resource_id                 = azurerm_virtual_network.vnet5.id
+      virtual_network_link_name_template_override = "additional-$${vnet_key}-link"
+      resolution_policy                           = "Default"
+    }
+  }
   virtual_network_link_default_virtual_networks = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
@@ -116,10 +123,6 @@ module "test" {
     }
     "vnet4" = {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet4.id
-      virtual_network_link_name_template_override = "$${vnet_key}-link"
-    }
-    "vnet5" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet5.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
