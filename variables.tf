@@ -196,6 +196,9 @@ variable "private_link_private_dns_zones" {
     azure_redis_enterprise = {
       zone_name = "privatelink.redisenterprise.cache.azure.net"
     }
+    azure_managed_redis = {
+      zone_name = "privatelink.redis.azure.net"
+    }
     azure_arc_hybrid_compute = {
       zone_name = "privatelink.his.arc.azure.com"
     }
@@ -208,17 +211,14 @@ variable "private_link_private_dns_zones" {
     azure_event_grid = {
       zone_name = "privatelink.eventgrid.azure.net"
     }
+    azure_event_grid_mqtt = {
+      zone_name = "privatelink.ts.eventgrid.azure.net"
+    }
     azure_api_management = {
       zone_name = "privatelink.azure-api.net"
     }
     azure_healthcare = {
       zone_name = "privatelink.azurehealthcareapis.com"
-    }
-    azure_healthcare_workspaces = {
-      zone_name = "privatelink.workspace.azurehealthcareapis.com"
-    }
-    azure_healthcare_fhir = {
-      zone_name = "privatelink.fhir.azurehealthcareapis.com"
     }
     azure_healthcare_dicom = {
       zone_name = "privatelink.dicom.azurehealthcareapis.com"
@@ -270,6 +270,9 @@ variable "private_link_private_dns_zones" {
     }
     azure_purview_studio = {
       zone_name = "privatelink.purviewstudio.azure.com"
+    }
+    azure_purview_service = {
+      zone_name = "privatelink.purview-service.microsoft.com"
     }
     azure_migration_service = {
       zone_name = "privatelink.prod.migration.windowsazure.com"
