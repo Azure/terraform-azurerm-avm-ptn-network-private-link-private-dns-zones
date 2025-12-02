@@ -346,6 +346,9 @@ Default:
   "azure_managed_prometheus": {
     "zone_name": "privatelink.{regionName}.prometheus.monitor.azure.com"
   },
+  "azure_managed_redis": {
+    "zone_name": "privatelink.redis.azure.net"
+  },
   "azure_maria_db_server": {
     "zone_name": "privatelink.mariadb.database.azure.com"
   },
