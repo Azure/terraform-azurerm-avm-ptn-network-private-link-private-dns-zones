@@ -200,6 +200,9 @@ variable "private_link_private_dns_zones" {
     azure_redis_enterprise = {
       zone_name = "privatelink.redisenterprise.cache.azure.net"
     }
+    azure_managed_redis = {
+      zone_name = "privatelink.redis.azure.net"
+    }
     azure_arc_hybrid_compute = {
       zone_name = "privatelink.his.arc.azure.com"
     }
