@@ -32,11 +32,20 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.7.0"
+  version = "0.9.2"
+
+  is_recommended = true
+}
+
+locals {
+  # Filter regions to those with a geo code to avoid null replacements in the module locals.
+  regions_with_geo_code = [
+    for region in module.regions.regions : region if try(region.geo_code, null) != null
+  ]
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -46,14 +55,14 @@ module "naming" {
 }
 
 resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = local.regions_with_geo_code[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
 
 module "test" {
   source = "../../"
 
-  location         = module.regions.regions[random_integer.region_index.result].name
+  location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
 }
@@ -114,7 +123,7 @@ Version: 0.4.2
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.7.0
+Version: 0.9.2
 
 ### <a name="module_test"></a> [test](#module\_test)
 

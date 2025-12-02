@@ -36,11 +36,20 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.7.0"
+  version = "0.9.2"
+
+  is_recommended = true
+}
+
+locals {
+  # Filter regions to those with a geo code to avoid null replacements in the module locals.
+  regions_with_geo_code = [
+    for region in module.regions.regions : region if try(region.geo_code, null) != null
+  ]
 }
 
 resource "random_integer" "region_index" {
-  max = length(module.regions.regions) - 1
+  max = length(local.regions_with_geo_code) - 1
   min = 0
 }
 
@@ -50,7 +59,7 @@ module "naming" {
 }
 
 resource "azurerm_resource_group" "this" {
-  location = module.regions.regions[random_integer.region_index.result].name
+  location = local.regions_with_geo_code[random_integer.region_index.result].name
   name     = module.naming.resource_group.name_unique
 }
 
@@ -78,63 +87,33 @@ module "test" {
     "custom_zone_1" = {
       zone_name                              = "custom-example-1.int"
       private_dns_zone_supports_private_link = false
-      virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "Default"
-        }
-        "vnet2" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
-        }
-      }
     }
     "custom_zone_2" = {
       zone_name                              = "custom-example-2.local"
       private_dns_zone_supports_private_link = false
-      virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "Default"
-        }
-        "vnet2" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
-        }
-      }
     }
     "custom_zone_3" = {
       zone_name                              = "custom-example-3-{regionName}.local"
       private_dns_zone_supports_private_link = false
-      virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "Default"
-        }
-        "vnet2" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
-        }
-      }
     }
     "custom_zone_4" = {
       zone_name                              = "custom-example-4-{regionCode}.local"
       private_dns_zone_supports_private_link = false
-      virtual_network_links = {
-        "vnet1" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_1.id
-          resolution_policy           = "Default"
-        }
-        "vnet2" = {
-          virtual_network_resource_id = azurerm_virtual_network.this_2.id
-          resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
-        }
-      }
     }
   }
   tags = {
     "env"             = "example"
     "example-tag-key" = "example tag value"
+  }
+  virtual_network_link_default_virtual_networks = {
+    "vnet1" = {
+      virtual_network_resource_id = azurerm_virtual_network.this_1.id
+      resolution_policy           = "Default"
+    }
+    "vnet2" = {
+      virtual_network_resource_id = azurerm_virtual_network.this_2.id
+      resolution_policy           = "NxDomainRedirect" # This won't be passed through as the zones above are marked as not supporting private link
+    }
   }
 }
 
@@ -259,7 +238,7 @@ Version: 0.4.2
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.7.0
+Version: 0.9.2
 
 ### <a name="module_test"></a> [test](#module\_test)
 

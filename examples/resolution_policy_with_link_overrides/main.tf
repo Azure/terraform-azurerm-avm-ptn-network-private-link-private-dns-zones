@@ -70,31 +70,11 @@ module "test" {
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
   enable_telemetry = var.enable_telemetry
-  private_link_private_dns_zones = {
-    azure_container_apps = {
-      zone_name                              = "privatelink.{regionName}.azurecontainerapps.io"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_ml = {
-      zone_name                              = "privatelink.api.azureml.ms"
-      private_dns_zone_supports_private_link = true
-    }
-    azure_ml_notebooks = {
-      zone_name                              = "privatelink.notebooks.azure.net"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-    azure_power_bi_dedicated = {
-      zone_name                              = "privatelink.pbidedicated.windows.net"
-      private_dns_zone_supports_private_link = true
-    }
-    azure_power_bi_power_query = {
-      zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
-      private_dns_zone_supports_private_link = true
-      resolution_policy                      = "NxDomainRedirect"
-    }
-  }
+  private_link_excluded_zones = [
+    "azure_ml_notebooks",
+    "privatelink.{regionName}.azurecontainerapps.io",
+    "privatelink.tip1.powerquery.microsoft.com"
+  ]
   virtual_network_link_default_virtual_networks = {
     "vnet1" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
@@ -103,6 +83,23 @@ module "test" {
     "vnet2" = {
       virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
+    }
+  }
+  virtual_network_link_overrides_by_zone_and_virtual_network = {
+    azure_container_apps = {
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
+    }
+    azure_ml_notebooks = {
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
+    }
+    azure_power_bi_power_query = {
+      vnet2 = {
+        resolution_policy = "NxDomainRedirect"
+      }
     }
   }
 }
