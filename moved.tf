@@ -1,9 +1,3 @@
-# Resource Group
-moved {
-  from = azurerm_resource_group.this
-  to   = azapi_resource.rg
-}
-
 # DNS Zones
 moved {
   from = module.avm_res_network_privatednszone["azure_container_apps"].azurerm_private_dns_zone.this
