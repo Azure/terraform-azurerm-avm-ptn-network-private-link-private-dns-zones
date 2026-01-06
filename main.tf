@@ -10,7 +10,7 @@ module "avm_interfaces" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.2"
+  version = "0.9.3"
 
   enable_telemetry = var.enable_telemetry
 }
