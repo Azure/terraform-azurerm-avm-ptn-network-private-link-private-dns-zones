@@ -23,6 +23,7 @@ module "avm_res_network_privatednszone" {
   domain_name           = each.value.zone_name
   parent_id             = local.resource_group_id_string
   enable_telemetry      = var.enable_telemetry
+  role_assignments      = each.value.role_assignments
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.virtual_network_links

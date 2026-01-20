@@ -18,6 +18,7 @@ locals {
       private_dns_zone_supports_private_link = zone_value.private_dns_zone_supports_private_link
       resolution_policy                      = zone_value.resolution_policy
       custom_iterator                        = zone_value.custom_iterator
+      role_assignments                       = lookup(var.virtual_network_role_assignments, zone_key, {})
     }
   }
   private_link_private_dns_zones_merged = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)
@@ -144,8 +145,9 @@ locals {
     for item in flatten([
       for zone_key, zone_value in local.private_link_private_dns_zones_filtered_and_processed : [
         for custom_iterator_key, custom_iterator_value in coalesce(zone_value.custom_iterator, local.default_custom_iterator).replacement_values : {
-          zone_key  = custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"
-          zone_name = custom_iterator_value == null ? zone_value.zone_name : replace(zone_value.zone_name, "{${zone_value.custom_iterator.replacement_placeholder}}", custom_iterator_key)
+          zone_key         = custom_iterator_value == null ? zone_key : "${zone_key}_${custom_iterator_key}"
+          zone_name        = custom_iterator_value == null ? zone_value.zone_name : replace(zone_value.zone_name, "{${zone_value.custom_iterator.replacement_placeholder}}", custom_iterator_key)
+          role_assignments = custom_iterator_value == null ? zone_value.role_assignments : replace(zone_value.role_assignments, "{${zone_value.custom_iterator.replacement_placeholder}}", custom_iterator_key)
           virtual_network_links = { for vnet_link_key, vnet_link_value in local.virtual_network_link_merged_with_overrides[zone_key] : vnet_link_key => {
             virtual_network_id = vnet_link_value.virtual_network_id
             name = templatestring(vnet_link_value.name, {
