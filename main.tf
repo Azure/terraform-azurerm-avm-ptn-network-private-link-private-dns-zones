@@ -26,6 +26,7 @@ module "avm_res_network_privatednszone" {
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.virtual_network_links
+  role_assignments      = each.value.role_assignments
 }
 
 resource "azapi_resource" "lock" {
