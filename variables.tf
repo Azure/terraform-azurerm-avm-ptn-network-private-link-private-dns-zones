@@ -650,7 +650,6 @@ DESCRIPTION
   }
 }
 
-
 variable "virtual_network_role_assignments" {
   type = map(map(object({
     role_definition_id_or_name             = string
