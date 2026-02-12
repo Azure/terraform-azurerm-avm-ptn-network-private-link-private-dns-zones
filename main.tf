@@ -17,12 +17,13 @@ module "regions" {
 
 module "avm_res_network_privatednszone" {
   source   = "Azure/avm-res-network-privatednszone/azurerm"
-  version  = "0.4.3"
+  version  = "0.5.0"
   for_each = local.private_link_private_dns_zones_final
 
   domain_name           = each.value.zone_name
   parent_id             = local.resource_group_id_string
   enable_telemetry      = var.enable_telemetry
+  role_assignments      = each.value.role_assignments
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.virtual_network_links
