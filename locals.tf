@@ -18,7 +18,7 @@ locals {
       private_dns_zone_supports_private_link = zone_value.private_dns_zone_supports_private_link
       resolution_policy                      = zone_value.resolution_policy
       custom_iterator                        = zone_value.custom_iterator
-      role_assignments                       = lookup(var.virtual_network_role_assignments, zone_key, {})
+      role_assignments                       = lookup(var.private_link_private_dns_zones_role_assignments, zone_key, {})
     }
   }
   private_link_private_dns_zones_merged = merge(var.private_link_private_dns_zones, var.private_link_private_dns_zones_additional)

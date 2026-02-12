@@ -496,6 +496,40 @@ object({
 
 Default: `{}`
 
+### <a name="input_private_link_private_dns_zones_role_assignments"></a> [private\_link\_private\_dns\_zones\_role\_assignments](#input\_private\_link\_private\_dns\_zones\_role\_assignments)
+
+Description: A map of maps to create role assignments on the private DNS Zone.
+
+The first key is the the private link private DNS zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.  
+The second key is an arbitrary map key for the role assignment.
+
+- `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
+- `principal_id` - The ID of the principal to assign the role to.
+- `principal_type` - (Optional) The type of the principal. Possible values are `User`, `Group`, and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
+- `description` - The description of the role assignment.
+- `skip_service_principal_aad_check` - If set to true, skips the Entra ID check for the service principal in the tenant. Defaults to `false`.
+- `condition` - The condition which will be used to scope the role assignment.
+- `condition_version` - The version of the condition syntax. Valid values are '2.0'.
+
+> Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
+
+Type:
+
+```hcl
+map(map(object({
+    role_definition_id_or_name             = string
+    principal_id                           = string
+    principal_type                         = optional(string, null)
+    description                            = optional(string, null)
+    skip_service_principal_aad_check       = optional(bool, false)
+    condition                              = optional(string, null)
+    condition_version                      = optional(string, null)
+    delegated_managed_identity_resource_id = optional(string, null)
+  })))
+```
+
+Default: `{}`
+
 ### <a name="input_resource_group_role_assignments"></a> [resource\_group\_role\_assignments](#input\_resource\_group\_role\_assignments)
 
 Description: A map of role assignments to create on the Resource Group. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -756,40 +790,6 @@ Type: `string`
 
 Default: `"Default"`
 
-### <a name="input_virtual_network_role_assignments"></a> [virtual\_network\_role\_assignments](#input\_virtual\_network\_role\_assignments)
-
-Description: A map of maps to create role assignments on the Virtual Network.
-
-The first key is the the private link private DNS zone map key from the `private_link_private_dns_zones` or `private_link_private_dns_zones_additional` variables.  
-The second key is an arbitrary map key for the role assignment.
-
-- `role_definition_id_or_name` - The ID or name of the role definition to assign to the principal.
-- `principal_id` - The ID of the principal to assign the role to.
-- `principal_type` - (Optional) The type of the principal. Possible values are `User`, `Group`, and `ServicePrincipal`. It is necessary to explicitly set this attribute when creating role assignments if the principal creating the assignment is constrained by ABAC rules that filters on the PrincipalType attribute.
-- `description` - The description of the role assignment.
-- `skip_service_principal_aad_check` - If set to true, skips the Entra ID check for the service principal in the tenant. Defaults to `false`.
-- `condition` - The condition which will be used to scope the role assignment.
-- `condition_version` - The version of the condition syntax. Valid values are '2.0'.
-
-> Note: only set `skip_service_principal_aad_check` to true if you are assigning a role to a service principal.
-
-Type:
-
-```hcl
-map(map(object({
-    role_definition_id_or_name             = string
-    principal_id                           = string
-    principal_type                         = optional(string, null)
-    description                            = optional(string, null)
-    skip_service_principal_aad_check       = optional(bool, false)
-    condition                              = optional(string, null)
-    condition_version                      = optional(string, null)
-    delegated_managed_identity_resource_id = optional(string, null)
-  })))
-```
-
-Default: `{}`
-
 ## Outputs
 
 The following outputs are exported:
@@ -820,7 +820,7 @@ Version: 0.5.0
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.4.3
+Version: 0.5.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
