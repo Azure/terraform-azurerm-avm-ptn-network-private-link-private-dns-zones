@@ -36,9 +36,10 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.2"
+  version = "0.12.0"
 
-  is_recommended = true
+  is_recommended  = true
+  use_cached_data = false
 }
 
 locals {
@@ -238,7 +239,7 @@ Version: 0.4.2
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.9.2
+Version: 0.12.0
 
 ### <a name="module_test"></a> [test](#module\_test)
 
