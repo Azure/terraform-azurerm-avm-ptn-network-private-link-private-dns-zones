@@ -26,9 +26,8 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
+  is_recommended  = true
   use_cached_data = false
-
-  is_recommended = true
 }
 
 locals {
