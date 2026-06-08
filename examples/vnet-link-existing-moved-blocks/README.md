@@ -35,7 +35,9 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.2"
+  version = "0.12.0"
+
+  use_cached_data = false
 
   is_recommended = true
 }
