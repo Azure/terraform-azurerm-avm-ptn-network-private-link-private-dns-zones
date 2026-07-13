@@ -74,7 +74,7 @@ module "test" {
   private_link_excluded_zones = [
     "azure_ml_notebooks",
     "privatelink.{regionName}.azurecontainerapps.io",
-    "privatelink.tip1.powerquery.microsoft.com"
+    "privatelink.prod.powerquery.microsoft.com"
   ]
   virtual_network_link_default_virtual_networks = {
     "vnet1" = {
