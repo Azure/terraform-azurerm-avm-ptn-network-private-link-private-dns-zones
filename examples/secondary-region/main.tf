@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
+      version = ">= 4.0, < 5.1"
     }
   }
 }
@@ -19,7 +19,7 @@ provider "azurerm" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.4.2"
+  version = "0.4.3"
 }
 
 resource "azurerm_resource_group" "this" {
