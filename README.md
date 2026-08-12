@@ -780,13 +780,13 @@ The following Modules are called:
 
 Source: Azure/avm-utl-interfaces/azure
 
-Version: 0.5.0
+Version: 0.6.0
 
 ### <a name="module_avm_res_network_privatednszone"></a> [avm\_res\_network\_privatednszone](#module\_avm\_res\_network\_privatednszone)
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.4.3
+Version: 0.5.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
