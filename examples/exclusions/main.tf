@@ -60,7 +60,7 @@ module "test" {
   private_link_excluded_zones = [
     "azure_ml_notebooks",
     "privatelink.{regionName}.azurecontainerapps.io",
-    "privatelink.tip1.powerquery.microsoft.com"
+    "privatelink.prod.powerquery.microsoft.com"
   ]
   private_link_private_dns_zones = {
     azure_container_apps = {
@@ -77,7 +77,7 @@ module "test" {
       zone_name = "privatelink.pbidedicated.windows.net"
     }
     azure_power_bi_power_query = {
-      zone_name = "privatelink.tip1.powerquery.microsoft.com"
+      zone_name = "privatelink.prod.powerquery.microsoft.com"
     }
   }
 }

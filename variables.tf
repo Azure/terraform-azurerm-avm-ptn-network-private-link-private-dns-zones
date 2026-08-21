@@ -131,7 +131,7 @@ variable "private_link_private_dns_zones" {
       zone_name = "privatelink.pbidedicated.windows.net"
     }
     azure_power_bi_power_query = {
-      zone_name = "privatelink.tip1.powerquery.microsoft.com"
+      zone_name = "privatelink.prod.powerquery.microsoft.com"
     }
     azure_databricks_ui_api = {
       zone_name = "privatelink.azuredatabricks.net"
