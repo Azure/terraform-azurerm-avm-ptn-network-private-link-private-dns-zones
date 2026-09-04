@@ -145,4 +145,3 @@ module "test" {
   }
   virtual_network_link_resolution_policy_default = "NxDomainRedirect"
 }
-
