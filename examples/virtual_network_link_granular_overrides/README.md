@@ -154,7 +154,6 @@ module "test" {
     }
   }
 }
-
 ```
 
 <!-- markdownlint-disable MD033 -->
