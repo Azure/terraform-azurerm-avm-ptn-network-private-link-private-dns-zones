@@ -91,7 +91,7 @@ module "test" {
       private_dns_zone_supports_private_link = true
     }
     azure_power_bi_power_query = {
-      zone_name                              = "privatelink.tip1.powerquery.microsoft.com"
+      zone_name                              = "privatelink.prod.powerquery.microsoft.com"
       private_dns_zone_supports_private_link = true
       resolution_policy                      = "NxDomainRedirect"
     }
