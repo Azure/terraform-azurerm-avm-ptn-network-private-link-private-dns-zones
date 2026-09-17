@@ -37,8 +37,9 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  is_recommended  = true
-  use_cached_data = false
+  enable_telemetry = false
+  is_recommended   = true
+  use_cached_data  = false
 }
 
 locals {
@@ -82,7 +83,7 @@ module "test" {
 
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = var.enable_telemetry
+  enable_telemetry = false
   private_link_private_dns_zones_additional = {
     example_zone_1 = {
       zone_name                              = "{regionCode}.example.com"

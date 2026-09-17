@@ -32,8 +32,9 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  is_recommended  = true
-  use_cached_data = false
+  enable_telemetry = false
+  is_recommended   = true
+  use_cached_data  = false
 }
 
 locals {
@@ -91,7 +92,7 @@ module "test" {
 
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = var.enable_telemetry
+  enable_telemetry = false
   virtual_network_link_by_zone_and_virtual_network = {
     azure_container_apps = {
       "vnet1" = {
