@@ -41,7 +41,7 @@ module "test" {
 
   location         = "uksouth"
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = var.enable_telemetry
+  enable_telemetry = false
   private_link_private_dns_zones_regex_filter = {
     enabled = true
   }
