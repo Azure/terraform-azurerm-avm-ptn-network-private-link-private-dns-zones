@@ -34,7 +34,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   is_recommended   = true
   use_cached_data  = false
 }
@@ -66,7 +66,7 @@ module "test" {
 
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
 }
 ```
 

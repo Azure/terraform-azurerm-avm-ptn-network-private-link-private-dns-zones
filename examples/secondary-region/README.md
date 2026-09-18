@@ -41,7 +41,7 @@ module "test" {
 
   location         = "uksouth"
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   private_link_private_dns_zones_regex_filter = {
     enabled = true
   }
@@ -80,7 +80,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `true`
+Default: `false`
 
 ## Outputs
 
