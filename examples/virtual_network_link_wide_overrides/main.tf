@@ -25,7 +25,7 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   is_recommended   = true
   use_cached_data  = false
 }
@@ -92,7 +92,7 @@ module "test" {
 
   location         = azurerm_resource_group.this.location
   parent_id        = azurerm_resource_group.this.id
-  enable_telemetry = false
+  enable_telemetry = var.enable_telemetry
   virtual_network_link_additional_virtual_networks = {
     "vnet5" = {
       virtual_network_resource_id                 = azurerm_virtual_network.vnet5.id
