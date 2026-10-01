@@ -166,5 +166,3 @@ locals {
     ) : item.zone_key => item
   }
 }
-
-
