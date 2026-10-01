@@ -23,9 +23,11 @@ provider "azurerm" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.9.2"
+  version = "0.12.0"
 
-  is_recommended = true
+  enable_telemetry = var.enable_telemetry
+  is_recommended   = true
+  use_cached_data  = false
 }
 
 locals {
