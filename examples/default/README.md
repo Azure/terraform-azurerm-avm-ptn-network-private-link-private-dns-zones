@@ -34,8 +34,9 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  is_recommended  = true
-  use_cached_data = false
+  enable_telemetry = var.enable_telemetry
+  is_recommended   = true
+  use_cached_data  = false
 }
 
 locals {
@@ -104,7 +105,7 @@ If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
 
-Default: `false`
+Default: `true`
 
 ## Outputs
 

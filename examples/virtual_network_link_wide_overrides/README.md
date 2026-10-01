@@ -32,8 +32,9 @@ module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
   version = "0.12.0"
 
-  is_recommended  = true
-  use_cached_data = false
+  enable_telemetry = var.enable_telemetry
+  is_recommended   = true
+  use_cached_data  = false
 }
 
 locals {
@@ -152,7 +153,6 @@ module "test" {
   }
   virtual_network_link_resolution_policy_default = "NxDomainRedirect"
 }
-
 ```
 
 <!-- markdownlint-disable MD033 -->
