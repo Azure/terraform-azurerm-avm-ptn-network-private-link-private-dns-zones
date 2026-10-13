@@ -338,6 +338,9 @@ Default:
   "azure_managed_redis": {
     "zone_name": "privatelink.redis.azure.net"
   },
+  "azure_maps": {
+    "zone_name": "privatelink.account.maps.azure.com"
+  },
   "azure_maria_db_server": {
     "zone_name": "privatelink.mariadb.database.azure.com"
   },
@@ -443,6 +446,9 @@ Default:
   },
   "azure_synapse_sql": {
     "zone_name": "privatelink.sql.azuresynapse.net"
+  },
+  "azure_video_indexer": {
+    "zone_name": "privatelink.api.videoindexer.ai"
   },
   "azure_web_pubsub": {
     "zone_name": "privatelink.webpubsub.azure.com"
