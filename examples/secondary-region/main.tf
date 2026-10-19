@@ -19,7 +19,7 @@ provider "azurerm" {
 
 module "naming" {
   source  = "Azure/naming/azurerm"
-  version = "0.4.2"
+  version = "0.4.4"
 }
 
 resource "azurerm_resource_group" "this" {
