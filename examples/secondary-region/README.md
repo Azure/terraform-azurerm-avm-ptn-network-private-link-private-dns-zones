@@ -11,6 +11,7 @@ terraform {
   required_version = "~> 1.5"
 
   required_providers {
+    # tflint-ignore: terraform_unused_required_providers
     azapi = {
       source  = "Azure/azapi"
       version = "~> 2.12"
@@ -19,6 +20,7 @@ terraform {
       source  = "hashicorp/azurerm"
       version = ">= 4.0, < 5.0"
     }
+    # tflint-ignore: terraform_unused_required_providers
     modtm = {
       source  = "registry.terraform.io/azure/modtm"
       version = "~> 0.3"
@@ -46,10 +48,6 @@ resource "azurerm_resource_group" "this" {
 
 module "test" {
   source = "../../"
-  providers = {
-    azapi = azapi
-    modtm = modtm
-  }
 
   location         = "uksouth"
   parent_id        = azurerm_resource_group.this.id
