@@ -241,6 +241,9 @@ variable "private_link_private_dns_zones" {
     azure_media_services_delivery = {
       zone_name = "privatelink.media.azure.net"
     }
+    azure_video_indexer = {
+      zone_name = "privatelink.api.videoindexer.ai"
+    }
     azure_automation = {
       zone_name = "privatelink.azure-automation.net"
     }
@@ -316,6 +319,9 @@ variable "private_link_private_dns_zones" {
           5 = "5"
         }
       }
+    }
+    azure_maps = {
+      zone_name = "privatelink.account.maps.azure.com"
     }
     azure_synapse = {
       zone_name = "privatelink.azuresynapse.net"
