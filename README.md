@@ -783,13 +783,13 @@ Version: 0.9.0
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.4.3
+Version: 0.5.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.13.0
+Version: 0.13.2
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection

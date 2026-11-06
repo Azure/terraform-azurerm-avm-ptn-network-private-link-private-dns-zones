@@ -11,7 +11,7 @@ module "avm_interfaces" {
 
 module "regions" {
   source  = "Azure/avm-utl-regions/azurerm"
-  version = "0.13.0"
+  version = "0.13.2"
 
   location         = var.location
   enable_telemetry = var.enable_telemetry
@@ -20,7 +20,7 @@ module "regions" {
 
 module "avm_res_network_privatednszone" {
   source   = "Azure/avm-res-network-privatednszone/azurerm"
-  version  = "0.4.3"
+  version  = "0.5.0"
   for_each = local.private_link_private_dns_zones_final
 
   domain_name           = each.value.zone_name
