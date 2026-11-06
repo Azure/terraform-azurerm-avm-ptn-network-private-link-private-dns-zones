@@ -16,26 +16,9 @@ terraform {
       source  = "Azure/azapi"
       version = "~> 2.12"
     }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
-    }
-    # tflint-ignore: terraform_unused_required_providers
-    modtm = {
-      source  = "registry.terraform.io/azure/modtm"
-      version = "~> 0.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
     }
   }
 }
@@ -67,30 +50,42 @@ module "naming" {
   version = "0.2.0"
 }
 
-resource "azurerm_resource_group" "this" {
-  location = local.regions_with_geo_code[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+module "resource_group" {
+  source  = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version = "0.5.0"
+
+  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  name             = module.naming.resource_group.name_unique
+  enable_telemetry = var.enable_telemetry
 }
 
-resource "azurerm_virtual_network" "this_1" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet1"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.1.0/24"]
+module "vnet1" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.1.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet1"
 }
 
-resource "azurerm_virtual_network" "this_2" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet2"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.2.0/24"]
+module "vnet2" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.2.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet2"
 }
 
 module "test" {
   source = "../../"
 
-  location         = azurerm_resource_group.this.location
-  parent_id        = azurerm_resource_group.this.id
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
   enable_telemetry = var.enable_telemetry
   private_link_excluded_zones = [
     "azure_ml_notebooks",
@@ -99,11 +94,11 @@ module "test" {
   ]
   virtual_network_link_default_virtual_networks = {
     "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_1.id
+      virtual_network_resource_id                 = module.vnet1.resource_id
       virtual_network_link_name_template_override = "vnet1-link"
     }
     "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.this_2.id
+      virtual_network_resource_id                 = module.vnet2.resource_id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }
@@ -136,19 +131,12 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.12)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 4.0, < 5.0)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
-
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
-- [azurerm_virtual_network.this_1](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
-- [azurerm_virtual_network.this_2](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
@@ -198,11 +186,29 @@ Source: Azure/avm-utl-regions/azurerm
 
 Version: 0.13.0
 
+### <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group)
+
+Source: Azure/avm-res-resources-resourcegroup/azurerm
+
+Version: 0.5.0
+
 ### <a name="module_test"></a> [test](#module\_test)
 
 Source: ../../
 
 Version:
+
+### <a name="module_vnet1"></a> [vnet1](#module\_vnet1)
+
+Source: Azure/avm-res-network-virtualnetwork/azurerm
+
+Version: 0.23.0
+
+### <a name="module_vnet2"></a> [vnet2](#module\_vnet2)
+
+Source: Azure/avm-res-network-virtualnetwork/azurerm
+
+Version: 0.23.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
