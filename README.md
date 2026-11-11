@@ -12,38 +12,39 @@ The module also has logic built in to it to handle the replacements of the follo
 > [!NOTE]
 > This module only supports Azure Public/Commercial today and **NOT** Azure US Government Cloud (a.k.a. Fairfax) or Azure China Cloud (a.k.a. Mooncake). If you would like to see support added for these clouds please raise an issue/feature request on this repo/module.
 
-## Migrating from versions `v0.17.0` and prior to `v0.18.0` and later
+## Upgrade considerations
 
-Versions `v0.17.0` and prior of this module used `azurerm` as its primary provider as the version of the `Azure/avm-res-network-privatednszone/azurerm` module it leveraged was built using `azurerm` as its primary provider also.
+The private DNS zone dependency is upgraded from `0.4.3` to `0.6.0`. Zone and
+virtual network link module keys and resource addresses are retained, but
+review the plan for every existing zone and link before applying. Older
+AzureRM-based installations can require separate state migration; consult the
+[historical migration guidance](https://github.com/Azure/terraform-azurerm-avm-ptn-network-private-link-private-dns-zones/blob/v0.23.2/_header.md)
+and verify it against the actual source version and state. No automatic
+migration is guaranteed for every historical installation.
 
-As of version `v0.18.0` and later of this module, the module has been re-architected to use `azapi` as its primary provider as the version of the `Azure/avm-res-network-privatednszone/azurerm` module (`v0.4.1`) it now leverages is built using `azapi` as its primary provider also.
+Older versions such as `0.7.0` accepted `resource_group_name` and could create
+the resource group. This version instead requires the resource ID of an
+existing resource group in `parent_id`; callers must manage that group
+separately. Existing deployments need an explicit, reviewed state migration
+for the group and any affected zones and links.
 
-> Version `v0.18.0` of this module includes support for the Resolution Policy on the private link private DNS zone virtual network links to allow for NXDomain Redirects to be configured, as documented in [Fallback to internet for Azure Private DNS zones](https://learn.microsoft.com/azure/dns/private-dns-fallback); see the new input properties in the `private_link_private_dns_zones` (`private_dns_zone_supports_private_link`), `private_link_private_dns_zones_additional` (`private_dns_zone_supports_private_link`), and `virtual_network_links` (`resolution_policy`) input variables.
+The resource group role assignment names retain the earlier deterministic
+UUID calculation for role names resolved by the interfaces module. Check the
+planned names against existing assignments, including the exact casing of
+principal and role definition IDs: UUID inputs are case-sensitive. States
+created from intermediate, unreleased configurations using random names may
+need separate migration. The DNS dependency's own role-assignment UUID
+compatibility has the same case sensitivity, although this pattern does not
+configure DNS-zone role assignments.
 
-This means that if you are using version `v0.17.0` or prior of this module and wish to upgrade to version `v0.18.0` or later, you will need to make some changes to your code to complete a successful upgrade.
-
-Whilst we have used `moved` blocks in the module itself, see [`moved.tf`](moved.tf), to help with the migration, we have only been able to do this for the resources that are default created by the module. These are:
-
-- The private link private DNS zones declared in the default value of the `private_link_private_dns_zones` input variable.
-- The Resource Group created by the module if you are not using an existing Resource Group, as controlled by the `resource_group_creation_enabled` input variable.
-
-For other resources that can be created by this module, you will need to declare your own `moved` blocks in your code (root module) to help with the migration. These resources are:
-
-- Private link private DNS zones declared in the `private_link_private_dns_zones_additional` input variable.
-- Private link private DNS zone virtual network links declared in the `virtual_network_links` input variable.
-- Role Assignments created on the Resource Group declared in the `resource_group_role_assignments` input variable.
-- Locks created on the Resource Group declared in the `lock` input variable.
-
-> You may decide it is not worth migrating some of these resources and instead allow Terraform to delete and recreate them. Such as the Role Assignments and Locks on the Resource Group. However, you should consider the impact of this before doing so based on your understanding of your environment and code.
-
-To help with this we have provided some example `moved` blocks that you can copy, paste, and amend/edit into your code (root module) to help with the migration. You can find these example `moved` blocks in the following example's `main.tf` files:
-
-- [custom-zones-vnet-link-existing-rg-including-moved-blocks](examples/custom-zones-vnet-link-existing-rg-including-moved-blocks/main.tf) - lines `106` onwards
-- [with-vnet-link-existing-rg-including-moved-blocks](examples/with-vnet-link-existing-rg-including-moved-blocks/main.tf) - lines `104` onwards
-
-You will also note that there are a number of new resources to be created relating to telemetry and the `modtm` provider, these do not need any `moved` blocks and are expected to be created as new resources to improve our AVM modules telemetry and insights.
-
-If you have any questions or need any help with the migration please raise an issue on this repo/module and we will do our best to help. However, we believe we have provided comprehensive guidance and examples to help with the migration to prevent the deletion of critical resources.
+Telemetry now uses subscription-scope Azure deployments rather than ModTM.
+The existing required `location` is forwarded to the private DNS module;
+`enable_telemetry = false` disables telemetry in the pattern and its
+dependencies. With telemetry enabled, the deployment identity needs
+`Microsoft.Resources/deployments/read`, `write`, and `delete` at subscription
+scope. Existing ModTM and telemetry-only random UUID state is forgotten without
+destroying it; Terraform may need the old providers available for the first
+initialization and migration plan. Review the plan before applying.
 
 ---
 
@@ -62,8 +63,6 @@ The following requirements are needed by this module:
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.9, < 2.0)
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.12)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
 
 ## Resources
 
@@ -777,13 +776,13 @@ The following Modules are called:
 
 Source: Azure/avm-utl-interfaces/azure
 
-Version: 0.9.0
+Version: 0.10.0
 
 ### <a name="module_avm_res_network_privatednszone"></a> [avm\_res\_network\_privatednszone](#module\_avm\_res\_network\_privatednszone)
 
 Source: Azure/avm-res-network-privatednszone/azurerm
 
-Version: 0.4.3
+Version: 0.6.0
 
 ### <a name="module_regions"></a> [regions](#module\_regions)
 

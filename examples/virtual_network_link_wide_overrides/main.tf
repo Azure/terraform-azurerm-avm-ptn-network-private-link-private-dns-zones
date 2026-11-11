@@ -7,26 +7,9 @@ terraform {
       source  = "Azure/azapi"
       version = "~> 2.12"
     }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
-    }
-    # tflint-ignore: terraform_unused_required_providers
-    modtm = {
-      source  = "registry.terraform.io/azure/modtm"
-      version = "~> 0.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
     }
   }
 }
@@ -58,77 +41,101 @@ module "naming" {
   version = "0.2.0"
 }
 
-resource "azurerm_resource_group" "this" {
-  location = local.regions_with_geo_code[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+module "resource_group" {
+  source  = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version = "0.5.0"
+
+  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  name             = module.naming.resource_group.name_unique
+  enable_telemetry = var.enable_telemetry
 }
 
-resource "azurerm_virtual_network" "vnet1" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet1"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.1.0/24"]
+module "vnet1" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.1.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet1"
 }
 
-resource "azurerm_virtual_network" "vnet2" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet2"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.2.0/24"]
+module "vnet2" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.2.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet2"
 }
 
-resource "azurerm_virtual_network" "vnet3" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet3"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.3.0/24"]
+module "vnet3" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.3.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet3"
 }
 
-resource "azurerm_virtual_network" "vnet4" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet4"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.4.0/24"]
+module "vnet4" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.4.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet4"
 }
 
-resource "azurerm_virtual_network" "vnet5" {
-  location            = azurerm_resource_group.this.location
-  name                = "vnet5"
-  resource_group_name = azurerm_resource_group.this.name
-  address_space       = ["10.0.5.0/24"]
+module "vnet5" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm"
+  version = "0.23.0"
+
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
+  address_space    = ["10.0.5.0/24"]
+  enable_telemetry = var.enable_telemetry
+  name             = "vnet5"
 }
 
 module "test" {
   source = "../../"
 
-  location         = azurerm_resource_group.this.location
-  parent_id        = azurerm_resource_group.this.id
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
   enable_telemetry = var.enable_telemetry
   virtual_network_link_additional_virtual_networks = {
     "vnet5" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet5.id
+      virtual_network_resource_id                 = module.vnet5.resource_id
       virtual_network_link_name_template_override = "additional-$${vnet_key}-link"
       resolution_policy                           = "Default"
     }
   }
   virtual_network_link_default_virtual_networks = {
     "vnet1" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet1.id
+      virtual_network_resource_id                 = module.vnet1.resource_id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
       resolution_policy                           = "Default"
     }
     "vnet2" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet2.id
+      virtual_network_resource_id                 = module.vnet2.resource_id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
       resolution_policy                           = "NxDomainRedirect"
     }
     "vnet3" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet3.id
+      virtual_network_resource_id                 = module.vnet3.resource_id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
       resolution_policy                           = "Default"
     }
     "vnet4" = {
-      virtual_network_resource_id                 = azurerm_virtual_network.vnet4.id
+      virtual_network_resource_id                 = module.vnet4.resource_id
       virtual_network_link_name_template_override = "$${vnet_key}-link"
     }
   }

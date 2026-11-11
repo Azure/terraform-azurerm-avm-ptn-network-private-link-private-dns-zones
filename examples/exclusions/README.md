@@ -16,26 +16,9 @@ terraform {
       source  = "Azure/azapi"
       version = "~> 2.12"
     }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = ">= 4.0, < 5.0"
-    }
-    # tflint-ignore: terraform_unused_required_providers
-    modtm = {
-      source  = "registry.terraform.io/azure/modtm"
-      version = "~> 0.3"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.5"
-    }
-  }
-}
-
-provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
     }
   }
 }
@@ -67,16 +50,20 @@ module "naming" {
   version = "0.2.0"
 }
 
-resource "azurerm_resource_group" "this" {
-  location = local.regions_with_geo_code[random_integer.region_index.result].name
-  name     = module.naming.resource_group.name_unique
+module "resource_group" {
+  source  = "Azure/avm-res-resources-resourcegroup/azurerm"
+  version = "0.5.0"
+
+  location         = local.regions_with_geo_code[random_integer.region_index.result].name
+  name             = module.naming.resource_group.name_unique
+  enable_telemetry = var.enable_telemetry
 }
 
 module "test" {
   source = "../../"
 
-  location         = azurerm_resource_group.this.location
-  parent_id        = azurerm_resource_group.this.id
+  location         = module.resource_group.resource.location
+  parent_id        = module.resource_group.resource_id
   enable_telemetry = var.enable_telemetry
   private_link_excluded_zones = [
     "azure_ml_notebooks",
@@ -113,17 +100,12 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) (~> 2.12)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 4.0, < 5.0)
-
-- <a name="requirement_modtm"></a> [modtm](#requirement\_modtm) (~> 0.3)
-
 - <a name="requirement_random"></a> [random](#requirement\_random) (~> 3.5)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 - [random_integer.region_index](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) (resource)
 
 <!-- markdownlint-disable MD013 -->
@@ -172,6 +154,12 @@ Version: 0.2.0
 Source: Azure/avm-utl-regions/azurerm
 
 Version: 0.13.0
+
+### <a name="module_resource_group"></a> [resource\_group](#module\_resource\_group)
+
+Source: Azure/avm-res-resources-resourcegroup/azurerm
+
+Version: 0.5.0
 
 ### <a name="module_test"></a> [test](#module\_test)
 

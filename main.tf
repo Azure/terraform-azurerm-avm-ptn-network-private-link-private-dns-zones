@@ -1,9 +1,9 @@
 module "avm_interfaces" {
   source  = "Azure/avm-utl-interfaces/azure"
-  version = "0.9.0"
+  version = "0.10.0"
 
-  location                         = var.location
   enable_telemetry                 = var.enable_telemetry
+  location                         = var.location
   lock                             = var.lock
   role_assignment_definition_scope = local.resource_group_id_string
   role_assignments                 = var.resource_group_role_assignments
@@ -20,12 +20,13 @@ module "regions" {
 
 module "avm_res_network_privatednszone" {
   source   = "Azure/avm-res-network-privatednszone/azurerm"
-  version  = "0.4.3"
+  version  = "0.6.0"
   for_each = local.private_link_private_dns_zones_final
 
   domain_name           = each.value.zone_name
   parent_id             = local.resource_group_id_string
   enable_telemetry      = var.enable_telemetry
+  location              = var.location
   tags                  = var.tags
   timeouts              = var.timeouts
   virtual_network_links = each.value.virtual_network_links
@@ -43,7 +44,7 @@ resource "azapi_resource" "lock" {
 resource "azapi_resource" "role_assignments" {
   for_each = module.avm_interfaces.role_assignments_azapi
 
-  name      = each.value.name
+  name      = uuidv5("url", format("%s%s", var.resource_group_role_assignments[each.key].principal_id, each.value.body.properties.roleDefinitionId))
   parent_id = local.resource_group_id_string
   type      = each.value.type
   body      = each.value.body
