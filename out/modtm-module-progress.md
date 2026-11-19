@@ -15,7 +15,7 @@ Updated: 2026-11-19
 - Main-state finding: live `main` at `db21171` uses invalid rule `required_output_rmfr7`.
 - Correction: replaced it with canonical rule `avm_output_resource_id_required`, preserving the `terraform_naming_convention` exemption.
 - Existing PR: [#231](https://github.com/Azure/terraform-azurerm-avm-ptn-network-private-link-private-dns-zones/pull/231) is a Regions dependency update and does not contain this rule change.
-- PR state: [#234](https://github.com/Azure/terraform-azurerm-avm-ptn-network-private-link-private-dns-zones/pull/234) is open as a draft; CI pending.
+- PR state: [#234](https://github.com/Azure/terraform-azurerm-avm-ptn-network-private-link-private-dns-zones/pull/234) is open as a draft. PR check, unit, integration, CodeQL, CLA, and 8/9 runnable E2E examples passed; `virtual_network_link_wide_overrides` remained pending after 20 one-minute status polls and is the only pending check.
 - Test state: `avm test unit` passed (1 run); `avm test` Terraform validation passed across 9 examples; two `avm pre-commit` passes passed and were idempotent.
 - Lint state: local retries were blocked by an unrelated shared AVM plugin-cache lock after the Windows filename-too-long download failure; not reported as passed locally.
 - Candidate state: commit `265fb3956f25a12ab0de954b15c5cfd3a477fa75` is not present on the live repository and is not reusable.
