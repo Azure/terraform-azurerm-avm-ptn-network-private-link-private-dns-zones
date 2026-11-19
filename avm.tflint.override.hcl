@@ -4,7 +4,7 @@ rule "terraform_naming_convention" {
 }
 
 # disabling as pattern module and not applicable for this module
-rule "required_output_rmfr7" {
+rule "avm_output_resource_id_required" {
   enabled = false
 }
 
