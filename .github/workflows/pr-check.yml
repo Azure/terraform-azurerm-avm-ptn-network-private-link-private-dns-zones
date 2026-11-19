@@ -2,8 +2,7 @@
 name: PR Check
 on:
   pull_request:
-    types: ['opened', 'reopened', 'synchronize']
-  merge_group:
+    types: ['opened', 'reopened', 'synchronize', 'labeled', 'unlabeled']
   workflow_dispatch:
     inputs:
       authoringSource:
@@ -22,7 +21,7 @@ on:
 
 jobs:
   run-managed-workflow:
-    uses: Azure/azure-verified-modules-tools/.github/workflows/terraform-module.yml@31824f07a277458ce24e74ae69a33fdb18803bdf
+    uses: Azure/azure-verified-modules-tools/.github/workflows/terraform-module.yml@14361453cdd14f78c8c45a8235643b620397d398
     name: run managed workflow
     with:
       authoringSource: ${{ inputs.authoringSource || 'gallery' }}
@@ -31,3 +30,4 @@ jobs:
     permissions:
       id-token: write
       contents: read
+      pull-requests: write
