@@ -776,7 +776,7 @@ The following Modules are called:
 
 Source: Azure/avm-utl-interfaces/azure
 
-Version: 0.10.0
+Version: 0.10.1
 
 ### <a name="module_avm_res_network_privatednszone"></a> [avm\_res\_network\_privatednszone](#module\_avm\_res\_network\_privatednszone)
 
@@ -788,7 +788,7 @@ Version: 0.6.0
 
 Source: Azure/avm-utl-regions/azurerm
 
-Version: 0.13.0
+Version: 0.15.0
 
 <!-- markdownlint-disable-next-line MD041 -->
 ## Data Collection
